@@ -3,12 +3,10 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const token = uni.getStorageSync('token')
-
 export default new Vuex.Store({
 	state: {
 		hasLogin: false,
-		token: token,
+		token: uni.getStorageSync('token'),
 		user: {},
 	},
 	mutations: {
