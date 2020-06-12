@@ -1,14 +1,19 @@
-import request from './request.js'
+import {
+	post,
+	del,
+	put,
+	get
+} from './request.js'
 
-export function post(data){
-	return request.post(`/api-login`,data)
+export function post(data) {
+	return post(`/api-login`, data)
 }
-export function put(id){
-	return request.put(`/api/${id}`)
+export function put(id,params) {
+	return put(`/api/${id}`,params)
 }
 export function get() {
-	return request.get(`/api/`)
+	return get(`/api/`)
 }
-export function del(id){
-	return request.del(`/api/${id}`)
+export function del(id) {
+	return del(`/api/${id}`)
 }
