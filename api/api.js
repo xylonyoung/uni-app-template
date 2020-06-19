@@ -5,15 +5,15 @@ import {
 	get
 } from './request.js'
 
-export function post(data) {
-	return post(`/api-login`, data)
-}
-export function put(id,params) {
-	return put(`/api/${id}`,params)
-}
-export function get() {
-	return get(`/api/`)
-}
-export function del(id) {
-	return del(`/api/${id}`)
-}
+// export function post(data) {
+// 	return post(`/api-login`, data)
+// }
+// export function put(id,params) {
+// 	return put(`/api/${id}`,params)
+// }
+// export function get() {
+// 	return get(`/api/`)
+// }
+// export function del(id) {
+// 	return del(`/api/${id}`)
+// }
