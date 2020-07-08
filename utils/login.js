@@ -1,6 +1,6 @@
 import store from '../store';
 
-function login() {
+export default function login() {
   store.dispatch('user/login')
 }
-export default login();
+

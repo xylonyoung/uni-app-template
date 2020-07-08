@@ -2,6 +2,7 @@
   <view>
     <view style="display:flex;justify-content:center;align-items:center;margin:20rpx">
       <uni-pagination
+				v-show="totalCount>0"
         :total="totalCount"
         :pageSize="numItemsPerPage"
         :current="current"
@@ -24,7 +25,7 @@ export default {
         '@order': 'modifiedTime|desc'
       },
       current: null,
-      totalCount: null,
+      totalCount: 0,
       numItemsPerPage: null
     }
   },
@@ -38,9 +39,11 @@ export default {
         listQuery.page = e.current
       }
       getOrders(listQuery).then(res => {
-        this.current = res.paginator.current
-        this.totalCount = res.paginator.totalCount
-        this.numItemsPerPage = res.paginator.numItemsPerPage
+				if(res.data.paginator){
+					this.current = res.paginator.current
+					this.totalCount = res.paginator.totalCount
+					this.numItemsPerPage = res.paginator.numItemsPerPage
+				}
       })
     }
   }

@@ -3,9 +3,6 @@ import App from './App'
 import uView from 'uview-ui'
 import store from './store'
 
-// login
-// import './utils/login'
-
 Vue.use(uView)
 
 Vue.config.productionTip = false
