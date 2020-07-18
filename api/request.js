@@ -1,5 +1,5 @@
-const baseURL = 'http://47.107.144.252:8007'
 import store from '../store'
+import {baseURL} from './url.js'
 
 function request(method, url, data) {
 	const token = store.getters.token

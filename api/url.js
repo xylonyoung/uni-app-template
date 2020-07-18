@@ -1,3 +1,3 @@
-import { baseURL } from './request.js'
-export const image = baseURL + '/uploads/images/'
-export const upload = baseURL + '/upload'
+export const baseURL = 'http://47.107.144.252:8007'
+export const imageURL = baseURL + '/uploads/images/'
+export const uploadURL = baseURL + '/upload'
