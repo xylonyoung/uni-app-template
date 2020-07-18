@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "uview-ui": "^1.4.6"
+    "uview-ui": "^1.5.2"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.0"
   }
 }

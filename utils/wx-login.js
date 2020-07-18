@@ -2,7 +2,7 @@ import {
 	get
 } from '../api/request.js';
 import store from '../store';
-// for H5
+// for weixin browser to use
 export default function login() {
 	const token = uni.getStorageSync('token');
 	wxBrowser().then(res => {
@@ -10,7 +10,7 @@ export default function login() {
 			if (token) {
 				store.dispatch('user/login');
 				share();
-			} else if(process.env.NODE_ENV === 'production'){
+			} else if (process.env.NODE_ENV === 'production') {
 				shareTemp();
 				wxLogin();
 			}
@@ -23,41 +23,39 @@ export default function login() {
 }
 
 function shareTemp() {
-	const sharedId = getQueryVariable('sharedId');
-	if (sharedId) {
-		uni.setStorageSync('sharedId', sharedId);
+	const shareId = getQueryVariable('shareId');
+	if (shareId) {
+		uni.setStorageSync('shareId', shareId);
 	}
 }
 
 function share() {
-	const localSharedId = uni.getStorageSync(
-		'sharedId'
+	const localShareId = uni.getStorageSync(
+		'shareId'
 	);
-	const sharedId = getQueryVariable('sharedId');
-	if (sharedId) {
+	const shareId = getQueryVariable('shareId');
+	if (shareId) {
 		uni.reLaunch({
-			url: `share?id=${sharedId}`,
+			url: `share?id=${shareId}`,
 		});
-	} else if (localSharedId) {
-		uni.removeStorageSync('sharedId');
+	} else if (localShareId) {
+		uni.removeStorageSync('shareId');
 		uni.reLaunch({
-			url: `share?id=${localSharedId}`,
+			url: `share?id=${localShareId}`,
 		});
 	}
 }
 
 function getQueryVariable(variable) {
-	if (location.href.includes('?')) {
-		let query = location.href.split('?')[1];
-		let vars = query.split('&');
-		for (let i = 0; i < vars.length; i++) {
-			let pair = vars[i].split('=');
-			if (pair[0] == variable) {
-				return pair[1];
-			}
+	var query = decodeURI(window.location.search.substring(1));
+	var vars = query.split("&");
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split("=");
+		if (pair[0] == variable) {
+			return pair[1];
 		}
 	}
-	return false;
+	return null;
 }
 
 function wxBrowser() {
