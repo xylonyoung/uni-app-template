@@ -21,6 +21,9 @@
 		}, {
 			"path": "pages/me/me",
 			"style": {}
+		}, {
+			"path": "pages/share/share",
+			"style": {}
 		}
 	],
 	"globalStyle": {
