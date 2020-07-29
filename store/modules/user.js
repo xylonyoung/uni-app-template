@@ -29,7 +29,7 @@ const actions = {
       commit('SET_USER_INFO', data)
       if (data.profile) {
         const profile = data.profile.__metadata
-        if (profile.phone && profile.room) {
+        if (profile.phone) {
           commit('SET_REGISTERED', true)
         }
       }

@@ -1,0 +1,103 @@
+@mixin rainbow-font {
+  animation: rainbow-font-kf 20s infinite linear;
+}
+@mixin rainbow {
+  background-image: linear-gradient(
+    135deg,
+    #ff0000,
+    #f36300,
+    #de9200,
+    #c2b700,
+    #a0d600,
+    #74dd54,
+    #46e085,
+    #00e1ad,
+    #00c6d9,
+    #00a5ff,
+    #0078ff,
+    #0000ff
+  );
+  background-size: 400%;
+  background-position: 0 50%;
+  animation: rainbow-kf 10s infinite;
+}
+@keyframes rainbow-kf {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes rainbow-font-kf {
+  0% {
+    color: #ff0000;
+  }
+  4% {
+    color: #f36300;
+  }
+  8% {
+    color: #de9200;
+  }
+  12% {
+    color: #c2b700;
+  }
+  16% {
+    color: #a0d600;
+  }
+  20% {
+    color: #74dd54;
+  }
+  25% {
+    color: #46e085;
+  }
+  30% {
+    color: #00e1ad;
+  }
+  35% {
+    color: #00c6d9;
+  }
+  40% {
+    color: #00a5ff;
+  }
+  45% {
+    color: #0078ff;
+  }
+  50% {
+    color: #0000ff;
+  }
+  55% {
+    color: #0078ff;
+  }
+  60% {
+    color: #00a5ff;
+  }
+  65% {
+    color: #00c6d9;
+  }
+  70% {
+    color: #00e1ad;
+  }
+  75% {
+    color: #46e085;
+  }
+  80% {
+    color: #74dd54;
+  }
+  85% {
+    color: #a0d600;
+  }
+  90% {
+    color: #c2b700;
+  }
+  95% {
+    color: #de9200;
+  }
+  100% {
+    color: #f36300;
+  }
+}

@@ -1,3 +1,11 @@
-export default function parseTime(date){
-	return date.split('T')[0].split['-'][1]
+export default function parseTime(date, hour) {
+  if(!date){
+    return 
+  }
+  let time = date.split('+')[0].replace('T', ' ')
+  if (hour) {
+    return time
+  } else {
+    return time.split(' ')[0]
+  }
 }

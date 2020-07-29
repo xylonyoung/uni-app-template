@@ -80,7 +80,7 @@
             "mode" : "history"
         },
         "devServer" : {
-            "https" : true
+            "https" : false
         }
     }
 }
