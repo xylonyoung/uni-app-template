@@ -12,15 +12,33 @@
     },
     {
       "path": "pages/login/login",
-      "style": {}
+      "style": {
+        "app-plus": {
+          "titleNView": {
+            "type": "transparent"
+          }
+        }
+      }
     },
     {
       "path": "pages/login/register",
-      "style": {}
+      "style": {
+        "app-plus": {
+          "titleNView": {
+            "type": "transparent"
+          }
+        }
+      }
     },
     {
       "path": "pages/login/forget",
-      "style": {}
+      "style": {
+        "app-plus": {
+          "titleNView": {
+            "type": "transparent"
+          }
+        }
+      }
     },
     {
       "path": "pages/me/me",

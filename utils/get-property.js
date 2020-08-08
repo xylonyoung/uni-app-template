@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.getProperty = void 0;
 function getProperty(obj, key) {
     if (!obj) {
         return false;
@@ -15,4 +16,4 @@ function getProperty(obj, key) {
     }
     return false;
 }
-exports["default"] = getProperty;
+exports.getProperty = getProperty;
