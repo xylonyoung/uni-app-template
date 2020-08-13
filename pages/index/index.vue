@@ -1,10 +1,11 @@
 <template>
   <view class="content">
+		<u-empty v-if="list.length === 0"></u-empty>
     <image class="logo" src="/static/logo.png"></image>
     <view class="text-area" v-for="(item, index) in list" :key="index">
       <text class="title">{{ item }}</text>
     </view>
-    <u-loadmore :status="status" />
+    <u-loadmore :status="status" v-if="list.length !== 0"/>
     <u-back-top :scroll-top="scrollTop"></u-back-top>
   </view>
 </template>
@@ -41,6 +42,7 @@ export default {
   },
   methods: {
     async loadData(type) {
+			//get fake data
       function getData(query) {
         return new Promise(resolve => {
           let res = {}
@@ -67,6 +69,7 @@ export default {
       }
       let list, currentPage, endPage
       await getData(this.query).then(res => {
+				console.log(res)
         list = this.getProperty(res, 'data') || []
         const paginator = res.paginator
         if (paginator) {
@@ -93,7 +96,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .content {
   display: flex;
   flex-direction: column;
