@@ -72,7 +72,6 @@ function get(url, data) {
 }
 
 module.exports = {
-	baseURL,
 	request,
 	post,
 	del,

@@ -42,7 +42,9 @@
     },
     {
       "path": "pages/me/me",
-      "style": {}
+      "style": {
+        "enablePullDownRefresh": true
+      }
     },
     {
       "path": "pages/wx-only/wx-only",
