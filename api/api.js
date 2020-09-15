@@ -2,7 +2,7 @@ import { post, del, put, get } from './request.js'
 export function getData(params) {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve({ data: [{ name: 'a' }, { name: 'b' }, { name: 'c' }] })
+      resolve({ data: [1, 2, 3, 4, 5] })
     }, 999)
   })
 }
