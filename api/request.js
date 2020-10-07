@@ -1,5 +1,5 @@
 import store from '../store'
-import {baseURL} from './url.js'
+import { baseURL } from './url.js'
 
 function request(method, url, data) {
 	const token = store.getters.token
@@ -8,7 +8,7 @@ function request(method, url, data) {
 			url: baseURL + url,
 			header: {
 				'Content-Type': 'application/json;charset=UTF-8',
-				'X-Auth-Token': token,
+				'X-Auth-Token': token
 			},
 			data: data || {},
 			method: method,
@@ -17,10 +17,8 @@ function request(method, url, data) {
 			success(res) {
 				if (res.data.code === 0) {
 					resolve(res.data)
-				} else if (
-					res.statusCode === 403 &&
-					res.data.message === 'Username could not be found.'
-				) {
+				} else if (res.statusCode === 403) {
+          //login again
 					uni.showToast({
 						title: '登录过期，正在跳转登录',
 						icon: 'none',
@@ -41,16 +39,17 @@ function request(method, url, data) {
 					let message = res.data.message || res.data
 					uni.showToast({
 						title: message,
-						icon: 'none',
+						icon: 'none'
 					})
 				}
 			},
 			fail(err) {
+				console.log('error' + err)
 				uni.showToast({
 					title: '网络错误！',
-					icon: 'none',
+					icon: 'none'
 				})
-			},
+			}
 		})
 	})
 }
@@ -76,5 +75,5 @@ module.exports = {
 	post,
 	del,
 	put,
-	get,
+	get
 }

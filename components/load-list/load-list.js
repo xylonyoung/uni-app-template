@@ -1,8 +1,17 @@
 const mixin = {
-  //下拉刷新
+  //listen pull down to refresh
   onPullDownRefresh() {
     this.$refs.loadList.loadData('refresh')
   },
+  //listen scroll for back-top
+  onPageScroll(e) {
+    this.$refs.loadList.scrollTop = e.scrollTop
+  },
+  //listener for reach bottom and load data
+  onReachBottom() {
+    if (this.$refs.loadList.status === 'loadmore') {
+      this.$refs.loadList.loadData()
+    }
+  },
 }
-
 export default mixin

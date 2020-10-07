@@ -7,7 +7,8 @@
     {
       "path": "pages/index/index",
       "style": {
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "uni-app",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -43,7 +44,8 @@
     {
       "path": "pages/me/me",
       "style": {
-        "enablePullDownRefresh": true
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
       }
     },
     {
@@ -60,14 +62,25 @@
           }
         }
       }
+    },
+    {
+      "path": "pages/demo/load-list",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/demo/uni-pagination",
+      "style": {
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8",
-    "navigationStyle": "custom" // 隐藏系统导航栏
+    "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
     "color": "#AAAAAA",

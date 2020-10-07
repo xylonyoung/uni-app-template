@@ -1,9 +1,7 @@
-import { getLogin, putUserProfile, getUser } from '../../api/api.js'
-
+import api from '../../api'
 const state = {
   token: '',
-  userInfo: {},
-  profile: {},
+  user: {},
   registered: false,
 }
 
@@ -11,11 +9,8 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_USER_INFO: (state, userInfo) => {
-    state.userInfo = userInfo
-  },
-  SET_PROFILE: (state, profile) => {
-    state.profile = profile
+  SET_USER: (state, user) => {
+    state.user = user
   },
   SET_REGISTERED: (state, registered) => {
     state.registered = registered
@@ -23,17 +18,27 @@ const mutations = {
 }
 
 const actions = {
-  updateUser({ commit }) {
-    getUser().then(res => {
-      const { data } = res
-      commit('SET_USER_INFO', data)
-      if (data.profile) {
-        const profile = data.profile.__metadata
-        if (profile.phone) {
-          commit('SET_REGISTERED', true)
-        }
+  putRecommendedUser({ dispatch }, id) {
+    function newUser() {
+      const createdTime = new Date(state.userInfo.created_time).getTime()
+      const now = new Date().getTime()
+      if (now - createdTime < 60 * 60 * 1000) {
+        return true
+      } else {
+        console.log('用户已过分享期')
+        return false
       }
-    })
+    }
+    if (newUser()) {
+      console.log('进行putUserSet')
+      putUserSet('recommendedUser', id).then(_ => {
+        uni.showToast({
+          title: '成功获取分享',
+          duration: 2000,
+        })
+        dispatch('updateUser')
+      })
+    }
   },
   // user login
   login({ dispatch, commit }) {
@@ -44,43 +49,44 @@ const actions = {
   //weixin login
   wxLogin({ dispatch, commit }) {
     const token = uni.getStorageSync('token')
-    const getInfo = () => {
+    function getInfo() {
       uni.getUserInfo({
-        success: response => {
-          const { userInfo } = response
-          commit('SET_PROFILE', userInfo)
-          putUserProfile(userInfo).then(() => {
+        success: res => {
+          const { userInfo } = res
+          api.user.putProfile(userInfo).then(_ => {
             dispatch('updateUser')
           })
         },
-        fail: () => {
+        fail: _ => {
           console.log('未授权')
-          dispatch('updateUser')
         },
       })
     }
-    return new Promise(resolve => {
+
+    return new Promise((resolve, reject) => {
       if (token) {
         commit('SET_TOKEN', token)
         getInfo()
-        resolve(true)
+        resolve()
       } else {
         uni.login({
           provider: 'weixin',
           success: res => {
-            getLogin({
-              code: res.code,
-            }).then(response => {
-              const { data } = response
-              commit('SET_TOKEN', data.token)
-              uni.setStorageSync('token', data.token)
-              getInfo()
-              resolve(res)
-            })
+            api.user
+              .login({
+                code: res.code,
+              })
+              .then(response => {
+                const { data } = response
+                commit('SET_TOKEN', data.token)
+                uni.setStorageSync('token', data.token)
+                getInfo()
+                resolve()
+              })
           },
           fail: err => {
-            console.log(err)
-            resolve(err)
+            console.log('error' + err)
+            reject(err)
             uni.showModal({
               title: '登录失败，请点击确认重新登录',
               showCancel: false,
@@ -97,7 +103,20 @@ const actions = {
       }
     })
   },
-
+  //update user
+  updateUser({ commit }) {
+    api.user.get().then(res => {
+      const { data } = res
+      commit('SET_USER', data)
+      uni.setStorageSync('user', data)
+      if (data.profile) {
+        const profile = data.profile.__metadata
+        if (profile.phone) {
+          commit('SET_REGISTERED', true)
+        }
+      }
+    })
+  },
   // user logout
   logout() {
     uni.clearStorageSync()
