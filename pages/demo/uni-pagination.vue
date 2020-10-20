@@ -1,5 +1,9 @@
 <template>
   <view>
+		<view v-for="(item, index) in list" :key="index">
+		  <u-avatar :src="item.avatar"></u-avatar>
+		  <view>{{ item.name }}</view>
+		</view>
     <view
       style="
         display: flex;
@@ -11,8 +15,8 @@
       <uni-pagination
         v-show="listQuery.totalCount > 0"
         :total="listQuery.totalCount"
-        :pageSize="listQuery.numItemsPerPage"
-        :current="listQuery.current"
+        :pageSize="listQuery.limit"
+        :current="listQuery.page"
         @change="loadData"
       ></uni-pagination>
     </view>
@@ -25,12 +29,11 @@ export default {
   components: { uniPagination },
   data() {
     return {
+			list:[],
       listQuery: {
         page: 1,
-        limit: 5,
-        current: null,
+        limit: 10,
         totalCount: 0,
-        numItemsPerPage: null,
         '@order': 'modifiedTime|desc',
       },
     }
@@ -39,12 +42,8 @@ export default {
     this.loadData()
   },
   methods: {
-    async loadData(e) {
+    async loadData() {
       let listQuery = this.listQuery
-      if (e) {
-        listQuery.page = e.current
-      }
-      console.log(this.$api)
       //load data
       await this.$api.pagination.get(listQuery).then(res => {
         console.log(res)
@@ -54,9 +53,8 @@ export default {
           this.list = data
         }
         if (paginator) {
-          listQuery.current = paginator.current
+          listQuery.page = paginator.current
           listQuery.totalCount = paginator.totalCount
-          listQuery.numItemsPerPage = paginator.numItemsPerPage
         } else {
           this.showEmpty = true
         }

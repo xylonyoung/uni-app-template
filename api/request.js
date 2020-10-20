@@ -17,15 +17,15 @@ function request(method, url, data) {
 			success(res) {
 				if (res.data.code === 0) {
 					resolve(res.data)
-				} else if (res.statusCode === 403) {
-          //login again
+				} else if(res.statusCode === 403) {
+					//login again
 					uni.showToast({
 						title: '登录过期，正在跳转登录',
 						icon: 'none',
 						duration: 3000
 					})
 					setTimeout(() => {
-						uni.clearStorageSync()
+						uni.removeStorageSync('token')
 						let url = '../login/login'
 						//#ifdef MP-WEIXIN
 						url = '../index/index'
@@ -46,7 +46,7 @@ function request(method, url, data) {
 			fail(err) {
 				console.log('error' + err)
 				uni.showToast({
-					title: '网络错误！',
+					title: '服务器繁忙！',
 					icon: 'none'
 				})
 			}
