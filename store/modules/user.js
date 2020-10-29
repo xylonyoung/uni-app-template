@@ -1,4 +1,4 @@
-import api from '../../api'
+import $api from '@/api'
 const state = {
 	token: '',
 	user: {},
@@ -55,12 +55,13 @@ const actions = {
 	
 	//update user
 	async updateUser({ commit }) {
-		await api.user.get().then(res => {
+		await $api.user.get().then(res => {
 			const { data } = res
 			commit('SET_USER', data)
 			uni.setStorageSync('user', data)
 			if (data.profile) {
 				const profile = data.profile.__metadata
+				commit('SET_PROFILE', profile)
 				if (profile.phone) {
 					commit('SET_REGISTERED', true)
 				}
@@ -77,7 +78,7 @@ const actions = {
 				success: res => {
 					const { userInfo } = res
 					commit('SET_PROFILE', userInfo)
-					api.user.putProfile(userInfo).then(_ => {
+					$api.user.putProfile(userInfo).then(_ => {
 						dispatch('updateUser')
 					})
 				},
@@ -96,7 +97,7 @@ const actions = {
 				uni.login({
 					provider: 'weixin',
 					success: res => {
-						api.user
+						$api.user
 							.login({
 								code: res.code
 							})

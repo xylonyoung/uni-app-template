@@ -14,6 +14,6 @@ class Api {
   }
 }
 
-const api = new Api()
+const $api = new Api()
 
-export default api
+export default $api

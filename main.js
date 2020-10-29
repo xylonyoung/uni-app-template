@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import uView from 'uview-ui'
-import api from './api'
+import $api from './api'
 
 // mock for fake data
 if (process.env.NODE_ENV === 'development') {
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // global api
-Vue.prototype.$api = api
+Vue.prototype.$api = $api
 
 Vue.use(uView)
 
