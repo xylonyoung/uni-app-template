@@ -98,7 +98,7 @@ const actions = {
 					provider: 'weixin',
 					success: res => {
 						$api.user
-							.login({
+							.wxLogin({
 								code: res.code
 							})
 							.then(response => {

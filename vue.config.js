@@ -1,7 +1,9 @@
+//#ifdef H5
 const path = require('path')
 //最新版本copy-webpack-plugin插件暂不兼容，推荐v5.0.0
 const CopyPlugin = require('copy-webpack-plugin') 
 module.exports = {
+	// publicPath: process.env.NODE_ENV === 'production' ? '/view/' : '/',
   configureWebpack: {
     plugins: [
       new CopyPlugin([
@@ -32,3 +34,4 @@ module.exports = {
     })
   },
 }
+//#endif

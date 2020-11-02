@@ -1,7 +1,7 @@
 import store from '../store'
 import { baseURL } from './url.js'
 
-function request(method, url, data) {
+export default function request(method, url, data) {
 	const token = store.getters.token
 	return new Promise((resolve, reject) => {
 		uni.request({
@@ -52,28 +52,4 @@ function request(method, url, data) {
 			}
 		})
 	})
-}
-
-function post(url, data) {
-	return request('POST', url, data)
-}
-
-function del(url, data) {
-	return request('DELETE', url, data)
-}
-
-function put(url, data) {
-	return request('PUT', url, data)
-}
-
-function get(url, data) {
-	return request('GET', url, data)
-}
-
-module.exports = {
-	request,
-	post,
-	del,
-	put,
-	get
 }

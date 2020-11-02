@@ -1,5 +1,5 @@
-import store from '../store';
-
-export default function login() {
-	store.dispatch('user/login')
+import store from '@/store'
+async function login() {
+	await store.dispatch('user/wxLogin')
 }
+// login()

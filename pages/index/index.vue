@@ -11,7 +11,7 @@
           :icon="item.icon"
           icon-size="60"
           :title="item.title"
-          :style="`animation-delay = ${index} * 0.3`"
+          :style="'animation-delay =' + index + '* 0.3'"
           @click="navTo(item.title)"
         ></u-cell-item>
       </template>
@@ -25,6 +25,593 @@ export default {
     return {
       title: 'Hello',
       pages: [],
+			iconList: [
+					{
+						name: 'level'
+					},
+					{
+						name: 'woman'
+					},
+					{
+						name: 'man'
+					},
+					{
+						name: 'arrow-left-double'
+					},
+					{
+						name: 'arrow-right-double'
+					},
+					{
+						name: 'chat'
+					},
+					{
+						name: 'chat-fill'
+					},
+					{
+						name: 'red-packet'
+					},
+					{
+						name: 'red-packet-fill'
+					},
+					{
+						name: 'order'
+					},
+					{
+						name: 'checkbox-mark'
+					},
+					{
+						name: 'arrow-up-fill'
+					},
+					{
+						name: 'arrow-down-fill'
+					},
+					{
+						name: 'backspace'
+					},
+					{
+						name: 'photo'
+					},
+					{
+						name: 'photo-fill'
+					},
+					{
+						name: 'lock'
+					},
+					{
+						name: 'lock-fill'
+					},
+					{
+						name: 'lock-open'
+					},
+					{
+						name: 'lock-opened-fill'
+					},
+					{
+						name: 'hourglass'
+					},
+					{
+						name: 'hourglass-half-fill'
+					},
+					{
+						name: 'home'
+					},
+					{
+						name: 'home-fill'
+					},
+					{
+						name: 'fingerprint'
+					},
+					{
+						name: 'cut'
+					},
+					{
+						name: 'star'
+					},
+					{
+						name: 'star-fill'
+					},
+					{
+						name: 'share'
+					},
+					{
+						name: 'share-fill'
+					},
+					{
+						name: 'volume-up'
+					},
+					{
+						name: 'volume-up-fill'
+					},
+					{
+						name: 'volume-off'
+					},
+					{
+						name: 'volume-off-fill'
+					},
+					{
+						name: 'trash'
+					},
+					{
+						name: 'trash-fill'
+					},
+					{
+						name: 'rewind-right'
+					},
+					{
+						name: 'rewind-right-fill'
+					},
+					{
+						name: 'rewind-left'
+					},
+					{
+						name: 'rewind-left-fill'
+					},
+					{
+						name: 'shopping-cart'
+					},
+					{
+						name: 'shopping-cart-fill'
+					},
+					{
+						name: 'question'
+					},
+					{
+						name: 'question-circle'
+					},
+					{
+						name: 'question-circle-fill'
+					},
+					{
+						name: 'plus'
+					},
+					{
+						name: 'plus-circle'
+					},
+					{
+						name: 'plus-circle-fill'
+					},
+					{
+						name: 'tags'
+					},
+					{
+						name: 'tags-fill'
+					},
+					{
+						name: 'pause'
+					},
+					{
+						name: 'pause-circle'
+					},
+					{
+						name: 'pause-circle-fill'
+					},
+					{
+						name: 'play-circle'
+					},
+					{
+						name: 'play-circle-fill'
+					},
+					{
+						name: 'map'
+					},
+					{
+						name: 'map-fill'
+					},
+					{
+						name: 'phone'
+					},
+					{
+						name: 'phone-fill'
+					},
+					{
+						name: 'list'
+					},
+					{
+						name: 'list-dot'
+					},
+					{
+						name: 'man-delete'
+					},
+					{
+						name: 'man-add'
+					},
+					{
+						name: 'man-add-fill'
+					},
+					{
+						name: 'person-delete-fill'
+					},
+					{
+						name: 'info'
+					},
+					{
+						name: 'info-circle'
+					},
+					{
+						name: 'info-circle-fill'
+					},
+					{
+						name: 'minus'
+					},
+					{
+						name: 'minus-circle'
+					},
+					{
+						name: 'minus-circle-fill'
+					},
+					{
+						name: 'mic'
+					},
+					{
+						name: 'mic-off'
+					},
+					{
+						name: 'grid'
+					},
+					{
+						name: 'grid-fill'
+					},
+					{
+						name: 'eye'
+					},
+					{
+						name: 'eye-fill'
+					},
+					{
+						name: 'eye-off'
+					},
+					{
+						name: 'file-text'
+					},
+					{
+						name: 'file-text-fill'
+					},
+					{
+						name: 'edit-pen'
+					},
+					{
+						name: 'edit-pen-fill'
+					},
+					{
+						name: 'email'
+					},
+					{
+						name: 'email-fill'
+					},
+					{
+						name: 'download'
+					},
+					{
+						name: 'checkmark'
+					},
+					{
+						name: 'checkmark-circle'
+					},
+					{
+						name: 'checkmark-circle-fill'
+					},
+					{
+						name: 'clock'
+					},
+					{
+						name: 'clock-fill'
+					},
+					{
+						name: 'close'
+					},
+					{
+						name: 'close-circle'
+					},
+					{
+						name: 'close-circle-fill'
+					},
+					{
+						name: 'calendar'
+					},
+					{
+						name: 'calendar-fill'
+					},
+					{
+						name: 'car'
+					},
+					{
+						name: 'car-fill'
+					},
+					{
+						name: 'bell'
+					},
+					{
+						name: 'bell-fill'
+					},
+					{
+						name: 'bookmark'
+					},
+					{
+						name: 'bookmark-fill'
+					},
+					{
+						name: 'attach'
+					},
+					{
+						name: 'play-right'
+					},
+					{
+						name: 'play-right-fill'
+					},
+					{
+						name: 'play-left'
+					},
+					{
+						name: 'play-left-fill'
+					},
+					{
+						name: 'error'
+					},
+					{
+						name: 'error-circle'
+					},
+					{
+						name: 'error-circle-fill'
+					},
+					{
+						name: 'wifi'
+					},
+					{
+						name: 'wifi-off'
+					},
+					{
+						name: 'skip-back-left'
+					},
+					{
+						name: 'skip-forward-right'
+					},
+					{
+						name: 'search'
+					},
+					{
+						name: 'setting'
+					},
+					{
+						name: 'setting-fill'
+					},
+					{
+						name: 'volume'
+					},
+					{
+						name: 'volume-fill'
+					},
+					{
+						name: 'more-dot-fill'
+					},
+					{
+						name: 'more-circle'
+					},
+					{
+						name: 'more-circle-fill'
+					},
+					{
+						name: 'bag'
+					},
+					{
+						name: 'bag-fill'
+					},
+					{
+						name: 'arrow-upward'
+					},
+					{
+						name: 'arrow-downward'
+					},
+					{
+						name: 'arrow-leftward'
+					},
+					{
+						name: 'arrow-rightward'
+					},
+					{
+						name: 'arrow-up'
+					},
+					{
+						name: 'arrow-down'
+					},
+					{
+						name: 'arrow-left'
+					},
+					{
+						name: 'arrow-right'
+					},
+					{
+						name: 'rmb'
+					},
+					{
+						name: 'rmb-circle'
+					},
+					{
+						name: 'rmb-circle-fill'
+					},
+					{
+						name: 'thumb-up'
+					},
+					{
+						name: 'thumb-up-fill'
+					},
+					{
+						name: 'thumb-down'
+					},
+					{
+						name: 'thumb-down-fill'
+					},
+					{
+						name: 'coupon'
+					},
+					{
+						name: 'coupon-fill'
+					},
+					{
+						name: 'kefu-ermai'
+					},
+					{
+						name: 'server-fill'
+					},
+					{
+						name: 'server-man'
+					},
+					{
+						name: 'scan'
+					},
+					{
+						name: 'warning'
+					},
+					{
+						name: 'warning-fill'
+					},
+					{
+						name: 'google'
+					},
+					{
+						name: 'google-circle-fill'
+					},
+					{
+						name: 'chrome-circle-fill'
+					},
+					{
+						name: 'ie'
+					},
+					{
+						name: 'IE-circle-fill'
+					},
+					{
+						name: 'github-circle-fill'
+					},
+					{
+						name: 'android-fill'
+					},
+					{
+						name: 'android-circle-fill'
+					},
+					{
+						name: 'apple-fill'
+					},
+					{
+						name: 'camera'
+					},
+					{
+						name: 'camera-fill'
+					},
+					{
+						name: 'pushpin'
+					},
+					{
+						name: 'pushpin-fill'
+					},
+					{
+						name: 'minus-square-fill'
+					},
+					{
+						name: 'plus-square-fill'
+					},
+					{
+						name: 'heart'
+					},
+					{
+						name: 'heart-fill'
+					},
+					{
+						name: 'reload'
+					},
+					{
+						name: 'account'
+					},
+					{
+						name: 'account-fill'
+					},
+					{
+						name: 'minus-people-fill'
+					},
+					{
+						name: 'plus-people-fill'
+					},
+					{
+						name: 'integral'
+					},
+					{
+						name: 'integral-fill'
+					},
+					{
+						name: 'zhihu'
+					},
+					{
+						name: 'zhihu-circle-fill'
+					},
+					{
+						name: 'gift'
+					},
+					{
+						name: 'gift-fill'
+					},
+					{
+						name: 'zhifubao'
+					},
+					{
+						name: 'zhifubao-circle-fill'
+					},
+					{
+						name: 'weixin-fill'
+					},
+					{
+						name: 'weixin-circle-fill'
+					},
+					{
+						name: 'twitter'
+					},
+					{
+						name: 'twitter-circle-fill'
+					},
+					{
+						name: 'taobao'
+					},
+					{
+						name: 'taobao-circle-fill'
+					},
+					{
+						name: 'weibo'
+					},
+					{
+						name: 'weibo-circle-fill'
+					},
+					{
+						name: 'qq-fill'
+					},
+					{
+						name: 'qq-circle-fill'
+					},
+					{
+						name: 'moments'
+					},
+					{
+						name: 'moments-circel-fill'
+					},
+					{
+						name: 'qzone'
+					},
+					{
+						name: 'qzone-circle-fill'
+					},
+					{
+						name: 'facebook'
+					},
+					{
+						name: 'facebook-circle-fill'
+					},
+					{
+						name: 'baidu'
+					},
+					{
+						name: 'baidu-circle-fill'
+					},
+					{
+						name: 'zhuanfa'
+					},
+				]
     }
   },
   onLoad() {
@@ -33,207 +620,10 @@ export default {
     files.keys().forEach(key => {
       pages = pages.concat(files(key).default)
     })
-    const icons = [
-      'level',
-      'woman',
-      'man',
-      'arrow-left-double',
-      'arrow-right-double',
-      'chat',
-      'chat-fill',
-      'red-packet',
-      'red-packet-fill',
-      'order',
-      'checkbox-mark',
-      'arrow-up-fill',
-      'arrow-down-fill',
-      'backspace',
-      'photo',
-      'photo-fill',
-      'lock',
-      'lock-fill',
-      'lock-open',
-      'lock-opened-fill',
-      'hourglass',
-      'hourglass-half-fill',
-      'home',
-      'home-fill',
-      'fingerprint',
-      'cut',
-      'star',
-      'star-fill',
-      'share',
-      'share-fill',
-      'volume-up',
-      'volume-up-fill',
-      'volume-off',
-      'volume-off-fill',
-      'trash',
-      'trash-fill',
-      'rewind-right',
-      'rewind-right-fill',
-      'rewind-left',
-      'rewind-left-fill',
-      'shopping-cart',
-      'shopping-cart-fill',
-      'question',
-      'question-circle',
-      'question-circle-fill',
-      'plus',
-      'plus-circle',
-      'plus-circle-fill',
-      'tags',
-      'tags-fill',
-      'pause',
-      'pause-circle',
-      'pause-circle-fill',
-      'play-circle',
-      'play-circle-fill',
-      'map',
-      'map-fill',
-      'phone',
-      'phone-fill',
-      'list',
-      'list-dot',
-      'man-delete',
-      'man-add',
-      'man-add-fill',
-      'person-delete-fill',
-      'info',
-      'info-circle',
-      'info-circle-fill',
-      'minus',
-      'minus-circle',
-      'minus-circle-fill',
-      'mic',
-      'mic-off',
-      'grid',
-      'grid-fill',
-      'eye',
-      'eye-fill',
-      'eye-off',
-      'file-text',
-      'file-text-fill',
-      'edit-pen',
-      'edit-pen-fill',
-      'email',
-      'email-fill',
-      'download',
-      'checkmark',
-      'checkmark-circle',
-      'checkmark-circle-fill',
-      'clock',
-      'clock-fill',
-      'close',
-      'close-circle',
-      'close-circle-fill',
-      'calendar',
-      'calendar-fill',
-      'car',
-      'car-fill',
-      'bell',
-      'bell-fill',
-      'bookmark',
-      'bookmark-fill',
-      'attach',
-      'play-right',
-      'play-right-fill',
-      'play-left',
-      'play-left-fill',
-      'error',
-      'error-circle',
-      'error-circle-fill',
-      'wifi',
-      'wifi-off',
-      'skip-back-left',
-      'skip-forward-right',
-      'search',
-      'setting',
-      'setting-fill',
-      'volume',
-      'volume-fill',
-      'more-dot-fill',
-      'more-circle',
-      'more-circle-fill',
-      'bag',
-      'bag-fill',
-      'arrow-upward',
-      'arrow-downward',
-      'arrow-leftward',
-      'arrow-rightward',
-      'arrow-up',
-      'arrow-down',
-      'arrow-left',
-      'arrow-right',
-      'rmb',
-      'rmb-circle',
-      'rmb-circle-fill',
-      'thumb-up',
-      'thumb-up-fill',
-      'thumb-down',
-      'thumb-down-fill',
-      'coupon',
-      'coupon-fill',
-      'kefu-ermai',
-      'server-fill',
-      'server-man',
-      'scan',
-      'warning',
-      'warning-fill',
-      'google',
-      'google-circle-fill',
-      'chrome-circle-fill',
-      'ie',
-      'IE-circle-fill',
-      'github-circle-fill',
-      'android-fill',
-      'android-circle-fill',
-      'apple-fill',
-      'camera',
-      'camera-fill',
-      'pushpin',
-      'pushpin-fill',
-      'minus-square-fill',
-      'plus-square-fill',
-      'heart',
-      'heart-fill',
-      'reload',
-      'account',
-      'account-fill',
-      'minus-people-fill',
-      'plus-people-fill',
-      'integral',
-      'integral-fill',
-      'zhihu',
-      'zhihu-circle-fill',
-      'gift',
-      'gift-fill',
-      'zhifubao',
-      'zhifubao-circle-fill',
-      'weixin-fill',
-      'weixin-circle-fill',
-      'twitter',
-      'twitter-circle-fill',
-      'taobao',
-      'taobao-circle-fill',
-      'weibo',
-      'weibo-circle-fill',
-      'qq-fill',
-      'qq-circle-fill',
-      'moments',
-      'moments-circel-fill',
-      'qzone',
-      'qzone-circle-fill',
-      'facebook',
-      'facebook-circle-fill',
-      'baidu',
-      'baidu-circle-fill',
-      'zhuanfa',
-    ]
     this.pages = pages.map(e => {
       return {
-        title: e.__file.match(/(?<=demo\/).*?(?=.vue)/)[0],
-        icon: icons[Math.floor(Math.random() * icons.length + 1) - 1],
+        title: e.__file.match(/demo\/(\S*).vue/)[1],
+        icon: this.iconList[Math.floor(Math.random() * this.iconList.length + 1) - 1].name,
       }
     })
   },
