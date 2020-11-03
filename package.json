@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "uview-ui": "^1.7.8"
   },
   "devDependencies": {

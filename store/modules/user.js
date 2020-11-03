@@ -2,7 +2,6 @@ import $api from '@/api'
 const state = {
 	token: '',
 	user: {},
-	profile: {},
 	registered: false
 }
 
@@ -12,9 +11,6 @@ const mutations = {
 	},
 	SET_USER: (state, user) => {
 		state.user = user
-	},
-	SET_PROFILE: (state, profile) => {
-		state.profile = profile
 	},
 	SET_REGISTERED: (state, registered) => {
 		state.registered = registered
@@ -43,41 +39,37 @@ const actions = {
 				duration: 2000
 			})
 			dispatch('updateUser')
-		}else{
+		} else {
 			uni.showToast({
 				title: '分享失败！',
-				icon:'none',
+				icon: 'none',
 				duration: 2000
 			})
 		}
 		uni.removeStorageSync('shareId')
 	},
-	
+
 	//update user
 	async updateUser({ commit }) {
 		await $api.user.get().then(res => {
 			const { data } = res
 			commit('SET_USER', data)
 			uni.setStorageSync('user', data)
-			if (data.profile) {
-				const profile = data.profile.__metadata
-				commit('SET_PROFILE', profile)
-				if (profile.phone) {
-					commit('SET_REGISTERED', true)
-				}
+			const { profile } = data
+			if (profile && profile.phone) {
+				commit('SET_REGISTERED', true)
 			}
 		})
 		return new Promise(resolve => resolve())
 	},
-	
-	//weixin login
+
+	//wechat login
 	wxLogin({ dispatch, commit }) {
 		const token = uni.getStorageSync('token')
 		function getInfo() {
 			uni.getUserInfo({
 				success: res => {
 					const { userInfo } = res
-					commit('SET_PROFILE', userInfo)
 					$api.user.putProfile(userInfo).then(_ => {
 						dispatch('updateUser')
 					})
@@ -135,7 +127,7 @@ const actions = {
 		commit('SET_TOKEN', token)
 		dispatch('updateUser')
 	},
-	
+
 	// user logout
 	logout() {
 		uni.clearStorageSync()
