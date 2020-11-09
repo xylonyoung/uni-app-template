@@ -72,6 +72,13 @@
 		{
 			"path": "pages/demo/uni-pagination",
 			"style": {}
+		},
+		{
+			"path": "pages/demo/swiper-list",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
+			}
 		}
 	],
 	"globalStyle": {

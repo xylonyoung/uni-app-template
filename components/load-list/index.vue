@@ -1,11 +1,11 @@
 <template>
-	<view class="content">
+	<view>
 		<!-- slot page -->
 		<slot></slot>
 		<!-- data is empty -->
 		<u-empty v-if="showEmpty"></u-empty>
 		<!-- load more data -->
-		<u-loadmore :status="status" v-if="!showEmpty" margin-top="20" margin-bottom="20" />
+		<u-loadmore v-else :status="status" margin-top="20" margin-bottom="20" />
 		<!-- back to top -->
 		<u-back-top :scroll-top="scrollTop"></u-back-top>
 	</view>
@@ -15,11 +15,11 @@
 // pages.json "style" need to setup "enablePullDownRefresh": true
 export default {
 	props: {
-		list: { type: Array, default: [] },
+		list: { type: Array, default: _ => [] },
 		listApi: { type: String, default: '' },
 		listQuery: {
 			type: Object,
-			default: () => ({ page: 1, limit: 10 })
+			default: _ => ({ page: 1, limit: 10 })
 		}
 	},
 	data() {
@@ -35,23 +35,25 @@ export default {
 	},
 	methods: {
 		async loadData(type) {
-			//init status
-			this.status = 'loading'
-			this.showEmpty = false
+			let currentPage,
+				endPage,
+				list = [],
+				listQuery = this.listQuery,
+				listApi = this.listApi.split('.')
 
-			//init query
-			let listQuery = this.listQuery
 			if (type === 'refresh') {
 				listQuery.page = 1
-				this.$emit('update:list', [])
+				this.showEmpty = false
+				this.status = 'loading'
 			}
-			//load data
-			let list = [],
-				currentPage,
-				endPage,
-				listApi = this.listApi.split('.')
+
+			if (this.status === 'nomore') {
+				return
+			} else {
+				this.status = 'loading'
+			}
+
 			await this.$api[listApi[0]][listApi[1]](listQuery).then(res => {
-				console.log(res)
 				const { data } = res
 				const { paginator } = res
 				list = data
@@ -65,11 +67,9 @@ export default {
 			})
 			//have next page or not?
 			this.status = endPage - currentPage === 0 || list.length === 0 ? 'nomore' : 'loadmore'
-			//update data
-			list = this.list.concat(list)
-			this.$emit('update:list', list)
+			//update data & interaction
+			this.$emit('update:list', type === 'refresh' ? list : [...this.list, ...list])
 			this.$emit('update:listQuery', listQuery)
-
 			uni.stopPullDownRefresh()
 		}
 	}
