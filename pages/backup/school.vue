@@ -1,42 +1,23 @@
 <template>
-	<view class="swiper-list">
-		<u-tabs-swiper
-			class="swiper-tabs"
-			ref="uTabs"
-			:list="tabs"
-			:current="current"
-			@change="tabsChange"
-		></u-tabs-swiper>
+	<view class="container">
+		<u-tabs-swiper ref="uTabs" :list="tabList" :current="current" @change="tabsChange"></u-tabs-swiper>
 		<swiper
 			class="swiper-box"
-			:style="{ height: height }"
 			:current="swiperCurrent"
 			@transition="transition"
 			@animationfinish="animationfinish"
 		>
-			<swiper-item class="swiper-item" v-for="(page, index) in tabs" :key="index">
-				<load-list
-					:list-api="listApi"
-					:list.sync="list"
-					:list-query.sync="listQuery"
-					v-if="showOrNot(index)"
-					:ref="'loadList' + index"
-				>
-					<u-avatar :src="item.avatar"></u-avatar>
-					<view>{{ item.name }}</view>
-					<view>{{ index }}</view>
-				</load-list>
+			<swiper-item class="swiper-item" v-for="(page, index) in tabList" :key="index">
+				<school-swiper :page="page" v-if="showOrNot(index)"></school-swiper>
 			</swiper-item>
 		</swiper>
 	</view>
 </template>
 
 <script>
-import mixin from '@/components/load-list/load-list.js'
-import loadList from '@/components/load-list'
+import SchoolSwiper from './school-swiper.vue'
 export default {
-	mixins: [mixin],
-	components: { loadList },
+	components: { SchoolSwiper },
 	computed: {
 		showOrNot() {
 			return function(index) {
@@ -44,28 +25,37 @@ export default {
 			}
 		}
 	},
-	props: {
-		tabs: { type: Array, default: _ => [] }
-	},
 	data() {
 		return {
-			list: [],
-			listApi: 'loadList.get',
-			listQuery: {
-				page: 1,
-				limit: 10,
-				'@order': 'createdTime | desc'
-			},
-			height: '400px', // 需要固定swiper的高度
+			tabList: [
+				{
+					name: '推荐'
+				},
+				{
+					name: '备孕'
+				},
+				{
+					name: '孕初期'
+				},
+				{
+					name: '孕中期'
+				},
+				{
+					name: '孕晚期'
+				},
+				{
+					name: '产褥期'
+				},
+				{
+					name: '100天'
+				}
+			],
 			// 因为内部的滑动机制限制，请将tabs组件和swiper组件的current用不同变量赋值
 			current: 0, // tabs组件的current值，表示当前活动的tab选项
 			swiperCurrent: 0 // swiper组件的current值，表示当前那个swiper-item是活动的
 		}
 	},
-	created() {
-		this.height = uni.getSystemInfoSync().windowHeight + 'px'
-		console.log(uni.getSystemInfoSync().windowHeight)
-	},
+	onLoad() {},
 	methods: {
 		// tabs通知swiper切换
 		tabsChange(index) {
@@ -89,21 +79,14 @@ export default {
 </script>
 
 <style lang="scss">
-.swiper-list {
+.container {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
-}
-.swiper-tabs {
-	z-index: 999;
-	position: fixed;
-	top: var(--window-top);
-	left: 0;
+	height: calc(100vh - var(--window-top));
 	width: 100%;
 }
 .swiper-box {
 	flex: 1;
-	margin-top: 80rpx;
 }
 .swiper-item {
 	height: 100%;

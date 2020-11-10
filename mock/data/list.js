@@ -9,7 +9,6 @@ function createList(response) {
 		params = Object.assign(params, getQueryParams(url))
 		params.next = +params.page + 1
 	}
-	console.log(params)
 	return Mock.mock(
 		Object.assign(success, {
 			'data|10': [
