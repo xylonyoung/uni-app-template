@@ -74,13 +74,21 @@
 			"style": {}
 		},
 		{
-			"path": "pages/demo/swiper-list",
+			"path": "pages/demo/mescroll-swiper",
 			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": true
+				"navigationBarTitleText": ""
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/demo/dynaimic-form",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

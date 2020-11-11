@@ -1,5 +1,5 @@
 <template>
-	<load-list :list-api="listApi" :list.sync="list" :list-query.sync="listQuery" ref="loadList">
+	<load-list :list-api="listApi" v-slot="{ list }" :list-query.sync="listQuery" ref="loadList">
 		<view v-for="(item, index) in list" :key="index" class="header">
 			<u-avatar :src="item.avatar"></u-avatar>
 			<view>{{ item.name }}</view>
@@ -15,7 +15,6 @@ export default {
 	components: { loadList },
 	data() {
 		return {
-			list: [],
 			listApi: 'loadList.get',
 			listQuery: {
 				page: 1,
@@ -23,7 +22,7 @@ export default {
 				'@order': 'createdTime | desc'
 			}
 		}
-	},
+	}
 }
 </script>
 <style lang="scss">
