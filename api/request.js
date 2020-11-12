@@ -3,6 +3,9 @@ import { baseURL } from './url.js'
 
 export default function request(method, url, data) {
 	const token = store.getters.token
+	// auto concatenation '/' in fornt of url
+	url = url.indexOf('/') === 0 ? url : `/${url}`
+	// https://uniapp.dcloud.io/api/request/request
 	return new Promise((resolve, reject) => {
 		uni.request({
 			url: baseURL + url,
@@ -17,14 +20,14 @@ export default function request(method, url, data) {
 			success(res) {
 				if (res.data.code === 0) {
 					resolve(res.data)
-				} else if(res.statusCode === 403) {
+				} else if (res.statusCode === 403) {
 					//login again
 					uni.showToast({
 						title: '登录过期，正在跳转登录',
 						icon: 'none',
 						duration: 3000
 					})
-					setTimeout(() => {
+					setTimeout(_ => {
 						uni.removeStorageSync('token')
 						let url = '../login/login'
 						//#ifdef MP-WEIXIN
@@ -49,6 +52,9 @@ export default function request(method, url, data) {
 					title: '服务器繁忙！',
 					icon: 'none'
 				})
+			},
+			complete(res) {
+				uni.hideLoading()
 			}
 		})
 	})

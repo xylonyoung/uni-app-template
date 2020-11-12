@@ -1,8 +1,8 @@
 import request from './request'
 
 const api = {
-	loadList: '/load-list',
-	pagination:'/uni-pagination'
+	loadList: 'load-list',
+	pagination:'uni-pagination'
 }
 class Api {
 	constructor(api) {
@@ -20,10 +20,10 @@ class Api {
 	}
 
 	user = {
-		get: data => this.get(`/api/user`, data),
-		login: data => this.post(`/api-login`, data),
-		wxLogin: data => this.get(`/wechat/mini/login`, data),
-		putProfile: data => this.put(`/api/user-profile`, data)
+		get: data => this.get(`api/user`, data),
+		login: data => this.post(`api-login`, data),
+		wxLogin: data => this.get(`wechat/mini/login`, data),
+		putProfile: data => this.put(`api/user-profile`, data)
 	}
 
 	// base function
