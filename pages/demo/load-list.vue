@@ -9,10 +9,10 @@
 </template>
 <script>
 import mixin from '@/components/load-list/load-list.js'
-import loadList from '@/components/load-list'
+import LoadList from '@/components/load-list'
 export default {
 	mixins: [mixin],
-	components: { loadList },
+	components: { LoadList },
 	data() {
 		return {
 			listApi: 'loadList.get',

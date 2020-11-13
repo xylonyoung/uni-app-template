@@ -29,7 +29,6 @@ export default {
       list:[]
     }
   },
-
   created() {
     this.loadData()
   },
