@@ -627,8 +627,15 @@ export default {
 				icon: this.iconList[Math.floor(Math.random() * this.iconList.length + 1) - 1].name
 			}
 		})
+		this.getIcons()
 	},
 	methods: {
+		getIcons(){
+			const iconCss = require('uview-ui/iconfont.css')
+			const fs = require('fs')
+			fs.readFile('uview-ui/iconfont.css')
+			console.log(iconCss,11111)
+		},
 		navTo(link) {
 			uni.navigateTo({
 				url: `/pages/demo/${link}`
