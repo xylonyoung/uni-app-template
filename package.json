@@ -7,13 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "xylon",
   "license": "ISC",
   "dependencies": {
-    "uview-ui": "^1.7.8"
+    "uview-ui": "^1.8.2"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^5.0.0",
     "mockjs": "^1.1.0"
   }
 }
