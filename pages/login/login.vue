@@ -192,6 +192,4 @@
 </script>
 
 <style>
-	@import url("../../components/watch-login/css/icon.css");
-	@import url("./css/main.css");
 </style>

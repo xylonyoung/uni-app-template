@@ -14,6 +14,7 @@
 		{
 			"path": "pages/login/login",
 			"style": {
+				"navigationBarTitleText": "登录",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
@@ -24,16 +25,13 @@
 		{
 			"path": "pages/login/register",
 			"style": {
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
+				"navigationBarTitleText": "注册"
 			}
 		},
 		{
 			"path": "pages/login/forget",
 			"style": {
+				"navigationBarTitleText": "密码",
 				"app-plus": {
 					"titleNView": {
 						"type": "transparent"
