@@ -1,6 +1,11 @@
 {
+	//插件自动引入 参考：https://uniapp.dcloud.io/collocation/pages?id=easycom
 	"easycom": {
-		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		"autoscan": true,
+		"custom": {
+			"^c-(.*)": "@/components/$1/index.vue",
+			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		}
 	},
 	"pages": [
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
@@ -14,12 +19,7 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录",
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
+				"navigationBarTitleText": "登录"
 			}
 		},
 		{
@@ -31,12 +31,7 @@
 		{
 			"path": "pages/login/forget",
 			"style": {
-				"navigationBarTitleText": "密码",
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
-					}
-				}
+				"navigationBarTitleText": "重置密码"
 			}
 		},
 		{
@@ -68,7 +63,7 @@
 			}
 		},
 		{
-			"path": "pages/demo/uni-pagination",
+			"path": "pages/demo/pagination",
 			"style": {}
 		},
 		{

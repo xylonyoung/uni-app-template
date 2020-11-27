@@ -12,21 +12,19 @@
         margin: 20rpx;
       "
 		>
-			<uni-pagination
+			<c-pagination
 				v-show="listQuery.totalCount > 0"
 				:total="listQuery.totalCount"
 				:pageSize="listQuery.limit"
 				:current="listQuery.page"
 				@change="loadData"
-			></uni-pagination>
+			></c-pagination>
 		</view>
 	</view>
 </template>
 
 <script>
-import uniPagination from '@/components/uni-pagination'
 export default {
-	components: { uniPagination },
 	data() {
 		return {
 			list: [],

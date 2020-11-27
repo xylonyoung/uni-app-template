@@ -1,139 +1,141 @@
 <template>
-	<view class="forget">
-		
-		<view class="content">
-			<!-- 主体 -->
-			<view class="main">
-				<view class="tips">若你忘记了密码，可在此重置新密码。</view>
-				<wInput
-					v-model="phoneData"
-					type="text"
-					maxlength="11"
-					placeholder="请输入手机号码"
-				></wInput>
-				<wInput
-					v-model="passData"
-					type="password"
-					maxlength="11"
-					placeholder="请输入新密码"
-					isShowPass
-				></wInput>
-				
-				<wInput
-					v-model="verCode"
-					type="number"
-					maxlength="4"
-					placeholder="验证码"
-					
-					isShowCode
-					codeText="获取重置码"
-					setTime="30"
-					ref="runCode"
-					@setCode="getVerCode()"
-				></wInput>
-			</view>
-			
-			<wButton 
-				class="wbutton"
-				text="重置密码"
-				:rotate="isRotate" 
-				@click.native="startRePass()"
-			></wButton>
+	<view class="register">
+		<view class="top">
+			<u-image width="100%" mode="widthFix" src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/d60ea2ee9c04e034e8c7e147bdb05731.jpg?thumb=1&w=720&h=360"></u-image>
+		</view>
 
+		<view class="center">
+			<u-form :model="formData" :rules="rules" ref="uForm" :label-width="150">
+				<u-form-item label="手机" prop="phone">
+					<u-input v-model="formData.phone" />
+				</u-form-item>
+				<u-form-item label="新密码" prop="password">
+					<u-input v-model="formData.password" type="password" />
+				</u-form-item>
+				<u-form-item label="验证码" prop="code">
+					<u-input placeholder="请输入验证码" v-model="formData.code"></u-input>
+					<u-button slot="right" type="success" size="mini" @click="getCode">{{codeTips}}</u-button>
+					<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
+				</u-form-item>
+			</u-form>
+		</view>
+
+		<view class="bottom">
+			<u-button type="primary" @click="submit">确定重置</u-button>
 		</view>
 	</view>
 </template>
-
 <script>
-	let _this;
-	import wInput from '../../components/watch-login/watch-input.vue' //input
-	import wButton from '../../components/watch-login/watch-button.vue' //button
 	export default {
 		data() {
 			return {
-				phoneData: "", //电话
-				passData: "", //密码
-				verCode:"", //验证码
-				isRotate: false, //是否加载旋转
+				formData: {},
+				codeTips: '',
+				agreement: false,
+				rules: {
+					phone: [{
+							required: true,
+							message: '请输入手机号',
+							trigger: ['change', 'blur'],
+						},
+						{
+							validator: (rule, value, callback) => {
+								// 调用uView自带的js验证规则，详见：https://www.uviewui.com/js/test.html
+								return this.$u.test.mobile(value);
+							},
+							message: '手机号码不正确',
+							// 触发器可以同时用blur和change，二者之间用英文逗号隔开
+							trigger: ['change', 'blur'],
+						}
+					],
+					code: [{
+							required: true,
+							message: '请输入验证码',
+							trigger: ['change', 'blur'],
+						},
+						{
+							type: 'number',
+							message: '验证码只能为数字',
+							trigger: ['change', 'blur'],
+						}
+					],
+					password: [{
+							required: true,
+							message: '请输入密码',
+							trigger: ['change', 'blur'],
+						},
+						{
+							// 正则不能含有两边的引号
+							pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+\S{5,12}$/,
+							message: '需同时含有字母和数字，长度在6-12之间',
+							trigger: ['change', 'blur'],
+						}
+					],
+				}
 			}
 		},
-		components:{
-			wInput,
-			wButton
-		},
-		mounted() {
-			_this= this;
+		onReady() {
+			this.$refs.uForm.setRules(this.rules);
 		},
 		methods: {
-			getVerCode(){
-				//获取验证码
-				if (_this.phoneData.length != 11) {
-				     uni.showToast({
-				        icon: 'none',
-						position: 'bottom',
-				        title: '手机号不正确'
-				    });
-				    return false;
-				}
-				console.log("获取验证码")
-				this.$refs.runCode.$emit('runCode'); //触发倒计时（一般用于请求成功验证码后调用）
-				uni.showToast({
-				    icon: 'none',
-					position: 'bottom',
-				    title: '模拟倒计时触发'
-				});
-				
-				setTimeout(function(){
-					_this.$refs.runCode.$emit('runCode',0); //假装模拟下需要 终止倒计时
-					uni.showToast({
-					    icon: 'none',
-						position: 'bottom',
-					    title: '模拟倒计时终止'
-					});
-				},3000)
+			navTo(link) {
+				uni.navigateTo({
+					url: `/pages/${link}`
+				})
 			},
-			startRePass() {
-				//重置密码
-				if(this.isRotate){
-					//判断是否加载中，避免重复点击请求
-					return false;
+			submit() {
+				this.$refs.uForm.validate(valid => {
+					if (valid) {
+						if (!this.agreement) return this.$u.toast('请勾选协议');
+						console.log('验证通过');
+					} else {
+						console.log('验证失败');
+					}
+				});
+			},
+			codeChange(text) {
+				this.codeTips = text;
+			},
+			// 获取验证码
+			getCode() {
+				if (this.$refs.uCode.canGetCode) {
+					// 模拟向后端请求验证码
+					uni.showLoading({
+						title: '正在获取验证码'
+					})
+					setTimeout(() => {
+						uni.hideLoading();
+						// 这里此提示会被this.start()方法中的提示覆盖
+						this.$u.toast('验证码已发送');
+						// 通知验证码组件内部开始倒计时
+						this.$refs.uCode.start();
+					}, 2000);
+				} else {
+					this.$u.toast('倒计时结束后再发送');
 				}
-				if (this.phoneData.length != 11) {
-				    uni.showToast({
-				        icon: 'none',
-						position: 'bottom',
-				        title: '手机号不正确'
-				    });
-				    return false;
-				}
-			    if (this.passData.length < 6) {
-			        uni.showToast({
-			            icon: 'none',
-						position: 'bottom',
-			            title: '密码不正确'
-			        });
-			        return false;
-			    }
-				if (this.verCode.length != 4) {
-				    uni.showToast({
-				        icon: 'none',
-						position: 'bottom',
-				        title: '验证码不正确'
-				    });
-				    return false;
-				}
-				console.log("重置密码成功")
-				_this.isRotate=true
-				setTimeout(function(){
-					_this.isRotate=false
-				},3000)
-				
-				
-			}
+			},
+			// 勾选版权协议
+			checkboxChange(e) {
+				this.agreement = e.value;
+			},
 		}
 	}
 </script>
+<style lang="scss">
+	.top {
+		padding-top: 100rpx;
+	}
 
-<style>
+	.center {
+		margin: 50rpx;
+
+		.agreement {
+			display: flex;
+			margin-top: 30rpx;
+		}
+	}
+
+	.bottom {
+		margin: 100rpx;
+	}
 </style>
-

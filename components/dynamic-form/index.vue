@@ -1,7 +1,7 @@
 <template>
 	<u-form :model="formData" ref="uForm">
 		<template v-for="(item, index) in formList">
-			<u-form-item :key="index" :label="item.label" :label-width="labelWidth(item.label)" :required="required">
+			<u-form-item :key="index" :label="item.label" :label-width="labelWidth(item.label)" :required="item.required">
 				<!-- https://uniapp.dcloud.io/component/input -->
 				<u-input v-if="item.type === 'input'" v-model="formData[item.name]" :placeholder="item.placeholder" />
 				<u-input v-else-if="item.type === 'password'" v-model="formData[item.name]" type="password" :placeholder="item.placeholder" />

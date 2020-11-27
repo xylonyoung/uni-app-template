@@ -1,5 +1,5 @@
 <template>
-  <view class="content">
+  <view class="index-container">
     <image class="logo" src="/static/logo.png"></image>
     <view>
       <text class="title">{{ title }}</text>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { iconList } from './icon'
+import { iconList } from '@/temp/icon'
 export default {
   data() {
     return {
@@ -64,7 +64,7 @@ export default {
     }
   }
 }
-.content {
+.index-container {
   display: flex;
   flex-direction: column;
   align-items: center;
