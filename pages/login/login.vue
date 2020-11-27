@@ -16,7 +16,7 @@
 		</view>
 
 		<view class="bottom">
-			<u-button type="primary" @click="submit">确定</u-button>
+			<u-button type="primary" @click="submit">登录</u-button>
 			<view class="account">
 				<navigator url="forget" open-type="navigate">找回密码</navigator>
 				<navigator url="register" open-type="navigate">注册账号</navigator>
