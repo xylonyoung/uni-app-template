@@ -5,7 +5,7 @@
     <!-- data is empty -->
     <u-empty v-if="showEmpty"></u-empty>
     <!-- load more data -->
-    <u-loadmore v-else :status="status" margin-top="20" margin-bottom="20" />
+    <u-loadmore v-else :status="status" margin-top="20"/>
     <!-- back to top -->
     <u-back-top :scroll-top="scrollTop"></u-back-top>
   </view>
@@ -68,7 +68,7 @@ export default {
       this.status =
         endPage - currentPage === 0 || list.length === 0 ? 'nomore' : 'loadmore'
       //update data & interaction
-      this.list = type === 'refresh' ? list : [...this.list, ...list]
+      this.list = type === 'refresh' ? list : this.list.concat(list)
       this.$emit('update:listQuery', listQuery)
       uni.stopPullDownRefresh()
     },

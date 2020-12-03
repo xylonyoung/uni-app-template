@@ -1,3 +1,4 @@
+<!-- https://ext.dcloud.net.cn/plugin?id=343 -->
 <template>
 	<view>
 		<!-- 当设置tab-width,指定每个tab宽度时,则不使用flex布局,改用水平滑动 -->
@@ -11,64 +12,83 @@
 </template>
 
 <script>
-import MescrollItem from './mescroll-swiper/mescroll-swiper-item.vue'
-export default {
-	components: { MescrollItem },
-	data() {
-		return {
-			height: '400px', // 需要固定swiper的高度
-			tabs: [
-				{ name: '全部' },
-				{ name: '奶粉' },
-				{ name: '面膜' },
-				{ name: '图书' },
-				{ name: '果汁' },
-				{ name: '奶瓶' },
-				{ name: '美素' },
-				{ name: '花王' },
-				{ name: '韩蜜' }
-			],
-			tabIndex: 0 // 当前tab的下标
-		}
-	},
-	methods: {
-		tabsChange(index) {
-			this.tabIndex = index
+	import MescrollItem from './mescroll-swiper/mescroll-swiper-item.vue'
+	export default {
+		components: {
+			MescrollItem
 		},
-		// 轮播菜单
-		swiperChange(e) {
-			this.tabIndex = e.detail.current
+		data() {
+			return {
+				height: '400px', // 需要固定swiper的高度
+				tabs: [{
+						name: '全部'
+					},
+					{
+						name: '奶粉'
+					},
+					{
+						name: '面膜'
+					},
+					{
+						name: '图书'
+					},
+					{
+						name: '果汁'
+					},
+					{
+						name: '奶瓶'
+					},
+					{
+						name: '美素'
+					},
+					{
+						name: '花王'
+					},
+					{
+						name: '韩蜜'
+					}
+				],
+				tabIndex: 0 // 当前tab的下标
+			}
+		},
+		methods: {
+			tabsChange(index) {
+				this.tabIndex = index
+			},
+			// 轮播菜单
+			swiperChange(e) {
+				this.tabIndex = e.detail.current
+			}
+			// 获取指定下标的mescroll对象
+			// getMescroll(i){
+			// 	let mescrollItems = this.$refs.mescrollItem;
+			// 	if(mescrollItems){
+			// 		let item = mescrollItems[i]
+			// 		if(item) return item.mescroll
+			// 	}
+			// 	return null
+			// }
+		},
+		onLoad() {
+			// 需要固定swiper的高度
+			this.height = uni.getSystemInfoSync().windowHeight + 'px'
+		},
+		onShow() {
+			// 返回刷新: https://www.mescroll.com/uni.html#note 第二点
+			// if(this.canReset){
+			// 	let curMescroll = this.getMescroll(this.tabIndex)
+			// 	curMescroll && curMescroll.resetUpScroll()
+			// }
+			// this.canReset = true
 		}
-		// 获取指定下标的mescroll对象
-		// getMescroll(i){
-		// 	let mescrollItems = this.$refs.mescrollItem;
-		// 	if(mescrollItems){
-		// 		let item = mescrollItems[i]
-		// 		if(item) return item.mescroll
-		// 	}
-		// 	return null
-		// }
-	},
-	onLoad() {
-		// 需要固定swiper的高度
-		this.height = uni.getSystemInfoSync().windowHeight + 'px'
-	},
-	onShow() {
-		// 返回刷新: https://www.mescroll.com/uni.html#note 第二点
-		// if(this.canReset){
-		// 	let curMescroll = this.getMescroll(this.tabIndex)
-		// 	curMescroll && curMescroll.resetUpScroll()
-		// }
-		// this.canReset = true
 	}
-}
 </script>
 <style lang="scss">
-.top-tabs {
-	z-index: 999;
-	position: fixed;
-	top: var(--window-top);
-	left: 0;
-	width: 100%;
-}
+	.top-tabs {
+		z-index: 999;
+		position: fixed;
+		top: var(--window-top);
+		left: 0;
+		width: 100%;
+	}
 </style>
