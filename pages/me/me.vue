@@ -56,8 +56,8 @@
 </script>
 
 <style lang="scss">
-	@import '@/style/animation.css';
-	@import '@/style/rainbow.scss';
+	@import '@/styles/animation.css';
+	@import '@/styles/rainbow.scss';
 
 	.u-cell {
 		::v-deep & :first-child {

@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/style/rainbow.scss';
+@import '@/styles/rainbow.scss';
 .page {
 	@include rainbow;
 	width: 100%;

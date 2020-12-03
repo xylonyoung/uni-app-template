@@ -11,9 +11,8 @@ if (process.env.NODE_ENV === 'development') {
 	require('./mock')
 }
 
-// global api
+// global api and getValue
 Vue.prototype.$api = $api
-// global getValue
 Vue.prototype.$getValue = getValue
 
 Vue.use(uView)
