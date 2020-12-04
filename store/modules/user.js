@@ -1,6 +1,6 @@
 import $api from '@/api'
 const state = {
-	token: '',
+	token: null,
 	user: {},
 	registered: false
 }
