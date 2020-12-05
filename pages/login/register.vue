@@ -1,5 +1,5 @@
 <template>
-	<view class="register">
+	<view >
 		<view class="top">
 			<u-image width="100%" mode="widthFix" src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/d60ea2ee9c04e034e8c7e147bdb05731.jpg?thumb=1&w=720&h=360"></u-image>
 		</view>
