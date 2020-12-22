@@ -10,7 +10,7 @@
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
-      "path": "pages/index/index",
+      "path": "pages/home/home",
       "style": {
         "navigationBarTitleText": "uni-app",
         "navigationStyle": "custom"
@@ -100,9 +100,9 @@
     "backgroundColor": "",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "iconPath": "static/tab-bar/index.png",
-        "selectedIconPath": "static/tab-bar/index-on.png",
+        "pagePath": "pages/home/home",
+        "iconPath": "static/tab-bar/home.png",
+        "selectedIconPath": "static/tab-bar/home-on.png",
         "text": "首页"
       },
       {

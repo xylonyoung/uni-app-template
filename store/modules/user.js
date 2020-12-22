@@ -18,7 +18,9 @@ const mutations = {
 }
 
 const actions = {
-	async putRecommendedUser({ dispatch }, id) {
+	async putRecommendedUser({
+		dispatch
+	}, id) {
 		await dispatch('updateUser')
 		//be shared user must register on one hour
 		function newUser() {
@@ -50,12 +52,18 @@ const actions = {
 	},
 
 	//update user
-	async updateUser({ commit }) {
+	async updateUser({
+		commit
+	}) {
 		await $api.user.get().then(res => {
-			const { data } = res
+			const {
+				data
+			} = res
 			commit('SET_USER', data)
 			uni.setStorageSync('user', data)
-			const { profile } = data
+			const {
+				profile
+			} = data
 			if (profile && profile.phone) {
 				commit('SET_REGISTERED', true)
 			}
@@ -64,12 +72,18 @@ const actions = {
 	},
 
 	//wechat login
-	wxLogin({ dispatch, commit }) {
+	wxLogin({
+		dispatch,
+		commit
+	}) {
 		const token = uni.getStorageSync('token')
+
 		function getInfo() {
 			uni.getUserInfo({
 				success: res => {
-					const { userInfo } = res
+					const {
+						userInfo
+					} = res
 					$api.user.putProfile(userInfo).then(_ => {
 						dispatch('updateUser')
 					})
@@ -94,7 +108,9 @@ const actions = {
 								code: res.code
 							})
 							.then(response => {
-								const { data } = response
+								const {
+									data
+								} = response
 								commit('SET_TOKEN', data.token)
 								uni.setStorageSync('token', data.token)
 								getInfo()
@@ -122,17 +138,25 @@ const actions = {
 	},
 
 	// user login
-	login({ dispatch, commit }) {
-		const token = uni.getStorageSync('token')
-		commit('SET_TOKEN', token)
-		dispatch('updateUser')
+	login({
+		dispatch,
+		commit
+	}, loginData) {
+		$api.user.login().then(res => {
+			commit('SET_TOKEN', res.data)
+			uni.setStorageSync('token', res.data)
+			dispatch('updateUser')
+			uni.reLaunch({
+				url: '/pages/home/home'
+			})
+		})
 	},
 
 	// user logout
 	logout() {
 		uni.clearStorageSync()
 		uni.reLaunch({
-			url: '../login/login'
+			url: '/pages/login/login'
 		})
 	}
 }

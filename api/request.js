@@ -29,9 +29,9 @@ export default function request(method, url, data) {
 					})
 					setTimeout(_ => {
 						uni.removeStorageSync('token')
-						let url = '../login/login'
+						let url = '/pages/login/login'
 						//#ifdef MP-WEIXIN
-						url = '../index/index'
+						url = '/pages/home/home'
 						//#endif
 						uni.reLaunch({
 							url: url

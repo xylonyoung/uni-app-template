@@ -75,6 +75,7 @@
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
 						if (!this.agreement) return this.$u.toast('请勾选协议');
+						this.$store.dispatch('user/login', this.formData)
 						console.log('验证通过');
 					} else {
 						console.log('验证失败');
