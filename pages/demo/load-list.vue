@@ -13,7 +13,7 @@
 		mixins: [mixin],
 		data() {
 			return {
-				listApi: 'loadList.get',
+				listApi: 'list',
 				listQuery: {
 					page: 1,
 					limit: 10,

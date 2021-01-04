@@ -18,7 +18,7 @@ export default {
     listApi: { type: String, default: '' },
     listQuery: {
       type: Object,
-      default: _ => ({ page: 1, limit: 10 }),
+      default: () => ({ page: 1, limit: 10 }),
     },
   },
   data() {
@@ -51,8 +51,7 @@ export default {
       } else {
         this.status = 'loading'
       }
-
-      await this.$api[listApi[0]][listApi[1]](listQuery).then(res => {
+      await this.$api.get(this.listApi,listQuery).then(res => {
         const { data } = res
         const { paginator } = res
         list = data

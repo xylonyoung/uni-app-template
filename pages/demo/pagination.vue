@@ -37,7 +37,7 @@
 			async loadData() {
 				let listQuery = this.listQuery
 				//load data
-				await this.$api.pagination.get(listQuery).then(res => {
+				await this.$api.get('list', listQuery).then(res => {
 					console.log(res)
 					const {
 						data

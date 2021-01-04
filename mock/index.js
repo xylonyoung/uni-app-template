@@ -20,3 +20,4 @@ configArray.forEach(item => {
     Mock.mock(new RegExp(protocol[0]), protocol[1], target)
   }
 })
+

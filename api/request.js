@@ -1,5 +1,5 @@
-import store from '../store'
-import { baseURL } from './url.js'
+import store from '@/store'
+import { baseURL } from '@/settings'
 
 export default function request(method, url, data) {
 	const token = store.getters.token
