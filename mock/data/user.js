@@ -1,43 +1,38 @@
-import createMock from '../create-mock'
-import { param2Obj } from '../utils'
+import createMock from '../index'
 
 export default {
   'api/user.get': response => user(response),
   'api-login.post': response => login(response),
-  'agreement.get': () => agreement(),
+  'agreement.get': () => agreement()
 }
 
 function user(response) {
-  const { data } = param2Obj(response.url)
-  if (data) {
-    return createMock({}, { code: 403 })
-  } else {
-    return createMock({
-      data: {
-        name: 'Angelina Jolie',
-        avatar: 'https://avatarfiles.alphacoders.com/880/88081.jpg',
-      },
-    })
-  }
+  return createMock({
+    data: {
+      name: 'Angelina Jolie',
+      avatar: 'https://avatarfiles.alphacoders.com/880/88081.jpg'
+    }
+  })
 }
 
 function login(response) {
   const data = JSON.parse(response.body)
+
   if (data.username === 'guest' && data.password === '123456') {
     return createMock({
-      data: 'token',
+      data: 'token'
     })
   } else {
-    return createMock(
-      {},
-      { code: 444, message: 'User is not found or invalid password.' },
-    )
+    return createMock({
+      code: -1,
+      message: 'User is not found or invalid password.'
+    })
   }
 }
 
 function agreement() {
   return createMock({
-    data: { en: agreementEn, zh: agreementZh },
+    data: { en: agreementEn, zh: agreementZh }
   })
 }
 

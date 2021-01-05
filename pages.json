@@ -43,7 +43,13 @@
     },
     {
       "path": "pages/wx-only/wx-only",
-      "style": {}
+      "style": {
+        "app-plus": {
+          "titleNView": {
+            "type": "transparent"
+          }
+        }
+      }
     },
     {
       "path": "pages/share/share",
