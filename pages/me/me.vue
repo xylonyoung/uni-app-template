@@ -1,10 +1,9 @@
 <template>
 	<view class="me-container">
-		<u-cell-group>
-			<template v-for="(item, index) in pages">
-				<u-cell-item :key="index" :icon="item.icon" icon-size="60" :title="item.title" class="animation-slide-bottom"
-				 :style="{ animationDelay: index * 0.5 + 's' }" @click="navTo(item.link)"></u-cell-item>
-			</template>
+		<template v-for="(item, index) in pages">
+			<u-cell-item :key="index" :icon="item.icon" icon-size="60" :title="item.title" class="animation-slide-bottom" :style="{ animationDelay: index * 0.5 + 's' }"
+			 @click="navTo(item.link)"></u-cell-item>
+		</template>
 		</u-cell-group>
 	</view>
 </template>
@@ -20,6 +19,15 @@
 				pages: [],
 				iconList,
 			}
+		},
+		onNavigationBarButtonTap() {
+			uni.switchTab({
+				url: '/pages/home/home'
+			})
+			uni.showTabBar()
+		},
+		onShow() {
+			uni.hideTabBar()
 		},
 		onLoad() {
 			this.pages = [{
@@ -38,9 +46,6 @@
 					link: 'wx-only/wx-only'
 				},
 			]
-
-
-
 		},
 		methods: {
 			getIcon() {

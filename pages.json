@@ -1,122 +1,130 @@
 {
-  //插件自动引入 参考：https://uniapp.dcloud.io/collocation/pages?id=easycom
-  "easycom": {
-    "autoscan": true,
-    "custom": {
-      "^c-(.*)": "@/components/$1/index.vue",
-      "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-    }
-  },
-  "pages": [
-    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-    {
-      "path": "pages/home/home",
-      "style": {
-        "navigationBarTitleText": "uni-app",
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/login/login",
-      "style": {
-        "navigationBarTitleText": "登录"
-      }
-    },
-    {
-      "path": "pages/login/register",
-      "style": {
-        "navigationBarTitleText": "注册"
-      }
-    },
-    {
-      "path": "pages/login/forget",
-      "style": {
-        "navigationBarTitleText": "重置密码"
-      }
-    },
-    {
-      "path": "pages/me/me",
-      "style": {
-        "enablePullDownRefresh": true,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/wx-only/wx-only",
-      "style": {
-        "app-plus": {
-          "titleNView": {
-            "type": "transparent"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/share/share",
-      "style": {
-        "navigationBarTitleText": "分享",
-        "app-plus": {
-          "titleNView": {
-            "type": "transparent"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/demo/load-list",
-      "style": {
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/demo/load-list-swiper",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/demo/pagination",
-      "style": {}
-    },
-    {
-      "path": "pages/demo/mescroll-swiper",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/demo/dynamic-form",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "tabBar": {
-    "color": "#999",
-    "selectedColor": "#ff6700",
-    "borderStyle": "white",
-    "backgroundColor": "",
-    "list": [
-      {
-        "pagePath": "pages/home/home",
-        "iconPath": "static/tab-bar/home.png",
-        "selectedIconPath": "static/tab-bar/home-on.png",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/me/me",
-        "iconPath": "static/tab-bar/me.png",
-        "selectedIconPath": "static/tab-bar/me-on.png",
-        "text": "我的"
-      }
-    ]
-  }
+	//插件自动引入 参考：https://uniapp.dcloud.io/collocation/pages?id=easycom
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^c-(.*)": "@/components/$1/index.vue",
+			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		}
+	},
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/login/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/login/forget",
+			"style": {
+				"navigationBarTitleText": "重置密码"
+			}
+		},
+		{
+			"path": "pages/me/me",
+			"style": {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [{
+							"type": "home",
+							"float": "left"
+						}]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/wx-only/wx-only",
+			"style": {
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/share/share",
+			"style": {
+				"navigationBarTitleText": "分享",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/demo/load-list",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/demo/load-list-swiper",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/demo/pagination",
+			"style": {}
+		},
+		{
+			"path": "pages/demo/mescroll-swiper",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/demo/dynamic-form",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#999",
+		"selectedColor": "#ff6700",
+		"borderStyle": "white",
+		"backgroundColor": "",
+		"list": [{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tab-bar/home.png",
+				"selectedIconPath": "static/tab-bar/home-on.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/me/me",
+				"iconPath": "static/tab-bar/me.png",
+				"selectedIconPath": "static/tab-bar/me-on.png",
+				"text": "我的"
+			}
+		]
+	}
 }
