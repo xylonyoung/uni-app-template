@@ -2,13 +2,6 @@
 import { loginType } from './settings'
 export default {
   onLaunch: function () {
-    console.log('App Launch')
-    try {
-      window.console &&
-        window.console.log &&
-        console.log('%c🌈🌻🌼', 'font-size:50px;')
-    } catch (e) {}
-    //login
     loginType()
   },
   onShow: function () {

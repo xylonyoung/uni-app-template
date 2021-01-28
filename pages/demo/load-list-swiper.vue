@@ -37,7 +37,7 @@
 		},
 		onLoad() {
 			this.tabs.forEach(e => {
-				e.listApi = 'loadList.get'
+				e.listApi = 'list'
 				e.listQuery = {
 					page: 1,
 					limit: 10,
