@@ -1,30 +1,35 @@
 <template>
   <view class="container">
-    <iframe :src="src" frameborder="0" scrolling="no"></iframe>
-    <view class="text">请使用微信打开</view>
+    <img :src="src" />
+    <view class="text">请使用浏览器打开</view>
   </view>
 </template>
 
 <script>
+import steps from './steps'
 export default {
   data() {
     return {
-      src: 'https://weixin.qq.com/'
+      src: steps
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-iframe {
-  width: 100%;
-  height: 1000rpx;
+.container {
+  height: 100vh;
+  background-color: #000;
+}
+img {
+  padding-left: 5%;
+  width: 95%;
 }
 .text {
   margin-top: 50rpx;
   font-size: 70rpx;
   font-weight: bold;
   text-align: center;
-  color:#87de48;
+  color: #87de48;
 }
 </style>

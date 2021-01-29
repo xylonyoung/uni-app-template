@@ -3,10 +3,12 @@
     <u-form-item
       v-for="(item, index) in formList"
       :key="index"
+      :prop="item.name"
       :label="item.label"
       :label-width="autoLabelWidth(item.label)"
       :required="item.required"
     >
+    
       <u-input
         v-if="item.type === 'input'"
         v-model="formData[item.name]"
@@ -118,7 +120,6 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.$refs.uForm.validate(), this.$refs.uForm)
       this.$refs.uForm.validate(valid => {
         if (valid) {
           console.log('验证通过')

@@ -1,4 +1,5 @@
 import $api from '@/api'
+
 const state = {
   token: null,
   user: {},
@@ -18,6 +19,11 @@ const mutations = {
 }
 
 const actions = {
+  needLogin(){
+    if(state.token){
+
+    }
+  },
   async reLogin({ commit }) {
     uni.showToast({
       title: '登录过期，正在跳转登录',
@@ -27,7 +33,7 @@ const actions = {
     setTimeout(() => {
       uni.removeStorageSync('token')
       commit('SET_TOKEN', null)
-      
+
       let url = '/pages/login/login'
       //#ifdef MP-WEIXIN
       url = '/pages/home/home'
@@ -37,6 +43,7 @@ const actions = {
       })
     }, 2000)
   },
+
   async putRecommendedUser({ dispatch }, id) {
     await dispatch('updateUser')
     //be shared user must register on one hour
@@ -68,9 +75,8 @@ const actions = {
     uni.removeStorageSync('shareId')
   },
 
-  //update user
   async updateUser({ commit }) {
-    await $api.user.get().then(res => {
+    await $api.get('/api/user').then(res => {
       const { data } = res
       commit('SET_USER', data)
       uni.setStorageSync('user', data)
@@ -82,15 +88,54 @@ const actions = {
     return new Promise(resolve => resolve())
   },
 
-  //wechat login
-  wxLogin({ dispatch, commit }) {
+  WeChatLogin({ dispatch, commit }) {
     const token = uni.getStorageSync('token')
 
-    function getInfo() {
+    if (token) {
+      setTokenAndInfo(token)
+    } else {
+      login(token => {
+        setTokenAndInfo(token)
+      })
+    }
+
+    function login(callback) {
+      uni.login({
+        provider: 'weixin',
+        success: res => {
+          $api.user
+            .get('/wechat/mini/login', {
+              code: res.code
+            })
+            .then(response => {
+              const { data } = response
+              uni.setStorageSync('token', data.token)
+              callback(data.token)
+            })
+        },
+        fail: err => {
+          console.log('error' + err)
+          uni.showModal({
+            title: '登录失败，请点击确认重新登录',
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                dispatch('WeChatLogin')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      })
+    }
+
+    function setTokenAndInfo(token) {
+      commit('SET_TOKEN', token)
       uni.getUserInfo({
         success: res => {
           const { userInfo } = res
-          $api.user.putProfile(userInfo).then(_ => {
+          $api.user.put('/api/user-profile', userInfo).then(() => {
             dispatch('updateUser')
           })
         },
@@ -100,50 +145,10 @@ const actions = {
         }
       })
     }
-    return new Promise((resolve, reject) => {
-      if (token) {
-        commit('SET_TOKEN', token)
-        getInfo()
-        resolve()
-      } else {
-        uni.login({
-          provider: 'weixin',
-          success: res => {
-            $api.user
-              .wxLogin({
-                code: res.code
-              })
-              .then(response => {
-                const { data } = response
-                commit('SET_TOKEN', data.token)
-                uni.setStorageSync('token', data.token)
-                getInfo()
-                resolve()
-              })
-          },
-          fail: err => {
-            console.log('error' + err)
-            reject(err)
-            uni.showModal({
-              title: '登录失败，请点击确认重新登录',
-              showCancel: false,
-              success: function (res) {
-                if (res.confirm) {
-                  dispatch('wxLogin')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
-          }
-        })
-      }
-    })
   },
 
-  // user login
   login({ dispatch, commit }, loginData) {
-    $api.user.login().then(res => {
+    $api.post('/api-login', loginData).then(res => {
       commit('SET_TOKEN', res.data)
       uni.setStorageSync('token', res.data)
       dispatch('updateUser')
@@ -153,11 +158,11 @@ const actions = {
     })
   },
 
-  // user logout
   logout() {
     uni.clearStorageSync()
+    commit('SET_TOKEN', null)
     uni.reLaunch({
-      url: '/pages/login/login'
+      url: '/pages/home/home'
     })
   }
 }

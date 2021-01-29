@@ -1,8 +1,10 @@
 <script>
-import { loginType } from './settings'
+import { WeChatLogin } from '@/settings'
 export default {
   onLaunch: function () {
-    loginType()
+    if (WeChatLogin) {
+      this.$store.dispatch('user/login')
+    }
   },
   onShow: function () {
     console.log('App Show')
