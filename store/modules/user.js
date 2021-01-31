@@ -88,7 +88,7 @@ const actions = {
     return new Promise(resolve => resolve())
   },
 
-  WeChatLogin({ dispatch, commit }) {
+  weChatLogin({ dispatch, commit }) {
     const token = uni.getStorageSync('token')
 
     if (token) {
@@ -120,7 +120,7 @@ const actions = {
             showCancel: false,
             success: function (res) {
               if (res.confirm) {
-                dispatch('WeChatLogin')
+                dispatch('weChatLogin')
               } else if (res.cancel) {
                 console.log('用户点击取消')
               }

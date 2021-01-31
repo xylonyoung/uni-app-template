@@ -12,7 +12,7 @@
     {
       "path": "pages/home/home",
       "style": {
-        "navigationBarTitleText": "uni-app",
+        "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
       }
     },
