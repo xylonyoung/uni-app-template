@@ -6,15 +6,8 @@
       :rules="rules"
       ref="dForm"
     >
-      <template v-slot:code>
-        <u-input
-          placeholder="请输入验证码"
-          v-model="formData.code"
-          type="text"
-        ></u-input>
-        <u-button slot="right" type="success" size="mini">获取验证码</u-button>
-      </template>
     </c-dynamic-form>
+
     <u-button @click="submit">提交</u-button>
   </view>
 </template>
@@ -22,7 +15,7 @@
 export default {
   data() {
     return {
-      form:{},
+      form: {},
       formData: {},
       formList: [
         {
@@ -203,7 +196,7 @@ export default {
         {
           name: 'code',
           label: '验证码',
-          type: 'slot'
+          type: 'code'
         }
       ],
       rules: {
@@ -215,13 +208,14 @@ export default {
             trigger: ['change', 'blur']
           }
         ]
-      }
+      },
     }
   },
   methods: {
     submit() {
       this.$refs.dForm.submit()
-    }
+    },
+
   }
 }
 </script>

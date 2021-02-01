@@ -8,20 +8,33 @@
       :label-width="autoLabelWidth(item.label)"
       :required="item.required"
     >
-    
       <u-input
         v-if="item.type === 'input'"
         v-model="formData[item.name]"
         v-bind="item.properties"
       />
 
-      <template v-else-if="item.type === 'switch'" class="u-flex">
-        <u-switch
-          v-model="formData[item.name]"
-          v-bind="item.properties"
-          slot="right"
-        />
+      <template v-else-if="item.type === 'code'">
+        <u-input
+          placeholder="请输入验证码"
+          v-model="formData.code"
+          type="text"
+        ></u-input>
+        <u-button slot="right" type="success" size="mini" @click="getCode">
+          {{ codeTips }}
+        </u-button>
+        <u-verification-code
+          :seconds="60"
+          ref="uCode"
+          @change="codeChange"
+        ></u-verification-code>
       </template>
+
+      <u-switch
+        v-else-if="item.type === 'switch'"
+        v-model="formData[item.name]"
+        v-bind="item.properties"
+      />
 
       <template v-else-if="item.type === 'select'">
         <u-input
@@ -112,7 +125,8 @@ export default {
       showFormData: {},
       showSelect: {},
       showCalendar: {},
-      fileList: []
+      fileList: [],
+      codeTips: ''
     }
   },
   mounted() {
@@ -162,6 +176,26 @@ export default {
       } else {
         this.updateData({ [name]: e })
         this.showFormData[name] = `${e.startDate} 至 ${e.endDate}`
+      }
+    },
+    codeChange(text) {
+      this.codeTips = text
+    },
+    getCode() {
+      if (this.$refs.uCode.canGetCode) {
+        // 模拟向后端请求验证码
+        uni.showLoading({
+          title: '正在获取验证码'
+        })
+        setTimeout(() => {
+          uni.hideLoading()
+          // 这里此提示会被this.start()方法中的提示覆盖
+          this.$u.toast('验证码已发送')
+          // 通知验证码组件内部开始倒计时
+          this.$refs.uCode.start()
+        }, 2000)
+      } else {
+        this.$u.toast('倒计时结束后再发送')
       }
     }
   }
