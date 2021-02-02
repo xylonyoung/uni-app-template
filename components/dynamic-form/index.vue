@@ -1,5 +1,11 @@
 <template>
   <u-form :model="formData" ref="uForm">
+    <u-verification-code
+      seconds="60"
+      ref="uCode"
+      @change="codeChange"
+    ></u-verification-code>
+    
     <u-form-item
       v-for="(item, index) in formList"
       :key="index"
@@ -23,11 +29,6 @@
         <u-button slot="right" type="success" size="mini" @click="getCode">
           {{ codeTips }}
         </u-button>
-        <u-verification-code
-          :seconds="60"
-          ref="uCode"
-          @change="codeChange"
-        ></u-verification-code>
       </template>
 
       <u-switch
@@ -181,7 +182,9 @@ export default {
     codeChange(text) {
       this.codeTips = text
     },
+    // 获取验证码
     getCode() {
+      console.log(this.$refs, this.$refs.uCode.canGetCode)
       if (this.$refs.uCode.canGetCode) {
         // 模拟向后端请求验证码
         uni.showLoading({

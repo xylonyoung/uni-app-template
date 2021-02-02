@@ -13,7 +13,7 @@ const mixin = {
 	},
 	computed: {
 		getRef() {
-			if (/^[0-9]*$/.test(this.tabIndex)) {
+			if (/^\d+$/.test(this.tabIndex)) {
 				return this.$refs.loadList[this.tabIndex]
 			} else {
 				return this.$refs.loadList
