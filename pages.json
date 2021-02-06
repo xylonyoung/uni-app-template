@@ -121,18 +121,6 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/order/order",
-        "iconPath": "static/tab-bar/order.png",
-        "selectedIconPath": "static/tab-bar/order-on.png",
-        "text": "下单"
-      },
-      {
-        "pagePath": "pages/my-order/my-order",
-        "iconPath": "static/tab-bar/my-order.png",
-        "selectedIconPath": "static/tab-bar/my-order-on.png",
-        "text": "我的订单"
-      },
-      {
         "pagePath": "pages/me/me",
         "iconPath": "static/tab-bar/me.png",
         "selectedIconPath": "static/tab-bar/me-on.png",
