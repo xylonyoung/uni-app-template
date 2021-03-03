@@ -19,9 +19,8 @@ const mutations = {
 }
 
 const actions = {
-  needLogin(){
-    if(state.token){
-
+  needLogin() {
+    if (state.token) {
     }
   },
   async reLogin({ commit }) {
@@ -90,7 +89,6 @@ const actions = {
 
   weChatLogin({ dispatch, commit }) {
     const token = uni.getStorageSync('token')
-
     if (token) {
       setTokenAndInfo(token)
     } else {
@@ -103,7 +101,7 @@ const actions = {
       uni.login({
         provider: 'weixin',
         success: res => {
-          $api.user
+          $api
             .get('/wechat/mini/login', {
               code: res.code
             })
@@ -135,7 +133,7 @@ const actions = {
       uni.getUserInfo({
         success: res => {
           const { userInfo } = res
-          $api.user.put('/api/user-profile', userInfo).then(() => {
+          $api.put('/api/user-profile', userInfo).then(() => {
             dispatch('updateUser')
           })
         },

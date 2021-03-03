@@ -7,9 +7,7 @@ import { baseURL } from '@/settings'
     require('@/mock')
   }
   try {
-    window.console &&
-      window.console.log &&
-      console.log('%c' + consoleStr, 'font-size:50px;')
+    console && console.log && console.log('%c' + consoleStr, 'font-size:50px;')
   } catch (e) {
     console.log(e)
   }
