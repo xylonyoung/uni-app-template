@@ -26,7 +26,7 @@
   </view>
 </template>
 <script>
-import mixin from '@/components/load-list/load-list.js'
+import mixin from '@/demo/components/load-list/load-list.js'
 export default {
   mixins: [mixin],
   data() {
@@ -36,13 +36,13 @@ export default {
           name: '全部'
         },
         {
-          name: '奶粉'
+          name: '好人'
         },
         {
-          name: '面膜'
+          name: '坏人'
         },
         {
-          name: '图书'
+          name: '不是人'
         }
       ],
       tabIndex: 0

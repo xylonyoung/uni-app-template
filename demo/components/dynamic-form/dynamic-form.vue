@@ -5,7 +5,7 @@
       ref="uCode"
       @change="codeChange"
     ></u-verification-code>
-    
+
     <u-form-item
       v-for="(item, index) in formList"
       :key="index"

@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "get-value": "^3.0.1",
+    "qrcode": "^1.4.4",
     "uview-ui": "^1.8.3"
   },
   "devDependencies": {

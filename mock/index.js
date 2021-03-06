@@ -5,23 +5,24 @@ Mock.setup({
   timeout: '200-600'
 })
 
-let configArray = []
+const configArray = []
 // 使用webpack的require.context()遍历所有mock文件
 const files = require.context('./data', true, /\.js$/)
 files.keys().forEach(key => {
-  if (key === './index.js') return
-  configArray = configArray.concat(files(key).default)
+  configArray.push(files(key).default)
 })
-
 // 注册所有的mock服务
 configArray.forEach(item => {
-  for (let [path, target] of Object.entries(item)) {
-    let protocol = path.split('.')
-    Mock.mock(new RegExp(protocol[0]), protocol[1], target)
+  for (const [path, func] of Object.entries(item)) {
+    const protocol = path.split('.')
+    Mock.mock(new RegExp(protocol[0]), protocol[1], function (options) {
+      return createMock(options, func)
+    })
   }
 })
 
-export default function createMock(data) {
+
+function createMock(options, func) {
   return Mock.mock(
     Object.assign(
       {
@@ -29,7 +30,7 @@ export default function createMock(data) {
         status: 200,
         message: 'success'
       },
-      data
+      func(options)
     )
   )
 }

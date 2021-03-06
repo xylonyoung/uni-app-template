@@ -1,39 +1,35 @@
-import createMock from '../index'
-
 export default {
-  'api/user.get': response => user(response),
+  'api/user.get': response => getUser(response),
   'api-login.post': response => login(response),
-  'agreement.get': () => agreement()
+  'agreement.get': response => agreement(response)
 }
 
-function user(response) {
-  return createMock({
-    data: {
-      name: 'Angelina Jolie',
-      avatar: 'https://avatarfiles.alphacoders.com/880/88081.jpg'
-    }
-  })
+function getUser(response) {
+  return {
+    name: 'Angelina Jolie',
+    avatar: 'https://avatarfiles.alphacoders.com/880/88081.jpg'
+  }
 }
 
 function login(response) {
   const data = JSON.parse(response.body)
-
   if (data.username === 'guest' && data.password === '123456') {
-    return createMock({
+    return {
       data: 'token'
-    })
+    }
   } else {
-    return createMock({
+    return {
       code: -1,
+      status: 403,
       message: 'User is not found or invalid password.'
-    })
+    }
   }
 }
 
 function agreement() {
-  return createMock({
+  return {
     data: { en: agreementEn, zh: agreementZh }
-  })
+  }
 }
 
 const agreementZh = `

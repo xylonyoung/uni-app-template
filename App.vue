@@ -1,10 +1,7 @@
 <script>
-import { weChatLogin } from '@/settings'
 export default {
   onLaunch: function () {
-    if (weChatLogin) {
-      this.$store.dispatch('user/weChatLogin')
-    }
+    console.log('App Launch')
   },
   onShow: function () {
     console.log('App Show')

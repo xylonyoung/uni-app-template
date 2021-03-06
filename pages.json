@@ -3,7 +3,7 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "^c-(.*)": "@/components/$1/index.vue",
+      "^c-(.*)": "@/demo/components/$1/$1.vue",
       "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
     }
   },
@@ -14,24 +14,6 @@
       "style": {
         "navigationBarTitleText": "首页",
         "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/category/category",
-      "style": {
-        "enablePullDownRefresh": true,
-        "navigationBarTitleText": "分类",
-        "app-plus": {
-          "bounce": "none",
-          "titleNView": {
-            "buttons": [
-              {
-                "type": "home",
-                "float": "left"
-              }
-            ]
-          }
-        }
       }
     },
     {
@@ -59,21 +41,28 @@
         "navigationBarTitleText": "重置密码"
       }
     },
-
+    // below for demo
     {
-      "path": "pages/wx-only/wx-only",
+      "path": "demo/pages/demo",
+      "style": {
+        "enablePullDownRefresh": true,
+        "navigationBarTitleText": "demo"
+      }
+    },
+    {
+      "path": "demo/pages/wechat-only",
       "style": {
         "navigationBarTitleText": "请使用微信打开"
       }
     },
     {
-      "path": "pages/wx-no/wx-no",
+      "path": "demo/pages/wechat-cannot",
       "style": {
         "navigationBarTitleText": "请使用浏览器打开"
       }
     },
     {
-      "path": "pages/share/share",
+      "path": "demo/pages/share",
       "style": {
         "navigationBarTitleText": "分享",
         "app-plus": {
@@ -84,35 +73,30 @@
       }
     },
     {
-      "path": "pages/demo/load-list",
+      "path": "demo/pages/load-list",
       "style": {
         "enablePullDownRefresh": true
       }
     },
     {
-      "path": "pages/demo/load-list-swiper",
+      "path": "demo/pages/load-list-swiper",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": true
       }
     },
     {
-      "path": "pages/demo/pagination",
+      "path": "demo/pages/pagination",
       "style": {}
     },
     {
-      "path": "pages/demo/mescroll-swiper",
-      "style": {
-        "navigationBarTitleText": ""
-      }
-    },
-    {
-      "path": "pages/demo/dynamic-form",
+      "path": "demo/pages/dynamic-form",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
       }
     }
+ 
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
@@ -133,10 +117,10 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/category/category",
-        "iconPath": "static/tab-bar/category.png",
-        "selectedIconPath": "static/tab-bar/category-on.png",
-        "text": "分类"
+        "pagePath": "demo/pages/demo",
+        "iconPath": "static/tab-bar/demo.png",
+        "selectedIconPath": "static/tab-bar/demo-on.png",
+        "text": "demo"
       },
       {
         "pagePath": "pages/me/me",

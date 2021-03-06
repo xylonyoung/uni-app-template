@@ -8,7 +8,7 @@
 	</c-load-list>
 </template>
 <script>
-	import mixin from '@/components/load-list/load-list.js'
+	import mixin from '@/demo/components/load-list/load-list.js'
 	export default {
 		mixins: [mixin],
 		data() {
