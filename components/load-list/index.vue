@@ -37,8 +37,7 @@ export default {
       let currentPage,
         endPage,
         list,
-        listQuery = this.listQuery,
-        listApi = this.listApi.split('.')
+        listQuery = this.listQuery
 
       if (type === 'refresh') {
         listQuery.page = 1

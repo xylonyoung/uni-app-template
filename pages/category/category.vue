@@ -88,11 +88,13 @@ export default {
       const files = require.context('../demo', false, /\.vue$/)
       const pages = files.keys().map(key => files(key).default)
       pages.forEach(e => {
+        const title = e.__file.match(/demo\/(\S*).vue/)[1]
         result.push({
-          title: e.__file.match(/demo\/(\S*).vue/)[1],
+          title,
           icon: this.iconList[
             Math.floor(Math.random() * this.iconList.length + 1) - 1
-          ].name
+          ].name,
+          link: `demo/${title}`
         })
       })
       return result.concat(
