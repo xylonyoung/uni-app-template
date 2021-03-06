@@ -20,6 +20,6 @@ export default {
 @import 'uview-ui/index.scss';
 
 page {
-  color: $t-font;
+  color: $c-font;
 }
 </style>

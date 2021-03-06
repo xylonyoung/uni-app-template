@@ -17,6 +17,31 @@
       }
     },
     {
+      "path": "pages/category/category",
+      "style": {
+        "enablePullDownRefresh": true,
+        "navigationBarTitleText": "分类",
+        "app-plus": {
+          "bounce": "none",
+          "titleNView": {
+            "buttons": [
+              {
+                "type": "home",
+                "float": "left"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "path": "pages/me/me",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登录"
@@ -34,31 +59,18 @@
         "navigationBarTitleText": "重置密码"
       }
     },
+
     {
-      "path": "pages/me/me",
+      "path": "pages/wx-only/wx-only",
       "style": {
-        "enablePullDownRefresh": true,
-        "navigationBarTitleText": "我的",
-        "app-plus": {
-          "bounce": "none",
-          "titleNView": {
-            "buttons": [
-              {
-                "type": "home",
-                "float": "left"
-              }
-            ]
-          }
-        }
+        "navigationBarTitleText": "请使用微信打开"
       }
     },
     {
-      "path": "pages/wx-only/wx-only",
-      "style": { "navigationBarTitleText": "请使用微信打开" }
-    },
-    {
       "path": "pages/wx-no/wx-no",
-      "style": { "navigationBarTitleText": "请使用浏览器打开" }
+      "style": {
+        "navigationBarTitleText": "请使用浏览器打开"
+      }
     },
     {
       "path": "pages/share/share",
@@ -119,6 +131,12 @@
         "iconPath": "static/tab-bar/home.png",
         "selectedIconPath": "static/tab-bar/home-on.png",
         "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/tab-bar/category.png",
+        "selectedIconPath": "static/tab-bar/category-on.png",
+        "text": "分类"
       },
       {
         "pagePath": "pages/me/me",
