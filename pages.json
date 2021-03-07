@@ -46,7 +46,7 @@
       "path": "demo/pages/demo",
       "style": {
         "enablePullDownRefresh": true,
-        "navigationBarTitleText": "demo"
+        "navigationStyle":"custom"
       }
     },
     {

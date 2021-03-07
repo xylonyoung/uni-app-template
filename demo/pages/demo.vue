@@ -1,5 +1,10 @@
 <template>
-  <view class="container">
+  <view>
+    <u-navbar
+      height="44"
+      title="demo"
+      :custom-back="backTo"
+    ></u-navbar>
     <u-cell-group>
       <u-cell-item
         v-for="(item, index) in pages"
@@ -20,7 +25,6 @@ import { iconList } from '@/demo/icon'
 export default {
   data() {
     return {
-      title: 'Hello',
       pages: []
     }
   },
@@ -28,12 +32,6 @@ export default {
     setTimeout(() => {
       uni.stopPullDownRefresh()
     }, 999)
-  },
-  onNavigationBarButtonTap() {
-    uni.switchTab({
-      url: '/pages/home/home'
-    })
-    uni.showTabBar()
   },
   onShow() {
     uni.hideTabBar()
@@ -66,6 +64,12 @@ export default {
       uni.navigateTo({
         url: `/demo/pages/${path}`
       })
+    },
+    backTo() {
+      uni.switchTab({
+        url: '/pages/home/home'
+      })
+      uni.showTabBar()
     }
   }
 }
@@ -81,22 +85,5 @@ export default {
       @include rainbow-font;
     }
   }
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.text-area {
-  display: flex;
-  justify-content: center;
-}
-
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
 }
 </style>

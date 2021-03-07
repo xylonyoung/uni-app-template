@@ -6,7 +6,7 @@
       @change="codeChange"
     ></u-verification-code>
 
-    <u-form-item
+    <!-- <u-form-item
       v-for="(item, index) in formList"
       :key="index"
       :prop="item.name"
@@ -101,7 +101,7 @@
       ></u-upload>
 
       <slot v-else-if="item.type === 'slot'" :name="item.name"></slot>
-    </u-form-item>
+    </u-form-item> -->
   </u-form>
 </template>
 
