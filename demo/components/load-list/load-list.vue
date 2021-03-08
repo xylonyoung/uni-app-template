@@ -3,7 +3,7 @@
     <scroll-view
       scroll-y
       class="scroll-view"
-      :style="{ height: height, 'padding-top': `${paddingTop}rpx` }"
+      :style="'height:' + height + ';padding-top:' + paddingTop + 'rpx'"
       scroll-with-animation
       :scroll-top="scrollTop"
       @scrolltolower="scrollToLower"
@@ -81,7 +81,13 @@ export default {
 
       this.status = 'loading'
 
-      const res = await this.$api.get(this.listApi, listQuery)
+      const res = await this.$api.get(this.listApi, listQuery).catch(() => {
+        if (this.list.length === 0) {
+          this.showEmpty = true
+        }
+      })
+      
+      if (!res) return
 
       const list = res.data
       const { paginator } = res
