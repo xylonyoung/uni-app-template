@@ -73,6 +73,12 @@
       }
     },
     {
+      "path": "demo/pages/left-tabs",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "demo/pages/load-list",
       "style": {
         "enablePullDownRefresh": true

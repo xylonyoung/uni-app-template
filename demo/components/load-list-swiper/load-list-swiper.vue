@@ -3,8 +3,8 @@
 		<u-tabs class="top-tabs" ref="uTabs" :list="tabs" :current="tabIndex" @change="tabsChange"></u-tabs>
 		<swiper :style="{ height: height }" :current="tabIndex" @change="swiperChange">
 			<swiper-item v-for="(tab, curIndex) in tabs" :key="curIndex">
-				<c-load-list :list-api="tab.listApi" :list-query.sync="tab.listQuery" v-slot="{ list }" ref="loadList" :auto="curIndex === tabIndex"
-				 padding-top="80">
+				<c-load-list :list-api="tab.listApi" :list-query.sync="tab.listQuery" v-slot="{ list }" ref="loadList"
+					:auto="curIndex === tabIndex" padding-top="80">
 					<slot :list="list"></slot>
 				</c-load-list>
 			</swiper-item>
