@@ -14,11 +14,11 @@ async function initialization() {
   if (needMock) {
     consoleStr += 'mock'
     //#ifndef MP-WEIXIN
-    require('@/mock')
+    import('@/mock')
     //#endif
     //#ifdef MP-WEIXIN
-    await import('@/mock/wechat-mock').then(res => {
-      $api = res.default
+    await import('@/mock/wechat-mock').then(module => {
+      $api = module.default
     })
     //#endif
   }

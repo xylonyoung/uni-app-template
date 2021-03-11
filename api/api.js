@@ -16,7 +16,6 @@ class Api {
   }
   request(method, url, data) {
     const token = store.getters.token
-    // https://uniapp.dcloud.io/api/request/request
     return new Promise((resolve, reject) => {
       uni.request({
         url: baseURL + url,
@@ -28,31 +27,25 @@ class Api {
         method: method,
         dataType: 'json',
         responseType: 'text',
-        success(res) {
-          if (res.data.code === 0) {
-            resolve(res.data)
-          } else {
-            reject(res.data)
-            uni.showToast({
-              title: res.data.message || res.data,
-              icon: 'none'
-            })
-          }
-        },
-        fail(err) {
-          console.log('error' + err)
-          if (err.status === 403) {
-            //login again
-            store.dispatch('user/reLogin')
-          } else {
-            uni.showToast({
-              title: '服务器繁忙！',
-              icon: 'none'
-            })
-          }
+        complete: res => {
+          this.responseProcess(res, resolve, reject)
         }
       })
     })
+  }
+  responseProcess(res, resolve, reject) {
+    if (res.status === 403) {
+      store.dispatch('user/reLogin')
+    } else if (res.data && res.data.code === 0) {
+      resolve(res.data)
+    } else {
+      reject(res.data)
+      console.log(res)
+      uni.showToast({
+        title: '服务器繁忙！',
+        icon: 'none'
+      })
+    }
   }
 }
 

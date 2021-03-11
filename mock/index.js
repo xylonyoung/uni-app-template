@@ -1,18 +1,18 @@
-const Mock = require('mockjs')
+import Mock from 'mockjs'
 
 // 设置拦截ajax请求的相应时间
 Mock.setup({
   timeout: '200-600'
 })
 
-const configArray = []
+const filesList = []
 // 使用webpack的require.context()遍历所有mock文件
 const files = require.context('./data', true, /\.js$/)
 files.keys().forEach(key => {
-  configArray.push(files(key).default)
+  filesList.push(files(key).default)
 })
 // 注册所有的mock服务
-configArray.forEach(item => {
+filesList.forEach(item => {
   for (const [path, func] of Object.entries(item)) {
     const protocol = path.split('.')
     Mock.mock(new RegExp(protocol[0]), protocol[1], function (options) {
@@ -20,7 +20,6 @@ configArray.forEach(item => {
     })
   }
 })
-
 
 function createMock(options, func) {
   return Mock.mock(

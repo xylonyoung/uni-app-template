@@ -14,8 +14,8 @@ class MockApi {
     filesList.forEach(e => {
       for (const [path, func] of Object.entries(e)) {
         const protocol = path.split('.')
-        let url = protocol[0]
-        let method = protocol[1].toUpperCase()
+        const url = protocol[0]
+        const method = protocol[1].toUpperCase()
         this.mockData[method] = Object.assign(this.mockData, {
           [url]: func
         })
