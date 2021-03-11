@@ -16,8 +16,6 @@ class Api {
   }
   request(method, url, data) {
     const token = store.getters.token
-    // auto concatenation '/' in fornt of url
-    url = url.indexOf('/') === 0 ? url : `/${url}`
     // https://uniapp.dcloud.io/api/request/request
     return new Promise((resolve, reject) => {
       uni.request({
