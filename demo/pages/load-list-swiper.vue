@@ -1,10 +1,10 @@
 <template>
   <view>
     <c-load-list-swiper
+      ref="swiper"
       v-slot="{ list }"
       :tabs.sync="tabs"
       :tabIndex.sync="tabIndex"
-      ref="swiper"
     >
       <view v-for="(item, index) in list" :key="index" class="header">
         <u-avatar :src="item.avatar"></u-avatar>

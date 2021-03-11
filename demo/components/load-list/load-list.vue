@@ -11,7 +11,9 @@
     >
       <slot :list="list"></slot>
 
-      <u-empty v-if="showEmpty"></u-empty>
+      <view v-if="showEmpty" style="height: 300rpx">
+        <u-empty></u-empty>
+      </view>
 
       <u-loadmore v-else :status="status" style="padding: 20rpx" />
 
@@ -38,7 +40,8 @@ export default {
       default: () => ({ page: 1, limit: 10 })
     },
     auto: { type: Boolean, default: true },
-    paddingTop: { type: [String, Number], default: 0 }
+    paddingTop: { type: [String, Number], default: 0 },
+    heightFix: { type: [String, Number], default: 0 }
   },
   data() {
     return {
@@ -58,7 +61,11 @@ export default {
     }
   },
   created() {
-    this.height = uni.getSystemInfoSync().windowHeight + 'px'
+    if (this.heightFix !== 0) {
+      this.height = `${this.heightFix}px`
+    } else {
+      this.height = `${uni.getSystemInfoSync().windowHeight}px`
+    }
   },
   methods: {
     backToTop() {
@@ -77,7 +84,7 @@ export default {
         listQuery.page = 1
         this.scrollTop = 0
         this.showEmpty = false
-      } else if (this.status === 'nomore') return
+      } else if (this.status === 'nomore' || !this.listApi) return
 
       this.status = 'loading'
 
@@ -86,7 +93,7 @@ export default {
           this.showEmpty = true
         }
       })
-      
+
       if (!res) return
 
       const list = res.data
@@ -106,6 +113,7 @@ export default {
       //update data & interaction
       this.list = type === 'refresh' ? list : this.list.concat(list)
       this.$emit('update:listQuery', listQuery)
+      this.$emit('change', { list: this.list, listQuery })
       uni.stopPullDownRefresh()
     }
   }
