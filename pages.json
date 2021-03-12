@@ -80,12 +80,6 @@
     },
     {
       "path": "demo/pages/load-list-swiper"
-    },
-    {
-      "path": "demo/pages/pagination"
-    },
-    {
-      "path": "demo/pages/dynamic-form"
     }
   ],
   "globalStyle": {
