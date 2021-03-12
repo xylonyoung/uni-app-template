@@ -46,7 +46,7 @@
       "path": "demo/pages/demo",
       "style": {
         "enablePullDownRefresh": true,
-        "navigationStyle":"custom"
+        "navigationStyle": "custom"
       }
     },
     {
@@ -73,36 +73,20 @@
       }
     },
     {
-      "path": "demo/pages/left-tabs",
-      "style": {
-        "enablePullDownRefresh": true
-      }
+      "path": "demo/pages/left-tabs"
     },
     {
-      "path": "demo/pages/load-list",
-      "style": {
-        "enablePullDownRefresh": true
-      }
+      "path": "demo/pages/load-list"
     },
     {
-      "path": "demo/pages/load-list-swiper",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": true
-      }
+      "path": "demo/pages/load-list-swiper"
     },
     {
-      "path": "demo/pages/pagination",
-      "style": {}
+      "path": "demo/pages/pagination"
     },
     {
-      "path": "demo/pages/dynamic-form",
-      "style": {
-        "navigationBarTitleText": "",
-        "enablePullDownRefresh": false
-      }
+      "path": "demo/pages/dynamic-form"
     }
- 
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

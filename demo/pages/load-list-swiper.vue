@@ -1,32 +1,44 @@
 <template>
   <view>
-    <c-load-list-swiper
-      ref="swiper"
-      v-slot="{ list }"
-      :tabs.sync="tabs"
-      :tabIndex.sync="tabIndex"
+    <u-tabs
+      class="tab-top"
+      ref="uTabs"
+      :list="tabList"
+      :current="tabIndex"
+      @change="tabsChange"
+    ></u-tabs>
+    <swiper
+      :style="{ height: height }"
+      :current="tabIndex"
+      @change="swiperChange"
     >
-      <view v-for="(item, index) in list" :key="index" class="header">
-        <u-avatar :src="item.avatar"></u-avatar>
-        <view>{{ item.name }}</view>
-        <view>{{ index }}</view>
-      </view>
-    </c-load-list-swiper>
+      <swiper-item v-for="(tab, curIndex) in tabList" :key="curIndex">
+        <c-load-list
+          ref="loadList"
+          :list.sync="tab.list"
+          :list-api="tab.listApi"
+          :list-query.sync="tab.listQuery"
+          padding-top="80"
+          :auto="curIndex === tabIndex"
+        >
+          <view v-for="(item, index) in tab.list" :key="index" class="person">
+            <u-avatar :src="item.avatar"></u-avatar>
+            <view>{{ item.name }}</view>
+            <view>{{ index }}</view>
+          </view>
+        </c-load-list>
+      </swiper-item>
+    </swiper>
   </view>
 </template>
 <script>
 export default {
   data() {
-    return {
-      tabs: [],
-      tabIndex: 0
-    }
-  },
-  onPullDownRefresh() {
-    this.$refs.swiper.onRefresh()
+    return { tabList: [], tabIndex: 0, height: '' }
   },
   onLoad() {
-    const tabs = [
+    this.calcHeight()
+    const tabList = [
       {
         name: '全部'
       },
@@ -40,7 +52,7 @@ export default {
         name: '不是人'
       }
     ]
-    this.tabs = tabs.map(e => {
+    this.tabList = tabList.map(e => {
       return {
         name: e.name,
         list: [],
@@ -52,11 +64,32 @@ export default {
         }
       }
     })
+  },
+  onPullDownRefresh() {
+    this.$refs.loadList[this.tabIndex].loadData('refresh')
+  },
+  methods: {
+    tabsChange(index) {
+      if (index === this.currentIndex) return
+      this.tabIndex = index
+    },
+    swiperChange(e) {
+      this.tabIndex = e.detail.current
+    },
+    calcHeight() {
+      this.height = `${uni.getSystemInfoSync().windowHeight}px`
+    }
   }
 }
 </script>
 <style lang="scss">
-.header {
+.tab-top {
+  position: fixed;
+  width: 100%;
+  top: var(--window-top);
+  z-index: 999;
+}
+.person {
   text-align: center;
   padding: 20rpx;
   border-bottom: 1rpx solid #eee;

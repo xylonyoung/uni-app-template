@@ -1,11 +1,11 @@
 <template>
   <c-load-list
-    :list-api="listApi"
-    v-slot="{ list }"
-    :list-query.sync="listQuery"
     ref="loadList"
+    :list.sync="list"
+    :list-api="listApi"
+    :list-query.sync="listQuery"
   >
-    <view v-for="(item, index) in list" :key="index" class="header">
+    <view v-for="(item, index) in list" :key="index" class="person">
       <u-avatar :src="item.avatar"></u-avatar>
       <view>{{ item.name }}</view>
       <view>{{ index }}</view>
@@ -16,6 +16,7 @@
 export default {
   data() {
     return {
+      list: [],
       listApi: 'list',
       listQuery: {
         page: 1,
@@ -23,14 +24,11 @@ export default {
         '@order': 'createdTime | desc'
       }
     }
-  },
-  onPullDownRefresh() {
-    this.$refs.loadList.loadData('refresh')
   }
 }
 </script>
 <style lang="scss">
-.header {
+.person {
   text-align: center;
   padding: 20rpx;
   border-bottom: 1rpx solid #eee;

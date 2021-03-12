@@ -1,35 +1,31 @@
 <template>
   <view>
-    <u-navbar height="44" title="课程分类" :custom-back="backTo"></u-navbar>
-
     <view style="padding: 20rpx">
       <u-search placeholder="课程" shape="square" v-model="keyword"></u-search>
     </view>
 
     <c-left-tabs
-      v-slot="{ list }"
-      :tabs="tabs"
-      :tab-index.sync="tabIndex"
       ref="leftTabs"
-      height-fix="52"
+      :tab-list="tabList"
+      :tab-index.sync="tabIndex"
+      :height="height"
     >
-      <view class="cover">
-        <u-image
-          height="100%"
-          src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1552566103,2701508936&fm=26&gp=0.jpg"
-        ></u-image>
-      </view>
-      <view class="items">
-        <view v-for="(item, index) in list" :key="index">
-          <u-image
-            height="150rpx"
-            mode="aspectFit"
-            src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1552566103,2701508936&fm=26&gp=0.jpg"
-          ></u-image>
-          <view class="title">
-            {{ item.name }}
+      <view v-for="(tab, curIndex) in tabList" :key="curIndex">
+        <c-load-list
+          ref="loadList"
+          :list.sync="tab.list"
+          :list-api="tab.listApi"
+          :list-query.sync="tab.listQuery"
+          :auto="curIndex === tabIndex"
+          :height="height"
+          v-show="curIndex === tabIndex"
+        >
+          <view v-for="(item, index) in tab.list" :key="index" class="person">
+            <u-avatar :src="item.avatar"></u-avatar>
+            <view>{{ item.name }}</view>
+            <view>{{ index }}</view>
           </view>
-        </view>
+        </c-load-list>
       </view>
     </c-left-tabs>
   </view>
@@ -37,72 +33,52 @@
 <script>
 export default {
   data() {
-    return {
-      keyword: '',
-      tabIndex: 0,
-      tabs: [
-        { name: '测试用用' },
-        { name: '测试用用测试用用测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' },
-        { name: '测试用用' }
-      ],
-      height: '100%'
-    }
-  },
-
-  onPullDownRefresh() {
-    this.$refs.leftTabs.onRefresh()
-  },
-  onNavigationBarButtonTap() {
-    uni.switchTab({
-      url: '/pages/home/home'
-    })
-    uni.showTabBar()
+    return { tabList: [], tabIndex: 0, height: '' }
   },
   onLoad() {
-    this.height = `${uni.getSystemInfoSync().windowHeight - 52}px`
-  },
-  onShow() {
-    uni.hideTabBar()
-    console.log(uni.getSystemInfoSync(), '00000000', this.height)
+    this.calcHeight()
+    const tabList = [
+      {
+        name: '全部'
+      },
+      {
+        name: '好人'
+      },
+      {
+        name: '坏人'
+      },
+      {
+        name: '不是人'
+      }
+    ]
+    this.tabList = tabList.map(e => {
+      return {
+        name: e.name,
+        list: [],
+        listApi: 'list',
+        listQuery: {
+          page: 1,
+          limit: 10,
+          '@order': 'createdTime | desc'
+        }
+      }
+    })
+    console.log(this.heightFix)
   },
   methods: {
-    backTo() {
-      uni.switchTab({
-        url: '/pages/home/home'
-      })
-      uni.showTabBar()
+    calcHeight() {
+      this.height = `${uni.getSystemInfoSync().windowHeight - 52}px`
+      // below is use custom navigationBar
+      // const { screenHeight, safeArea } = uni.getSystemInfoSync()
+      // this.heightFix = screenHeight - safeArea.top - navigationBarHeight
     }
   }
 }
 </script>
 <style lang='scss' scoped>
-.left-tabs {
-  .cover {
-    width: 100%;
-    height: 300rpx;
-    padding: 20rpx;
-  }
-  .items {
-    width: 100%;
-    padding: 20rpx;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20rpx;
-    .title {
-      margin-top: 10rpx;
-    }
-  }
+.person {
+  text-align: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
 }
 </style>

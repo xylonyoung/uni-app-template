@@ -1,23 +1,30 @@
 <template>
   <view class="page">
-    <u-image width="500rpx" height="500rpx" :src="image"></u-image>
+    <canvas canvas-id="qrcode" style="width: 250px; height: 250px" />
   </view>
 </template>
 
 <script>
-import QRCode from 'qrcode'
+import uQRCode from '@/demo/utils/uqrcode.js'
 export default {
   data() {
-    return { image: '' }
+    return {}
   },
   onLoad(options) {
-    const url = `${location.origin}/pages/login/register?shareId=${options.id}`
-    QRCode.toDataURL(url, { errorCorrectionLevel: 'H' })
-      .then(res => {
-        this.image = res
+    uQRCode
+      .make({
+        canvasId: 'qrcode',
+        componentInstance: this,
+        text: 'https://www.bing.com',
+        size: 250,
+        margin: 10,
+        backgroundColor: '#ffffff',
+        foregroundColor: '#000000',
+        fileType: 'jpg',
+        errorCorrectLevel: uQRCode.errorCorrectLevel.H
       })
-      .catch(err => {
-        console.error(err)
+      .then(res => {
+        console.log(res)
       })
   }
 }
