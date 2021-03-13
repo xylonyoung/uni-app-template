@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/rainbow.scss';
+@import '@/demo/styles/rainbow.scss';
 
 .page {
   @include rainbow;

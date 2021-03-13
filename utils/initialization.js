@@ -7,10 +7,13 @@ import { baseURL } from '@/settings'
 initialization()
 
 async function initialization() {
+  store.dispatch('user/getToken')
+
   let consoleStr = '🌈🌻🌼'
   let $api = api
   const needMock =
     process.env.NODE_ENV === 'development' && baseURL === 'https://mockjs'
+
   if (needMock) {
     consoleStr += 'mock'
     //#ifndef MP-WEIXIN
@@ -30,7 +33,7 @@ async function initialization() {
       Vue.prototype.$getValue = getValue
     }
   })
-  
+
   //#ifdef MP-WEIXIN
   if (!needMock) {
     store.dispatch('user/weChatLogin')
