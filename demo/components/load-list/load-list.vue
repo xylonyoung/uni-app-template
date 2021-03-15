@@ -1,39 +1,42 @@
 <template>
-  <view class="load-list-container">
+  <view>
     <scroll-view
       scroll-y
       class="scroll-view"
       :style="'height:' + height + ';padding-top:' + paddingTop + 'rpx'"
-      scroll-with-animation
       :scroll-top="scrollTop"
       @scrolltolower="scrollToLower"
       @scroll="scroll"
+      refresher-enabled
+      :refresher-triggered="refresh"
+      @refresherrefresh="loadData('refresh')"
     >
-      <slot :list="list"></slot>
+      <slot :list="list" />
 
       <view v-if="showEmpty" style="height: 300rpx">
-        <u-empty></u-empty>
+        <u-empty />
       </view>
 
       <u-loadmore v-else :status="status" style="padding: 20rpx" />
-
-      <transition name="back">
-        <view class="back-to-top" v-if="scrollTop > 300">
-          <u-icon
-            @click="backToTop"
-            size="60"
-            color="rgba(255,255,255,0.8)"
-            name="arrow-upward"
-          ></u-icon>
-        </view>
-      </transition>
     </scroll-view>
+
+    <transition name="back">
+      <view class="back-to-top" v-if="scrollTop > 300">
+        <u-icon
+          @click="backToTop"
+          size="60"
+          color="rgba(255,255,255,0.8)"
+          name="arrow-upward"
+        />
+      </view>
+    </transition>
   </view>
 </template>
 
 <script>
 export default {
   props: {
+    list: { type: Array, default: () => [] },
     listApi: { type: String, default: '' },
     listQuery: {
       type: Object,
@@ -41,15 +44,17 @@ export default {
     },
     auto: { type: Boolean, default: true },
     paddingTop: { type: [String, Number], default: 0 },
-    heightFix: { type: [String, Number], default: 0 }
+    height: {
+      type: String,
+      default: () => `${uni.getSystemInfoSync().windowHeight}px`
+    }
   },
   data() {
     return {
-      height: '399px',
       scrollTop: 0,
       status: 'loading',
       showEmpty: false,
-      list: []
+      refresh: false
     }
   },
   watch: {
@@ -58,13 +63,6 @@ export default {
         if (val && this.list.length === 0) this.loadData()
       },
       immediate: true
-    }
-  },
-  created() {
-    if (this.heightFix !== 0) {
-      this.height = `${this.heightFix}px`
-    } else {
-      this.height = `${uni.getSystemInfoSync().windowHeight}px`
     }
   },
   methods: {
@@ -84,6 +82,7 @@ export default {
         listQuery.page = 1
         this.scrollTop = 0
         this.showEmpty = false
+        this.refresh = true
       } else if (this.status === 'nomore' || !this.listApi) return
 
       this.status = 'loading'
@@ -96,8 +95,7 @@ export default {
 
       if (!res) return
 
-      const list = res.data
-      const { paginator } = res
+      const { paginator, data } = res
       let currentPage, endPage
 
       if (paginator) {
@@ -109,21 +107,19 @@ export default {
       }
       //have next page or not?
       this.status =
-        endPage - currentPage === 0 || list.length === 0 ? 'nomore' : 'loadmore'
+        endPage - currentPage === 0 || data.length === 0 ? 'nomore' : 'loadmore'
       //update data & interaction
-      this.list = type === 'refresh' ? list : this.list.concat(list)
+      const list = type === 'refresh' ? data : this.list.concat(data)
+      this.$emit('update:list', list)
       this.$emit('update:listQuery', listQuery)
-      this.$emit('change', { list: this.list, listQuery })
-      uni.stopPullDownRefresh()
+      this.$emit('change', { list, listQuery })
+      this.refresh = false
     }
   }
 }
 </script>
 
 <style lang="scss">
-.load-list-container {
-  height: 100%;
-}
 .scroll-view {
   box-sizing: border-box;
 }
@@ -133,7 +129,7 @@ export default {
   position: fixed;
   right: 50rpx;
   bottom: 80rpx;
-  z-index: 9;
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -16,10 +16,11 @@ function getList(response) {
   return createList(response, list)
 }
 function createList(response, list) {
-  let paginator = { page: 1, next: 2, endPage: 3, totalCount: 30 }
-  if (response) {
-    paginator = Object.assign(paginator, response.body)
-    paginator.next = +paginator.page + 1
+  const paginator = {
+    current: response.body.page,
+    next: response.body.page + 1,
+    endPage: 3,
+    totalCount: 30
   }
-  return Object.assign(list, paginator)
+  return Object.assign(list, { paginator })
 }

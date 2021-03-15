@@ -12,12 +12,12 @@ class MockApi {
       filesList.push(files(key).default)
     })
     filesList.forEach(e => {
-      for (const [path, func] of Object.entries(e)) {
-        const protocol = path.split('.')
-        const url = protocol[0]
-        const method = protocol[1].toUpperCase()
+      for (const [key, value] of Object.entries(e)) {
+        const path = key.split('.')
+        const url = path[0]
+        const method = path[1].toUpperCase()
         this.mockData[method] = Object.assign(this.mockData, {
-          [url]: func
+          [url]: value
         })
       }
     })
@@ -36,7 +36,7 @@ class MockApi {
     return this.request('GET', url, data)
   }
   request(method, url, data) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const name = url.replace('/', '')
       resolve(this.createMock({ body: data }, this.mockData[method][name]))
     })

@@ -76,8 +76,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/animation.css';
-@import '@/styles/rainbow.scss';
+@import '@/demo/styles/animation.css';
+@import '@/demo/styles/rainbow.scss';
 
 .u-cell {
   ::v-deep & :first-child {
