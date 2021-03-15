@@ -74,6 +74,7 @@ export default {
     },
     scroll(e) {
       this.scrollTop = e.detail.scrollTop
+      this.$emit('scroll', e)
     },
     async loadData(type) {
       const listQuery = Object.assign({}, this.listQuery)
