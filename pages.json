@@ -89,7 +89,7 @@
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
-    "color": "#999",
+    "color": "#999", //icon color #444
     "selectedColor": "#ff6700",
     "borderStyle": "white",
     "backgroundColor": "",

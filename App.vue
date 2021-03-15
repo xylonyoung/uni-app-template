@@ -17,6 +17,6 @@ export default {
 @import 'uview-ui/index.scss';
 
 page {
-  color: $c-font;
+  color: $t-font-color;
 }
 </style>

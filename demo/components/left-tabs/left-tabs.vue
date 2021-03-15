@@ -58,11 +58,6 @@ export default {
     clickTab(index) {
       if (index === this.tabIndex) return
       this.$emit('update:tabIndex', index)
-    },
-    calcHeight() {
-      const { screenHeight, safeArea } = uni.getSystemInfoSync()
-      // 44 and 52 is the height of u-navbar and u-search.
-      this.heightFix = screenHeight - safeArea.top - 44 - 52
     }
   }
 }
