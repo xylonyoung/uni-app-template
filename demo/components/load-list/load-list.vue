@@ -3,10 +3,12 @@
     <scroll-view
       scroll-y
       class="scroll-view"
-      :style="'height:' + height + ';padding-top:' + paddingTop + 'rpx'"
+      :style="'height:' + height + ';padding-top:' + paddingTop"
       :scroll-top="scrollTop"
       @scrolltolower="scrollToLower"
       @scroll="scroll"
+      scroll-with-animation
+      scroll-anchoring
       refresher-enabled
       :refresher-triggered="refresh"
       @refresherrefresh="loadData('refresh')"
@@ -21,7 +23,7 @@
     </scroll-view>
 
     <transition name="back">
-      <view class="back-to-top" v-if="scrollTop > 300">
+      <view class="back-to-top" v-show="distanceOfTop > 300">
         <u-icon
           @click="backToTop"
           size="60"
@@ -43,7 +45,7 @@ export default {
       default: () => ({ page: 1, limit: 10 })
     },
     auto: { type: Boolean, default: true },
-    paddingTop: { type: [String, Number], default: 0 },
+    paddingTop: { type: String, default: '' },
     height: {
       type: String,
       default: () => `${uni.getSystemInfoSync().windowHeight}px`
@@ -52,6 +54,7 @@ export default {
   data() {
     return {
       scrollTop: 0,
+      distanceOfTop: 0,
       status: 'loading',
       showEmpty: false,
       refresh: false
@@ -67,21 +70,26 @@ export default {
   },
   methods: {
     backToTop() {
-      this.scrollTop = 0
+      this.distanceOfTop = 0
+      this.setScrollTop()
     },
     scrollToLower() {
       this.loadData()
     },
     scroll(e) {
-      this.scrollTop = e.detail.scrollTop
+      this.distanceOfTop = e.detail.scrollTop
       this.$emit('scroll', e)
+    },
+    setScrollTop() {
+      // scroll-top reaction need value change
+      this.scrollTop = this.scrollTop === 0 ? 1 : 0
     },
     async loadData(type) {
       const listQuery = Object.assign({}, this.listQuery)
 
       if (type === 'refresh') {
         listQuery.page = 1
-        this.scrollTop = 0
+        this.setScrollTop()
         this.showEmpty = false
         this.refresh = true
       } else if (this.status === 'nomore' || !this.listApi) return
@@ -137,6 +145,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 100%;
 }
+
 .back-enter-active {
   transition: opacity 0.5s;
 }

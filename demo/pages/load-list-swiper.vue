@@ -1,14 +1,24 @@
 <template>
   <view>
+    <view class="search">
+      <u-icon name="list-dot" size="50"></u-icon>
+      <view class="search-bar">
+        <u-search placeholder="请输入搜索的商品" v-model="keyword"></u-search>
+      </view>
+    </view>
     <u-tabs
-      class="tab-top"
+      class="tabs"
       ref="uTabs"
       :list="tabList"
       :current="tabIndex"
+      :is-scroll="false"
       @change="tabsChange"
+      duration="0.1"
+      v-show="showTabs"
     ></u-tabs>
     <swiper
-      :style="{ height: height }"
+      class="swiper"
+      :style="'height:' + height"
       :current="tabIndex"
       @change="swiperChange"
     >
@@ -18,8 +28,11 @@
           :list.sync="tab.list"
           :list-api="tab.listApi"
           :list-query.sync="tab.listQuery"
-          padding-top="80"
+          @scroll="scroll"
           :auto="curIndex === tabIndex"
+          :v-show="curIndex === tabIndex"
+          :padding-top="paddingTop"
+          :height="height"
         >
           <view v-for="(item, index) in tab.list" :key="index" class="person">
             <u-avatar :src="item.avatar"></u-avatar>
@@ -34,7 +47,14 @@
 <script>
 export default {
   data() {
-    return { tabList: [], tabIndex: 0, height: '' }
+    return {
+      tabList: [],
+      tabIndex: 0,
+      height: '',
+      showTabs: true,
+      scrollTop: 0,
+      paddingTop: '80rpx'
+    }
   },
   onLoad() {
     this.calcHeight()
@@ -50,7 +70,7 @@ export default {
       },
       {
         name: '不是人'
-      }
+      },
     ]
     this.tabList = tabList.map(e => {
       return {
@@ -69,6 +89,16 @@ export default {
     this.$refs.loadList[this.tabIndex].loadData('refresh')
   },
   methods: {
+    scroll(e) {
+      this.showTabs = e.detail.scrollTop - this.scrollTop < 0
+      if (this.showTabs) {
+        this.paddingTop = '80rpx'
+      } else {
+        this.paddingTop = '0rpx'
+      }
+      this.scrollTop = e.detail.scrollTop
+    },
+
     tabsChange(index) {
       if (index === this.currentIndex) return
       this.tabIndex = index
@@ -77,16 +107,30 @@ export default {
       this.tabIndex = e.detail.current
     },
     calcHeight() {
-      this.height = `${uni.getSystemInfoSync().windowHeight}px`
+      this.height = `${uni.getSystemInfoSync().windowHeight - 53}px`
     }
   }
 }
 </script>
 <style lang="scss">
-.tab-top {
-  position: fixed;
+.search {
+  position: sticky;
   width: 100%;
   top: var(--window-top);
+  z-index: 999;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $t-border-color;
+  .search-bar {
+    width: 90%;
+  }
+}
+.tabs {
+  position: fixed;
+  width: 100%;
+  top: calc(--window-top + 53px);
   z-index: 999;
 }
 .person {
