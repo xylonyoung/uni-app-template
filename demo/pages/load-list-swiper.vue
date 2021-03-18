@@ -13,12 +13,11 @@
       :current="tabIndex"
       :is-scroll="false"
       @change="tabsChange"
-      duration="0.1"
       v-show="showTabs"
     ></u-tabs>
     <swiper
       class="swiper"
-      :style="'height:' + height"
+      :style="{ height: height }"
       :current="tabIndex"
       @change="swiperChange"
     >
@@ -28,10 +27,7 @@
           :list.sync="tab.list"
           :list-api="tab.listApi"
           :list-query.sync="tab.listQuery"
-          @scroll="scroll"
           :auto="curIndex === tabIndex"
-          :v-show="curIndex === tabIndex"
-          :padding-top="paddingTop"
           :height="height"
         >
           <view v-for="(item, index) in tab.list" :key="index" class="person">
@@ -50,14 +46,12 @@ export default {
     return {
       tabList: [],
       tabIndex: 0,
-      height: '',
+      height: 'calc(100vh - 93px)',
       showTabs: true,
-      scrollTop: 0,
-      paddingTop: '80rpx'
+      scrollTop: 0
     }
   },
   onLoad() {
-    this.calcHeight()
     const tabList = [
       {
         name: '全部'
@@ -70,7 +64,7 @@ export default {
       },
       {
         name: '不是人'
-      },
+      }
     ]
     this.tabList = tabList.map(e => {
       return {
@@ -89,35 +83,18 @@ export default {
     this.$refs.loadList[this.tabIndex].loadData('refresh')
   },
   methods: {
-    scroll(e) {
-      this.showTabs = e.detail.scrollTop - this.scrollTop < 0
-      if (this.showTabs) {
-        this.paddingTop = '80rpx'
-      } else {
-        this.paddingTop = '0rpx'
-      }
-      this.scrollTop = e.detail.scrollTop
-    },
-
     tabsChange(index) {
       if (index === this.currentIndex) return
       this.tabIndex = index
     },
     swiperChange(e) {
       this.tabIndex = e.detail.current
-    },
-    calcHeight() {
-      this.height = `${uni.getSystemInfoSync().windowHeight - 53}px`
     }
   }
 }
 </script>
 <style lang="scss">
 .search {
-  position: sticky;
-  width: 100%;
-  top: var(--window-top);
-  z-index: 999;
   padding: 20rpx;
   display: flex;
   justify-content: space-between;
@@ -126,12 +103,6 @@ export default {
   .search-bar {
     width: 90%;
   }
-}
-.tabs {
-  position: fixed;
-  width: 100%;
-  top: calc(--window-top + 53px);
-  z-index: 999;
 }
 .person {
   text-align: center;

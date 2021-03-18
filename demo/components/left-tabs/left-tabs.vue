@@ -1,39 +1,42 @@
 <template>
-  <view class="left-tabs" :style="'background-color:' + bgColor">
-    <scroll-view scroll-y class="tabs" :style="'height:' + height">
+  <view class="left-tabs-container" :style="'background-color:' + bgColor">
+    <scroll-view scroll-y class="tabs" :style="[scrollStyle]">
       <view
-        v-for="(item, index) in tabList"
+        v-for="(item, index) in list"
         :key="index"
         class="tabs-box"
-        :style="
-          index === tabIndex
-            ? `color:${activeColor};background-color:${activeBgColor}`
-            : ''
-        "
+        :style="[tabItemStyle(index)]"
         @click="clickTab(index)"
       >
-        <view
-          class="name"
-          :style="
-            index === tabIndex
-              ? `border-left: 10rpx solid ${activeColor};padding-left: 10rpx`
-              : ''
-          "
-        >
+        <view class="name">
           {{ item.name }}
         </view>
       </view>
     </scroll-view>
-    <view class="content" :style="'background-color:' + activeBgColor">
-      <slot />
+    <view
+      class="content"
+      :style="'background-color:' + activeBgColor"
+      v-show="children && Number.isInteger(tabIndex)"
+    >
+      <view :style="[tabChildStyle('all')]" @click="clickChild('all')">
+        全部
+      </view>
+      <view
+        v-for="(item, index) in childList"
+        :key="index"
+        :style="[tabChildStyle(index)]"
+        @click="clickChild(index)"
+      >
+        {{ item.name }}
+      </view>
     </view>
   </view>
 </template>
 <script>
 export default {
   props: {
-    tabList: { type: Array, default: () => [] },
-    tabIndex: { type: Number, default: 0 },
+    list: { type: Array, default: () => [] },
+    current: { type: [Number, Array], default: null },
     bgColor: {
       type: String,
       default: '#f2f2f2'
@@ -46,40 +49,115 @@ export default {
       type: String,
       default: '#fff'
     },
+    width: {
+      type: String,
+      default: () => '160rpx'
+    },
     height: {
       type: String,
-      default: () => `${uni.getSystemInfoSync().windowHeight}px`
+      default: () => `100vh`
+    },
+    children: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    return {}
+    return { tabIndex: null, childIndex: null, allChild: false }
+  },
+  created() {
+    if (this.children) {
+      this.tabIndex = this.current[0]
+      this.childIndex = this.current[1]
+    } else {
+      this.tabIndex = this.current
+    }
+    console.log(this.tabIndex, this.childIndex)
+  },
+  computed: {
+    scrollStyle() {
+      return { height: this.height, width: this.width }
+    },
+    showChildren() {
+      const list = this.list[this.tabIndex]
+      if (list && list.children && list.children.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
+    childList() {
+      const result = this.list[this.tabIndex]
+      if (result) {
+        return result.children
+      } else {
+        return []
+      }
+    }
   },
   methods: {
+    tabChildStyle(index) {
+      const style = {
+        color: this.activeColor,
+        padding: '20rpx'
+      }
+      if (index === 'all') return this.allChild ? style : { padding: '20rpx' }
+      return index === this.childIndex ? style : { padding: '20rpx' }
+    },
+    tabItemStyle(index) {
+      const style = {
+        color: this.activeColor,
+        'background-color': this.activeBgColor,
+        'border-left': `8rpx solid ${this.activeColor}`,
+        padding: '20rpx 20rpx 20rpx 12rpx'
+      }
+      return index === this.tabIndex ? style : ''
+    },
     clickTab(index) {
       if (index === this.tabIndex) return
-      this.$emit('update:tabIndex', index)
+      this.tabIndex = index
+      this.allChild = false
+      this.childIndex = null
+      if (!this.children) {
+        this.$emit('update:current', index)
+        this.$emit('change', index)
+      }
+    },
+    clickChild(index) {
+      if (index === this.childIndex) return
+      if (index === 'all') {
+        this.allChild = true
+        this.childIndex = null
+        this.$emit('update:current', this.tabIndex)
+        this.$emit('change', this.tabIndex)
+      } else {
+        this.allChild = false
+        this.childIndex = index
+        this.$emit('update:current', [this.tabIndex, index])
+        this.$emit('change', [this.tabIndex, index])
+      }
     }
   }
 }
 </script>
 <style lang='scss' scoped>
-.left-tabs {
+.left-tabs-container {
   display: flex;
 }
 .tabs {
-  width: 160rpx;
   height: 100%;
   box-sizing: border-box;
   .tabs-box {
-    padding: 20rpx 20rpx 20rpx 0;
+    padding: 20rpx;
+    transition-duration: 0.3s;
     .name {
-      padding-left: 20rpx;
       text-align: center;
     }
   }
 }
 .content {
-  width: calc(100% - 160rpx);
+  width: 30vh;
   box-sizing: border-box;
+  text-align: center;
 }
 </style>

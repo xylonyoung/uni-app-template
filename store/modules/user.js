@@ -20,7 +20,7 @@ const mutations = {
 
 const actions = {
   async putRecommendedUser({ dispatch }, id) {
-    await dispatch('updateUser')
+    await dispatch('getUserInformation')
     //be shared user must register on one hour
     function newUser() {
       const recommended_user = state.userInfo.recommended_user
@@ -39,7 +39,7 @@ const actions = {
         title: '成功获取分享',
         duration: 2000
       })
-      dispatch('updateUser')
+      dispatch('getUserInformation')
     } else {
       uni.showToast({
         title: '分享失败！',
@@ -50,11 +50,10 @@ const actions = {
     uni.removeStorageSync('shareId')
   },
 
-  async updateUser({ commit }) {
+  async getUserInformation({ commit }) {
     await $api.get('/api/user').then(res => {
       const { data } = res
       commit('SET_USER', data)
-      uni.setStorageSync('user', data)
       const { profile } = data
       if (profile && profile.phone) {
         commit('SET_REGISTERED', true)
@@ -63,59 +62,53 @@ const actions = {
     return new Promise(resolve => resolve())
   },
 
-  weChatLogin({ dispatch, state }) {
-    if (state.token) {
-      getUserInfo()
-    } else {
-      login(() => {
-        getUserInfo()
-        dispatch('reLaunchHomePage')
-      })
+  async weChatLogin({ dispatch, state }) {
+    if (!state.token) {
+      await login()
     }
+
+    uni.getUserInfo({
+      success: res => {
+        const { userInfo } = res
+        $api.put('/api/user-profile', userInfo).then(() => {
+          dispatch('getUserInformation')
+        })
+      },
+      fail: err => {
+        console.log(err)
+      }
+    })
 
     function login() {
-      uni.login({
-        provider: 'weixin',
-        success: res => {
-          $api
-            .get('/wechat/mini/login', {
-              code: res.code
-            })
-            .then(response => {
-              const { data } = response
-              uni.setStorageSync('token', data.token)
-              dispatch('getToken')
-            })
-        },
-        fail: err => {
-          console.log('error' + err)
-          uni.showModal({
-            title: '登录失败，请点击确认重新登录',
-            showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                dispatch('weChatLogin')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
+      return new Promise(resolve => {
+        uni.login({
+          provider: 'weixin',
+          success: res => {
+            $api
+              .get('/wechat/mini/login', {
+                code: res.code
+              })
+              .then(response => {
+                const { data } = response
+                uni.setStorageSync('token', data.token)
+                dispatch('getToken')
+                dispatch('switchHomePage')
+                resolve()
+              })
+          },
+          fail: err => {
+            console.log('error' + err)
+            uni.showModal({
+              title: '登录失败，请点击确认重新登录~',
+              showCancel: false,
+              success: res => {
+                if (res.confirm) {
+                  dispatch('weChatLogin')
+                }
               }
-            }
-          })
-        }
-      })
-    }
-
-    function getUserInfo() {
-      uni.getUserInfo({
-        success: res => {
-          const { userInfo } = res
-          $api.put('/api/user-profile', userInfo).then(() => {
-            dispatch('updateUser')
-          })
-        },
-        fail: () => {
-          console.log('未授权')
-          dispatch('updateUser')
-        }
+            })
+          }
+        })
       })
     }
   },
@@ -125,21 +118,21 @@ const actions = {
     commit('SET_TOKEN', token)
   },
 
-  async reLogin({ commit }) {
+  async reLogin({ commit, dispatch }) {
     uni.showToast({
-      title: '登录过期，正在跳转登录',
+      title: '登录过期，正在跳转登录~',
       icon: 'none',
       duration: 3000
     })
-    setTimeout(() => {
-      uni.removeStorageSync('token')
-      commit('SET_TOKEN', null)
+    uni.removeStorageSync('token')
+    commit('SET_TOKEN', null)
 
+    setTimeout(() => {
       //#ifdef MP-WEIXIN
       dispatch('weChatLogin')
       //#endif
       //#ifndef MP-WEIXIN
-      uni.reLaunch({
+      uni.redirectTo({
         url: '/pages/login/login'
       })
       //#endif
@@ -150,19 +143,19 @@ const actions = {
     $api.post('/api-login', loginData).then(res => {
       uni.setStorageSync('token', res.data)
       dispatch('getToken')
-      dispatch('updateUser')
-      dispatch('reLaunchHomePage')
+      dispatch('getUserInformation')
+      dispatch('switchHomePage')
     })
   },
 
   logout({ dispatch, commit }) {
     uni.clearStorageSync()
     commit('SET_TOKEN', null)
-    dispatch('reLaunchHomePage')
+    dispatch('switchHomePage')
   },
 
-  reLaunchHomePage() {
-    uni.reLaunch({
+  switchHomePage() {
+    uni.switchTab({
       url: '/pages/home/home'
     })
   }

@@ -1,12 +1,13 @@
 <template>
   <view>
     <scroll-view
+      class="wrapper"
+      :style="[scrollStyle]"
       scroll-y
-      class="scroll-view"
-      :style="'height:' + height + ';padding-top:' + paddingTop"
       :scroll-top="scrollTop"
-      @scrolltolower="scrollToLower"
       @scroll="scroll"
+      :lower-threshold="100"
+      @scrolltolower="scrollToLower"
       scroll-with-animation
       scroll-anchoring
       refresher-enabled
@@ -15,23 +16,19 @@
     >
       <slot :list="list" />
 
-      <view v-if="showEmpty" style="height: 300rpx">
-        <u-empty />
-      </view>
+      <view v-if="showEmpty" style="height: 300rpx"><u-empty /></view>
 
       <u-loadmore v-else :status="status" style="padding: 20rpx" />
     </scroll-view>
 
-    <transition name="back">
-      <view class="back-to-top" v-show="distanceOfTop > 300">
-        <u-icon
-          @click="backToTop"
-          size="60"
-          color="rgba(255,255,255,0.8)"
-          name="arrow-upward"
-        />
-      </view>
-    </transition>
+    <view class="back-to-top" v-if="distanceOfTop > 300">
+      <u-icon
+        @click="backToTop"
+        size="60"
+        color="rgba(255,255,255)"
+        name="arrow-upward"
+      />
+    </view>
   </view>
 </template>
 
@@ -48,7 +45,7 @@ export default {
     paddingTop: { type: String, default: '' },
     height: {
       type: String,
-      default: () => `${uni.getSystemInfoSync().windowHeight}px`
+      default: () => `100vh`
     }
   },
   data() {
@@ -60,19 +57,25 @@ export default {
       refresh: false
     }
   },
+  computed: {
+    scrollStyle() {
+      return { height: this.height, 'padding-top': this.paddingTop }
+    }
+  },
   watch: {
     auto: {
       handler: function (val) {
         if (val && this.list.length === 0) this.loadData()
       },
       immediate: true
-    }
+    },
   },
   methods: {
     backToTop() {
-      this.distanceOfTop = 0
       this.setScrollTop()
+      this.distanceOfTop = 0
     },
+
     scrollToLower() {
       this.loadData()
     },
@@ -129,7 +132,7 @@ export default {
 </script>
 
 <style lang="scss">
-.scroll-view {
+.wrapper {
   box-sizing: border-box;
 }
 .back-to-top {
@@ -138,24 +141,12 @@ export default {
   position: fixed;
   right: 50rpx;
   bottom: 80rpx;
-  z-index: 999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #000;
+  opacity: 0.3;
   border-radius: 100%;
-}
-
-.back-enter-active {
-  transition: opacity 0.5s;
-}
-.back-enter {
-  opacity: 0;
-}
-.back-leave-active {
-  transition: opacity 0.5s;
-}
-.back-leave-to {
-  opacity: 0;
 }
 </style>
