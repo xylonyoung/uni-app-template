@@ -21,7 +21,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        '@order': 'createdTime | desc'
+        '@order': 'createdTime|DESC'
       }
     }
   }

@@ -17,8 +17,8 @@ function getList(response) {
 }
 function createList(response, list) {
   const paginator = {
-    current: response.body.page,
-    next: response.body.page + 1,
+    current: response.page,
+    next: response.page + 1,
     endPage: 3,
     totalCount: 30
   }

@@ -22,12 +22,7 @@
     </scroll-view>
 
     <view class="back-to-top" v-if="distanceOfTop > 300">
-      <u-icon
-        @click="backToTop"
-        size="60"
-        color="rgba(255,255,255)"
-        name="arrow-upward"
-      />
+      <u-icon @click="backToTop" size="60" color="#fff" name="arrow-upward" />
     </view>
   </view>
 </template>
@@ -36,17 +31,11 @@
 export default {
   props: {
     list: { type: Array, default: () => [] },
-    listApi: { type: String, default: '' },
-    listQuery: {
-      type: Object,
-      default: () => ({ page: 1, limit: 10 })
-    },
+    listApi: { type: String, default: null },
+    listQuery: { type: Object, default: () => ({ page: 1, limit: 10 }) },
     auto: { type: Boolean, default: true },
-    paddingTop: { type: String, default: '' },
-    height: {
-      type: String,
-      default: () => `100vh`
-    }
+    paddingTop: { type: String, default: null },
+    height: { type: String, default: () => `100vh` }
   },
   data() {
     return {
@@ -68,14 +57,13 @@ export default {
         if (val && this.list.length === 0) this.loadData()
       },
       immediate: true
-    },
+    }
   },
   methods: {
     backToTop() {
       this.setScrollTop()
       this.distanceOfTop = 0
     },
-
     scrollToLower() {
       this.loadData()
     },
@@ -95,7 +83,7 @@ export default {
         this.setScrollTop()
         this.showEmpty = false
         this.refresh = true
-      } else if (this.status === 'nomore' || !this.listApi) return
+      } else if (this.status === 'nomore') return
 
       this.status = 'loading'
 

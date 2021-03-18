@@ -2,25 +2,8 @@ import Mock from 'mockjs'
 
 class MockApi {
   constructor() {
-    this.mockData = {}
+    this.requestData = {}
     this.initMock()
-  }
-  initMock() {
-    const filesList = []
-    const files = require.context('./data', true, /\.js$/)
-    files.keys().forEach(key => {
-      filesList.push(files(key).default)
-    })
-    filesList.forEach(e => {
-      for (const [key, value] of Object.entries(e)) {
-        const path = key.split('.')
-        const url = path[0]
-        const method = path[1].toUpperCase()
-        this.mockData[method] = Object.assign(this.mockData, {
-          [url]: value
-        })
-      }
-    })
   }
 
   post(url, data) {
@@ -38,8 +21,34 @@ class MockApi {
   request(method, url, data) {
     return new Promise(resolve => {
       const name = url.replace('/', '')
-      resolve(this.createMock({ body: data }, this.mockData[method][name]))
+      resolve(this.createMock(data, this.requestData[method][name]))
     })
+  }
+
+  initMock() {
+    const fileList = this.getFiles()
+    fileList.forEach(e => {
+      this.getRequestData(e)
+    })
+  }
+
+  getRequestData(arg) {
+    for (const [key, value] of Object.entries(arg)) {
+      const path = key.split('.')
+      const url = path[0]
+      const method = path[1].toUpperCase()
+      this.requestData[method] = Object.assign({}, this.requestData[method])
+      this.requestData[method][url] = value
+    }
+  }
+
+  getFiles() {
+    const result = []
+    const files = require.context('./data', true, /\.js$/)
+    files.keys().forEach(key => {
+      result.push(files(key).default)
+    })
+    return result
   }
 
   createMock(data, func) {

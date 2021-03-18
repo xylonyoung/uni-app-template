@@ -1,21 +1,23 @@
 <template>
   <view>
-    <u-navbar
-      height="44"
-      title="demo"
-      :custom-back="backTo"
-    ></u-navbar>
+    <u-navbar height="44" title="demo" :custom-back="backTo"></u-navbar>
     <u-cell-group>
       <u-cell-item
         v-for="(item, index) in pages"
         :key="index"
-        :icon="item.icon"
-        icon-size="60"
         :title="item.title"
         class="animation-slide-bottom"
-        :style="{ animationDelay: index * 0.5 + 's' }"
+        :style="{ animationDelay: index * 0.2 + 's' }"
         @click="navTo(item.path)"
-      ></u-cell-item>
+      >
+        <u-icon
+          class="icon"
+          slot="icon"
+          size="60"
+          :name="item.icon"
+          :style="{ animationDelay: index * 0.3 + 's' }"
+        ></u-icon>
+      </u-cell-item>
     </u-cell-group>
   </view>
 </template>
@@ -79,11 +81,7 @@ export default {
 @import '@/demo/styles/animation.css';
 @import '@/demo/styles/rainbow.scss';
 
-.u-cell {
-  ::v-deep & :first-child {
-    .u-iconfont {
-      @include rainbow-font;
-    }
-  }
+.icon {
+  @include rainbow-font;
 }
 </style>
