@@ -62,7 +62,7 @@ const actions = {
     return new Promise(resolve => resolve())
   },
 
-  async weChatLogin({ dispatch, state }) {
+  async wechatLogin({ dispatch, state }) {
     if (!state.token) {
       await login()
     }
@@ -78,6 +78,8 @@ const actions = {
         console.log(err)
       }
     })
+
+    return new Promise(resolve => resolve())
 
     function login() {
       return new Promise(resolve => {
@@ -103,7 +105,7 @@ const actions = {
               showCancel: false,
               success: res => {
                 if (res.confirm) {
-                  dispatch('weChatLogin')
+                  dispatch('wechatLogin')
                 }
               }
             })
@@ -124,12 +126,13 @@ const actions = {
       icon: 'none',
       duration: 3000
     })
+    
     uni.removeStorageSync('token')
     commit('SET_TOKEN', null)
 
     setTimeout(() => {
       //#ifdef MP-WEIXIN
-      dispatch('weChatLogin')
+      dispatch('wechatLogin')
       //#endif
       //#ifndef MP-WEIXIN
       uni.redirectTo({
@@ -139,13 +142,14 @@ const actions = {
     }, 2000)
   },
 
-  login({ dispatch }, loginData) {
-    $api.post('/api-login', loginData).then(res => {
+  async login({ dispatch }, loginData) {
+    await $api.post('/api-login', loginData).then(res => {
       uni.setStorageSync('token', res.data)
       dispatch('getToken')
       dispatch('getUserInformation')
       dispatch('switchHomePage')
     })
+    return new Promise(resolve => resolve())
   },
 
   logout({ dispatch, commit }) {

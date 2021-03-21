@@ -29,7 +29,7 @@ async function initialization() {
 
 	//#ifdef MP-WEIXIN
 	if (!needMock) {
-		store.dispatch('user/weChatLogin')
+		store.dispatch('user/wechatLogin')
 	}
 	//#endif
 
