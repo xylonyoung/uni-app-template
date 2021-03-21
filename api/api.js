@@ -1,7 +1,7 @@
 import store from '@/store'
 import { baseURL } from '@/settings'
 
-class Api {
+export class Api {
   post(url, data) {
     return this.request('POST', url, data)
   }
@@ -14,22 +14,22 @@ class Api {
   get(url, data) {
     return this.request('GET', url, data)
   }
-  request(method, url, data) {
+  request(method, url, data = {}) {
     const token = store.getters.token
     return new Promise((resolve, reject) => {
       uni.request({
         url: baseURL + url,
         header: {
           'Content-Type': 'application/json;charset=UTF-8',
-          'X-Auth-Token': token
+          'X-Auth-Token': token,
         },
-        data: data || {},
+        data,
         method: method,
         dataType: 'json',
         responseType: 'text',
-        complete: res => {
+        complete: (res) => {
           this.responseProcess(res, resolve, reject)
-        }
+        },
       })
     })
   }
@@ -43,7 +43,7 @@ class Api {
       console.log(res)
       uni.showToast({
         title: '服务器繁忙！',
-        icon: 'none'
+        icon: 'none',
       })
     }
   }
