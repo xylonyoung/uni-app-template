@@ -7,6 +7,14 @@ export function getFiles() {
   return result
 }
 
+export function createMock(data, func) {
+  return Mock.mock({
+    code: 0,
+    status: 200,
+    message: 'success',
+    ...func(data),
+  })
+}
 /**
  * @param {string} url
  * @returns {Object}

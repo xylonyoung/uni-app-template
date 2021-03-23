@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 import { Api } from '@/api/api'
-import { getFiles } from './utils'
+import { getFiles, createMock } from './utils'
 
 class MockApi extends Api {
   constructor() {
@@ -8,11 +8,11 @@ class MockApi extends Api {
     this.requestData = {}
     this.initMock()
   }
-  
+
   request(method, url, data = {}) {
     return new Promise((resolve) => {
       const name = url.replace('/', '')
-      resolve(this.createMock(data, this.requestData[method][name]))
+      resolve(createMock(data, this.requestData[method][name]))
     })
   }
 
@@ -23,23 +23,10 @@ class MockApi extends Api {
         const path = key.split('.')
         const url = path[0]
         const method = path[1].toUpperCase()
-        this.requestData[method] = Object.assign({}, this.requestData[method])
+        this.requestData[method] = { ...this.requestData[method] }
         this.requestData[method][url] = value
       }
     })
-  }
-
-  createMock(data, func) {
-    return Mock.mock(
-      Object.assign(
-        {
-          code: 0,
-          status: 200,
-          message: 'success',
-        },
-        func(data)
-      )
-    )
   }
 }
 
