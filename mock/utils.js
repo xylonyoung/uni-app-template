@@ -1,10 +1,6 @@
 export function getFiles() {
-  const result = []
   const files = require.context('./data', true, /\.js$/)
-  files.keys().forEach((key) => {
-    result.push(files(key).default)
-  })
-  return result
+  return files.keys().map((key) => files(key).default)
 }
 
 export function createMock(data, func) {

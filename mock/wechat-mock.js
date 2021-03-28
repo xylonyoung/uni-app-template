@@ -1,4 +1,3 @@
-import Mock from 'mockjs'
 import { Api } from '@/api/api'
 import { getFiles, createMock } from './utils'
 
