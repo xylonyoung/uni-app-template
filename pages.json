@@ -88,9 +88,10 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
+  // icon size 81px * 81px 参考：https://uniapp.dcloud.io/api/ui/tabbar?id=settabbaritem
   "tabBar": {
     "color": "#999", //icon color #444
-    "selectedColor": "#ff6700",
+    "selectedColor": "#ff6900",
     "borderStyle": "white",
     "backgroundColor": "",
     "list": [

@@ -1,18 +1,15 @@
 import $api from '@/api/api'
+import { createMutations } from '../utils'
 
 const state = {
   user: {},
   registered: false,
+  // wechat authorize for getUserInfo
+  authorized: false,
 }
 
-const mutations = {
-  SET_USER: (state, user) => {
-    state.user = user
-  },
-  SET_REGISTERED: (state, registered) => {
-    state.registered = registered
-  },
-}
+// mutation's key is snack case (e.g.,SET_USER)
+const mutations = createMutations(state)
 
 const actions = {
   async putRecommendedUser({ dispatch }, id) {
@@ -58,12 +55,13 @@ const actions = {
     return new Promise((resolve) => resolve())
   },
 
-  async wechatLogin({ dispatch }, phone) {
+  async wechatLogin({ commit, dispatch }, phone) {
     if (!uni.getStorageSync('token')) {
       await login()
     }
     uni.getUserInfo({
       success: (res) => {
+        commit('SET_AUTHORIZED', true)
         const { userInfo } = res
         $api.put('/api/user-profile', userInfo).then(() => {
           dispatch('getUserInformation')
@@ -71,8 +69,10 @@ const actions = {
       },
       fail: (err) => {
         console.log(err)
+        dispatch('getUserInformation')
       },
     })
+    return new Promise((resolve) => resolve())
 
     function login() {
       return new Promise((resolve) => {
@@ -88,7 +88,6 @@ const actions = {
             $api.get('/wechat/mini/login', params).then((response) => {
               const { data } = response
               uni.setStorageSync('token', data.token)
-              dispatch('switchHomePage')
               resolve()
             })
           },
@@ -115,6 +114,7 @@ const actions = {
       icon: 'none',
       duration: 3000,
     })
+
     uni.removeStorageSync('token')
 
     setTimeout(() => {

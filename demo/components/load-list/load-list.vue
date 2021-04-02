@@ -1,7 +1,7 @@
 <template>
   <view>
     <scroll-view
-      class="wrapper"
+      class="swiper-wrapper"
       :style="[scrollStyle]"
       scroll-y
       :scroll-top="scrollTop"
@@ -16,13 +16,18 @@
     >
       <slot :list="list" />
 
-      <view v-if="showEmpty" style="height: 300rpx"><u-empty /></view>
+      <view v-if="empty" style="height: 300rpx"><u-empty /></view>
 
       <u-loadmore v-else :status="status" style="padding: 20rpx" />
     </scroll-view>
 
     <view class="back-to-top" v-if="distanceOfTop > 300">
-      <u-icon @click="backToTop" size="60" color="#fff" name="arrow-upward" />
+      <u-icon
+        @click="backToTop"
+        size="60"
+        color="#fff"
+        name="arrow-upward"
+      />
     </view>
   </view>
 </template>
@@ -31,37 +36,42 @@
 export default {
   props: {
     list: { type: Array, default: () => [] },
-    listApi: { type: String, default: null },
-    listQuery: { type: Object, default: () => ({ page: 1, limit: 10 }) },
+    listApi: { type: String, default: '' },
+    listQuery: {
+      type: Object,
+      default: () => ({ page: 1, limit: 10 }),
+    },
+    reload: { type: Boolean, default: false },
     auto: { type: Boolean, default: true },
-    paddingTop: { type: String, default: null },
-    height: { type: String, default: () => `100vh` }
+    height: { type: String, default: () => `100vh` },
   },
   data() {
     return {
       scrollTop: 0,
       distanceOfTop: 0,
       status: 'loading',
-      showEmpty: false,
-      refresh: false
+      empty: false,
+      refresh: false,
     }
   },
   computed: {
     scrollStyle() {
-      return { height: this.height, 'padding-top': this.paddingTop }
-    }
+      return { height: this.height }
+    },
   },
   watch: {
-    auto: {
-      handler: function (val) {
-        if (val && this.list.length === 0) this.loadData()
-      },
-      immediate: true
-    }
+    reload(val) {
+      this.backToTop()
+      this.refresh = val
+    },
+  },
+  created() {
+    if (this.auto) this.loadData()
   },
   methods: {
     backToTop() {
-      this.setScrollTop()
+      // scroll-top reaction need value change
+      this.scrollTop = this.scrollTop === 0 ? 1 : 0
       this.distanceOfTop = 0
     },
     scrollToLower() {
@@ -71,56 +81,51 @@ export default {
       this.distanceOfTop = e.detail.scrollTop
       this.$emit('scroll', e)
     },
-    setScrollTop() {
-      // scroll-top reaction need value change
-      this.scrollTop = this.scrollTop === 0 ? 1 : 0
+    resetReload() {
+      this.refresh = false
+      this.$emit('update:reload', false)
     },
-    async loadData(type) {
-      const listQuery = Object.assign({}, this.listQuery)
+    async loadData(refresh) {
+      const listQuery = { ...this.listQuery }
 
-      if (type === 'refresh') {
+      if (refresh) {
         listQuery.page = 1
-        this.setScrollTop()
-        this.showEmpty = false
-        this.refresh = true
+        this.empty = false
+        this.$emit('update:list', [])
       } else if (this.status === 'nomore') return
 
       this.status = 'loading'
 
-      const res = await this.$api.get(this.listApi, listQuery).catch(() => {
-        if (this.list.length === 0) {
-          this.showEmpty = true
-        }
-      })
+      const res = await this.$api.get(this.listApi, listQuery)
 
-      if (!res) return
+      if (!res) {
+        this.empty = true
+        this.resetReload()
+        return
+      }
 
       const { paginator, data } = res
-      let currentPage, endPage
+      const list = refresh ? data : [...this.list, ...data]
 
-      if (paginator) {
-        listQuery.page = paginator.next
-        currentPage = paginator.current
-        endPage = paginator.endPage
+      if (res.data.length === 0) {
+        this.empty = true
       } else {
-        this.showEmpty = true
+        listQuery.page = paginator.next
+        this.status =
+          paginator.current === paginator.last ? 'nomore' : 'loadmore'
       }
-      //have next page or not?
-      this.status =
-        endPage - currentPage === 0 || data.length === 0 ? 'nomore' : 'loadmore'
-      //update data & interaction
-      const list = type === 'refresh' ? data : this.list.concat(data)
+
       this.$emit('update:list', list)
       this.$emit('update:listQuery', listQuery)
       this.$emit('change', { list, listQuery })
-      this.refresh = false
-    }
-  }
+      this.resetReload()
+    },
+  },
 }
 </script>
 
 <style lang="scss">
-.wrapper {
+.swiper-wrapper {
   box-sizing: border-box;
 }
 .back-to-top {

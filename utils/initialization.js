@@ -24,13 +24,14 @@ async function initialization() {
     //#endif
   }
 
-  vueUse($api)
-
   try {
     console && console.log && console.log('%c' + consoleStr, 'font-size:50px;')
   } catch (e) {
     console.log(e)
   }
+
+  vueUse($api)
+
 }
 
 /**
