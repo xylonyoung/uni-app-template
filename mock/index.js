@@ -1,5 +1,5 @@
 import Mock from 'mockjs'
-import { getFiles, createMock, param2Obj } from './utils'
+import { getFiles, createMock, param2Obj } from './mock-utils'
 
 initMock()
 

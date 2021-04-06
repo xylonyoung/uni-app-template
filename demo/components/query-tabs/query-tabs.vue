@@ -24,30 +24,40 @@ export default {
     current: { type: Number, default: 0 },
     bgColor: {
       type: String,
-      default: '#f2f2f2'
+      default: '#f2f2f2',
     },
     activeColor: {
       type: String,
-      default: '#ff6700'
+      default: '#ff6700',
     },
     activeBgColor: {
       type: String,
-      default: '#fff'
+      default: '#fff',
     },
     showBar: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      orderList: []
+      queryList: [],
+      tabIndex: 0,
     }
   },
-  created() {},
+  watch: {
+    current: {
+      handler(val) {
+        this.$nextTick(() => {
+          this.tabIndex = val
+        })
+      },
+      immediate: true,
+    },
+  },
   methods: {
     arrowStyle(index, type) {
-      return this.orderList[index] === type ? '' : { color: 'initial' }
+      return this.queryList[index] === type ? '' : { color: 'initial' }
     },
     tabItemStyle(index) {
       const style = {
@@ -55,32 +65,32 @@ export default {
         'background-color': this.activeBgColor,
         'border-bottom': this.showBar
           ? `6rpx solid ${this.activeColor}`
-          : 'none'
+          : 'none',
       }
-      return index === this.current ? style : ''
+      return index === this.tabIndex ? style : ''
     },
     clickTab(index) {
-      if (index === this.current) {
-        const arrow = this.orderList[index] === 'down' ? 'up' : 'down'
-        this.$set(this.orderList, index, arrow)
+      if (index === this.tabIndex) {
+        const arrow = this.queryList[index] === 'down' ? 'up' : 'down'
+        this.$set(this.queryList, index, arrow)
       } else {
-        this.$set(this.orderList, index, 'up')
-        this.$emit('update:current', index)
+        this.$set(this.queryList, index, 'up')
+        this.tabIndex = index
       }
       const tabItem = this.list[index]
-      const query = {}
+      let query
       if (tabItem.order) {
-        const order = this.orderList[index] === 'up' ? 'ASC' : 'DESC'
-        query['@order'] = `${tabItem.order}|${order}`
+        const order = this.queryList[index] === 'up' ? 'ASC' : 'DESC'
+        query = { '@order': `${tabItem.order}|${order}` }
       } else {
-        query['@filter'] = tabItem.query
+        query = { ...tabItem.query }
       }
       this.$emit('change', query)
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
 .query-tabs-container {
   width: 100%;
   height: 80rpx;
@@ -89,6 +99,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  background-color: #fff;
 }
 .tabs-box {
   height: 80rpx;

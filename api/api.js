@@ -1,9 +1,10 @@
 import { baseURL } from '@/settings'
 
-class Api {
+export class Api {
   constructor() {
     this.buildMethods()
   }
+
   buildMethods() {
     const methods = ['post', 'delete', 'put', 'get']
     methods.forEach((e) => {
@@ -13,6 +14,7 @@ class Api {
       }
     })
   }
+
   request(method, requestedURL, data = {}) {
     const token = uni.getStorageSync('token')
     const url = this.buildFullPath(requestedURL)
@@ -34,21 +36,38 @@ class Api {
       })
     })
   }
+
   buildFullPath(relativeURL) {
     return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
   }
+
   responseProcess(res, resolve, reject) {
     if (res.statusCode === 403) {
       store.dispatch('user/reLogin')
       return
     }
-    if (res.data && res.data.code === 0) {
-      resolve(res.data)
+    if (res.data) {
+      switch (res.data.code) {
+        case 0:
+          resolve(res.data)
+          break
+        case -2:
+          errorResponse(
+            res.data.message === 'The user is not found.' ? '没有此用户~' : null
+          )
+          break
+        default:
+          errorResponse()
+      }
     } else {
+      errorResponse()
+    }
+
+    function errorResponse(message) {
       reject(res.data)
       console.log(res)
       uni.showToast({
-        title: '服务器繁忙！',
+        title: message || '服务器繁忙！',
         icon: 'none',
       })
     }

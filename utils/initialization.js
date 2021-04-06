@@ -4,9 +4,7 @@ import getValue from 'get-value'
 import { baseURL } from '@/settings'
 import { getImage, numberFormat } from './index'
 
-initialization()
-
-async function initialization() {
+;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
   let $api = api
   const needMock =
@@ -18,7 +16,7 @@ async function initialization() {
     import('@/mock')
     //#endif
     //#ifdef MP-WEIXIN
-    await import('@/mock/wechat-mock').then(module => {
+    await import('@/mock/wechat-mock').then((module) => {
       $api = module.default
     })
     //#endif
@@ -31,8 +29,7 @@ async function initialization() {
   }
 
   vueUse($api)
-
-}
+})()
 
 /**
  * set global functions, variables, components, etc.
@@ -44,6 +41,6 @@ function vueUse($api) {
       Vue.prototype.$getValue = getValue
       Vue.prototype.$getImage = getImage
       Vue.prototype.$numberFormat = numberFormat
-    }
+    },
   })
 }

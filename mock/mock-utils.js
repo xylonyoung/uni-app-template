@@ -1,3 +1,5 @@
+import Mock from 'mockjs'
+
 export function getFiles() {
   const files = require.context('./data', true, /\.js$/)
   return files.keys().map((key) => files(key).default)

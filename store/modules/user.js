@@ -1,14 +1,11 @@
 import $api from '@/api/api'
-import { createMutations } from '../utils'
+import { createMutations } from '../store-utils'
 
 const state = {
   user: {},
   registered: false,
-  // wechat authorize for getUserInfo
-  authorized: false,
 }
 
-// mutation's key is snack case (e.g.,SET_USER)
 const mutations = createMutations(state)
 
 const actions = {
@@ -52,30 +49,28 @@ const actions = {
         commit('SET_REGISTERED', true)
       }
     })
-    return new Promise((resolve) => resolve())
+    return new Promise((resolve) => {
+      resolve()
+    })
   },
 
-  async wechatLogin({ commit, dispatch }, phone) {
-    if (!uni.getStorageSync('token')) {
-      await login()
-    }
-    uni.getUserInfo({
-      success: (res) => {
-        commit('SET_AUTHORIZED', true)
-        const { userInfo } = res
-        $api.put('/api/user-profile', userInfo).then(() => {
-          dispatch('getUserInformation')
+  wechatLogin({ commit, dispatch }, phone) {
+    return new Promise(async (resolve, reject) => {
+      let isError = false
+      if (!uni.getStorageSync('token') || phone) {
+        await login().catch((err) => {
+          reject(err)
+          isError = true
         })
-      },
-      fail: (err) => {
-        console.log(err)
-        dispatch('getUserInformation')
-      },
+      }
+      if (isError) return
+
+      resolve()
+      dispatch('getUserInformation')
     })
-    return new Promise((resolve) => resolve())
 
     function login() {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         uni.login({
           provider: 'weixin',
           success: (res) => {
@@ -85,11 +80,16 @@ const actions = {
             if (phone) {
               params.phone = phone
             }
-            $api.get('/wechat/mini/login', params).then((response) => {
-              const { data } = response
-              uni.setStorageSync('token', data.token)
-              resolve()
-            })
+            $api
+              .get('/wechat/mini/login', params)
+              .then((response) => {
+                const { data } = response
+                uni.setStorageSync('token', data.token)
+                resolve()
+              })
+              .catch((err) => {
+                reject(err)
+              })
           },
           fail: (err) => {
             console.log('error' + err)

@@ -8,8 +8,8 @@ export function createMutations(state) {
   return result
 
   function snakeCase(str) {
-    const result = str.replace(/A-Z/g, function (match, letter) {
-      return `_${letter}`
+    const result = str.replace(/[A-Z]/g, function (match) {
+      return `_${match}`
     })
     return `SET_${result.toUpperCase()}`
   }

@@ -1,5 +1,5 @@
 import { Api } from '@/api/api'
-import { getFiles, createMock } from './utils'
+import { getFiles, createMock } from './mock-utils'
 
 class MockApi extends Api {
   constructor() {

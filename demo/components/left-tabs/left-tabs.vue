@@ -39,28 +39,28 @@ export default {
     current: { type: [Number, Array], default: null },
     bgColor: {
       type: String,
-      default: '#f2f2f2'
+      default: '#f2f2f2',
     },
     activeColor: {
       type: String,
-      default: '#ff6700'
+      default: '#ff6700',
     },
     activeBgColor: {
       type: String,
-      default: '#fff'
+      default: '#fff',
     },
     width: {
       type: String,
-      default: () => '160rpx'
+      default: () => '160rpx',
     },
     height: {
       type: String,
-      default: () => `100vh`
+      default: () => `100vh`,
     },
     children: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return { tabIndex: null, childIndex: null, allChild: false }
@@ -80,11 +80,7 @@ export default {
     },
     showChildren() {
       const list = this.list[this.tabIndex]
-      if (list && list.children && list.children.length > 0) {
-        return true
-      } else {
-        return false
-      }
+      return list && list.children && list.children.length > 0
     },
     childList() {
       const result = this.list[this.tabIndex]
@@ -93,13 +89,13 @@ export default {
       } else {
         return []
       }
-    }
+    },
   },
   methods: {
     tabChildStyle(index) {
       const style = {
         color: this.activeColor,
-        padding: '20rpx'
+        padding: '20rpx',
       }
       if (index === 'all') return this.allChild ? style : { padding: '20rpx' }
       return index === this.childIndex ? style : { padding: '20rpx' }
@@ -109,7 +105,7 @@ export default {
         color: this.activeColor,
         'background-color': this.activeBgColor,
         'border-left': `8rpx solid ${this.activeColor}`,
-        padding: '20rpx 20rpx 20rpx 12rpx'
+        padding: '20rpx 20rpx 20rpx 12rpx',
       }
       return index === this.tabIndex ? style : ''
     },
@@ -136,11 +132,11 @@ export default {
         this.$emit('update:current', [this.tabIndex, index])
         this.$emit('change', [this.tabIndex, index])
       }
-    }
-  }
+    },
+  },
 }
 </script>
-<style lang='scss' scoped>
+<style lang='scss'>
 .left-tabs-container {
   display: flex;
 }

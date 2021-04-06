@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+bignumber.js@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.npm.taobao.org/bignumber.js/download/bignumber.js-8.1.1.tgz#4b072ae5aea9c20f6730e4e5d529df1271c4d885"
+  integrity sha1-Swcq5a6pwg9nMOTl1SnfEnHE2IU=
+
 commander@*:
   version "7.2.0"
   resolved "https://registry.npm.taobao.org/commander/download/commander-7.2.0.tgz?cache=0&sync_timestamp=1616363849438&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
@@ -25,6 +30,13 @@ mockjs@^1.1.0:
   integrity sha1-5qDDeOkZBtuv8gkRzAJzs8fXWwY=
   dependencies:
     commander "*"
+
+numbro@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.npm.taobao.org/numbro/download/numbro-2.3.2.tgz#4967c631b0ea99b17dd7f88cdd1eaa4ace4d4971"
+  integrity sha1-SWfGMbDqmbF91/iM3R6qSs5NSXE=
+  dependencies:
+    bignumber.js "^8.1.1"
 
 uview-ui@^1.8.3:
   version "1.8.4"
