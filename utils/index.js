@@ -18,8 +18,8 @@ export function getImage(name = '') {
   return `${baseURL}/uploads/images/${name}`
 }
 export function toCamelCase(str) {
-  return str.replace(/\_|\-(\w)/g, function (match, letter, offset) {
-    return offset > 0 ? letter.toUpperCase() : letter
+  return str.replace(/\_|\-(\w)/g, function (match, p1, offset) {
+    return offset > 0 ? p1.toUpperCase() : p1
   })
 }
 export function htmlFormat(htmlData = '') {

@@ -22,12 +22,7 @@
     </scroll-view>
 
     <view class="back-to-top" v-if="distanceOfTop > 300">
-      <u-icon
-        @click="backToTop"
-        size="60"
-        color="#fff"
-        name="arrow-upward"
-      />
+      <u-icon @click="backToTop" size="60" color="#fff" name="arrow-upward" />
     </view>
   </view>
 </template>
@@ -78,8 +73,10 @@ export default {
       this.loadData()
     },
     scroll(e) {
-      this.distanceOfTop = e.detail.scrollTop
-      this.$emit('scroll', e)
+      this.$u.debounce(() => {
+        this.distanceOfTop = e.detail.scrollTop
+        this.$emit('scroll', e)
+      }, 99)
     },
     resetReload() {
       this.refresh = false
@@ -111,6 +108,7 @@ export default {
         this.empty = true
       } else {
         listQuery.page = paginator.next
+        listQuery.totalCount = paginator.totalCount
         this.status =
           paginator.current === paginator.last ? 'nomore' : 'loadmore'
       }

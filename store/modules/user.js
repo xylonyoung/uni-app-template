@@ -1,12 +1,9 @@
 import $api from '@/api/api'
-import { createMutations } from '../store-utils'
 
 const state = {
   user: {},
   registered: false,
 }
-
-const mutations = createMutations(state)
 
 const actions = {
   async putRecommendedUser({ dispatch }, id) {
@@ -149,8 +146,6 @@ const actions = {
   },
 }
 export default {
-  namespaced: true,
   state,
-  mutations,
   actions,
 }
