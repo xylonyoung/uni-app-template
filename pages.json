@@ -3,7 +3,7 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "^c-(.*)": "@/demo/components/$1/$1.vue",
+      "^c-(.*)": "@/demo/components/$1/index.vue",
       "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
     }
   },
@@ -77,6 +77,9 @@
     },
     {
       "path": "demo/pages/load-list-swiper"
+    },
+    {
+      "path": "demo/pages/query-tabs"
     }
   ],
   "globalStyle": {

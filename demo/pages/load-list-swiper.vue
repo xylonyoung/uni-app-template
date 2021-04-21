@@ -79,9 +79,6 @@ export default {
       }
     })
   },
-  onPullDownRefresh() {
-    this.$refs.loadList[this.tabIndex].loadData('refresh')
-  },
   methods: {
     tabsChange(index) {
       if (index === this.currentIndex) return

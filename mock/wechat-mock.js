@@ -1,4 +1,4 @@
-import { Api } from '@/api/api'
+import { Api } from '@/api'
 import { getFiles, createMock } from './mock-utils'
 
 class MockApi extends Api {
@@ -11,7 +11,9 @@ class MockApi extends Api {
   request(method, url, data = {}) {
     return new Promise((resolve) => {
       const name = url.replace('/', '')
+      setTimeout(() => {
       resolve(createMock(data, this.requestData[method][name]))
+      }, 666);
     })
   }
 

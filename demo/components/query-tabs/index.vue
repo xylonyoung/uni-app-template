@@ -11,8 +11,16 @@
         {{ item.name }}
       </view>
       <view class="arrow" v-if="item.order">
-        <u-icon name="arrow-up" :style="[arrowStyle(index, 'up')]"></u-icon>
-        <u-icon name="arrow-down" :style="[arrowStyle(index, 'down')]"></u-icon>
+        <u-icon
+          name="arrow-up-fill"
+          size="16"
+          :color="arrowColor(index, 'up')"
+        ></u-icon>
+        <u-icon
+          name="arrow-down-fill"
+          size="16"
+          :color="arrowColor(index, 'down')"
+        ></u-icon>
       </view>
     </view>
   </view>
@@ -28,7 +36,7 @@ export default {
     },
     activeColor: {
       type: String,
-      default: '#ff6700',
+      default: '#ff6900',
     },
     activeBgColor: {
       type: String,
@@ -56,8 +64,10 @@ export default {
     },
   },
   methods: {
-    arrowStyle(index, type) {
-      return this.queryList[index] === type ? '' : { color: 'initial' }
+    arrowColor(index, type) {
+      return this.tabIndex === index && this.queryList[index] === type
+        ? ''
+        : '#bbb'
     },
     tabItemStyle(index) {
       const style = {
@@ -70,21 +80,21 @@ export default {
       return index === this.tabIndex ? style : ''
     },
     clickTab(index) {
-      if (index === this.tabIndex) {
-        const arrow = this.queryList[index] === 'down' ? 'up' : 'down'
-        this.$set(this.queryList, index, arrow)
-      } else {
-        this.$set(this.queryList, index, 'up')
-        this.tabIndex = index
-      }
       const tabItem = this.list[index]
       let query
+
       if (tabItem.order) {
-        const order = this.queryList[index] === 'up' ? 'ASC' : 'DESC'
+        const arrow = this.queryList[index] === 'up' ? 'down' : 'up'
+        const order = arrow === 'up' ? 'ASC' : 'DESC'
         query = { '@order': `${tabItem.order}|${order}` }
+        this.$set(this.queryList, index, arrow)
+      } else if (index === this.tabIndex) {
+        return
       } else {
         query = { ...tabItem.query }
       }
+
+      this.tabIndex = index
       this.$emit('change', query)
     },
   },

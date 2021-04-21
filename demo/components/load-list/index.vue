@@ -56,12 +56,15 @@ export default {
   },
   watch: {
     reload(val) {
-      this.backToTop()
+      if (val) this.backToTop()
       this.refresh = val
     },
-  },
-  created() {
-    if (this.auto) this.loadData()
+    auto: {
+      handler(val) {
+        if (val && !this.empty && this.list.length === 0) this.loadData()
+      },
+      immediate: true,
+    },
   },
   methods: {
     backToTop() {
@@ -79,7 +82,6 @@ export default {
       }, 99)
     },
     resetReload() {
-      this.refresh = false
       this.$emit('update:reload', false)
     },
     async loadData(refresh) {
@@ -88,6 +90,7 @@ export default {
       if (refresh) {
         listQuery.page = 1
         this.empty = false
+        this.refresh = true
         this.$emit('update:list', [])
       } else if (this.status === 'nomore') return
 

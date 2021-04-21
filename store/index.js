@@ -13,10 +13,15 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   // set './app.js' => 'app'
   const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
   const value = modulesFiles(modulePath)
-  modules[moduleName] = value.default
+  modules[moduleName] = createMutations(value.default)
   return modules
 }, {})
 
+/**
+ * auto create mutation base on state
+ * @example state.name --> SET_NAME(state, val){state[name] = val}
+ * @returns {Object}
+ */
 function createMutations(storeData) {
   // https://next.vuex.vuejs.org/guide/modules.html#namespacing
   const result = { ...storeData, namespaced: true }
