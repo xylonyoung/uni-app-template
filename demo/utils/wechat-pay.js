@@ -1,4 +1,4 @@
-import $api from '@/api/api'
+import $api from '@/api'
 export default async function wechatPay(id) {
   uni.showLoading()
   const { data } = await $api.post(`/api/invoices/${id}/pay/wechat`, {

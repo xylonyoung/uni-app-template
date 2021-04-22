@@ -46,25 +46,16 @@ const actions = {
         commit('SET_REGISTERED', true)
       }
     })
-    return new Promise((resolve) => {
-      resolve()
-    })
+    return 'finished'
   },
 
-  wechatLogin({ commit, dispatch }, phone) {
-    return new Promise(async (resolve, reject) => {
-      let isError = false
-      if (!uni.getStorageSync('token') || phone) {
-        await login().catch((err) => {
-          reject(err)
-          isError = true
-        })
-      }
-      if (isError) return
-
-      resolve()
-      dispatch('getUserInformation')
-    })
+  async wechatLogin({ dispatch }, phone) {
+    let result
+    if (!uni.getStorageSync('token') || phone) {
+      result = await login()
+    }
+    dispatch('getUserInformation')
+    return result
 
     function login() {
       return new Promise((resolve, reject) => {
@@ -82,7 +73,7 @@ const actions = {
               .then((response) => {
                 const { data } = response
                 uni.setStorageSync('token', data.token)
-                resolve()
+                resolve(data)
               })
               .catch((err) => {
                 reject(err)
@@ -90,6 +81,7 @@ const actions = {
           },
           fail: (err) => {
             console.log('error' + err)
+            reject(err)
             uni.showModal({
               title: '登录失败，请点击确认重新登录~',
               showCancel: false,

@@ -8,13 +8,10 @@ class MockApi extends Api {
     this.initMock()
   }
 
-  request(method, url, data = {}) {
-    return new Promise((resolve) => {
-      const name = url.replace('/', '')
-      setTimeout(() => {
-      resolve(createMock(data, this.requestData[method][name]))
-      }, 666);
-    })
+  async request(method, url, data = {}) {
+    await new Promise((resolve) => setTimeout(resolve, 666))
+    const name = url.replace('/', '')
+    return createMock(data, this.requestData[method][name])
   }
 
   initMock() {

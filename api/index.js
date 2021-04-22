@@ -15,6 +15,10 @@ export class Api {
     })
   }
 
+  buildFullPath(relativeURL) {
+    return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+  }
+
   request(method, requestedURL, data = {}) {
     const token = uni.getStorageSync('token')
     const url = this.buildFullPath(requestedURL)
@@ -35,10 +39,6 @@ export class Api {
         },
       })
     })
-  }
-
-  buildFullPath(relativeURL) {
-    return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
   }
 
   responseProcess(res, resolve, reject) {
