@@ -3,7 +3,7 @@
   "easycom": {
     "autoscan": true,
     "custom": {
-      "^c-(.*)": "@/demo/components/$1/index.vue",
+      "^c-(.*)": "@/components/$1/index.vue",
       "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
     }
   },
@@ -39,6 +39,20 @@
       "path": "pages/login/forget",
       "style": {
         "navigationBarTitleText": "重置密码"
+      }
+    },
+    {
+      "path": "pages/category/category",
+      "style": {
+        "navigationBarTitleText": "商品分类",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/cart/cart",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
       }
     },
     // below for demo
@@ -102,10 +116,22 @@
         "text": "首页"
       },
       {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/tab-bar/category.png",
+        "selectedIconPath": "static/tab-bar/category-on.png",
+        "text": "分类"
+      },
+      {
         "pagePath": "demo/pages/demo",
         "iconPath": "static/tab-bar/demo.png",
         "selectedIconPath": "static/tab-bar/demo-on.png",
         "text": "demo"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "static/tab-bar/cart.png",
+        "selectedIconPath": "static/tab-bar/cart-on.png",
+        "text": "购物车"
       },
       {
         "pagePath": "pages/me/me",
