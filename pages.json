@@ -55,6 +55,13 @@
         "enablePullDownRefresh": false
       }
     },
+    {
+      "path": "pages/product/product",
+      "style": {
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false
+      }
+    },
     // below for demo
     {
       "path": "demo/pages/demo",

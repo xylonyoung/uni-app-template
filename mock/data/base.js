@@ -1,21 +1,22 @@
 export default {
-  'list.get': (response) => getList(response),
+  'list.get': (response) => createList(response),
 }
-function getList(response) {
+
+function createList(response) {
   const list = {
     'data|10': [
       {
-        createdTime: '@datetime()',
-        name: '@cname()',
-        region: '@region()',
-        avatar: '@image()',
+        'id|+1': 1,
+        name: '@ctitle(10)',
+        cover: '@image()',
+        'price|6-6666': 66,
+        'sold|0-6666': 88,
         'images|3': ['@image()'],
+        'dimension|10': [{ id: 1, name: '规格', inventory: 6, price: 999 }],
+        createdTime: '@datetime()',
       },
     ],
   }
-  return createList(response, list)
-}
-function createList(response, list) {
   const paginator = {
     current: response.page,
     next: response.page + 1,

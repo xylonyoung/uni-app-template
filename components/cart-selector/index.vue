@@ -1,12 +1,12 @@
 <template>
   <u-popup
-    class="popup"
+    class="cart-selector-container"
     v-model="showDimension"
     mode="bottom"
     @close="popupClose"
   >
-    <view class="product-detail">
-      <view class="image">
+    <view class="product">
+      <view class="product-cover">
         <u-image
           width="200rpx"
           height="200rpx"
@@ -14,27 +14,30 @@
         ></u-image>
       </view>
       <view>
-        <view class="price">
+        <view class="product-price">
           <text>￥</text>
           <text>{{ dimensionPrice }}</text>
         </view>
-        <view class="stock">库存{{ inventoryQuantity }}件</view>
+        <view class="product-stock">库存{{ inventoryQuantity }}件</view>
       </view>
     </view>
+
     <view class="dimension">
       <view>规格</view>
       <view>
         <u-tag
-          class="tag"
+          class="dimension-tag"
           v-for="(item, index) in dimensionList"
           :key="index"
-          :text="item.__metadata.name"
+          :text="item.name"
           :type="index === dimensionIndex ? 'error' : 'info'"
           @click="dimensionChange(index)"
         />
       </view>
     </view>
+
     <u-gap height="40" v-if="hideButton"></u-gap>
+
     <view v-else>
       <view class="quantity">
         <view>购买数量</view>
@@ -45,9 +48,8 @@
         ></u-number-box>
       </view>
       <view class="bottom">
-        <view class="cart" @click="addToCart">加入购物车</view>
-        <!-- TODO -->
-        <view class="buy" @click="toPay">立即购买</view>
+        <view class="bottom-cart" @click="addToCart">加入购物车</view>
+        <view class="bottom-buy" @click="toPay">立即购买</view>
       </view>
     </view>
   </u-popup>
@@ -69,17 +71,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'storeInfo']),
+    ...mapGetters(['cart']),
     inventoryQuantity() {
-      return this.selectedDimension ? this.selectedDimension.remains : 0
+      return this.selectedDimension ? this.selectedDimension.inventory : 0
     },
     selectedDimension() {
       return this.dimensionList[this.dimensionIndex] ?? {}
     },
     dimensionPrice() {
-      return this.selectedDimension.__metadata
-        ? this.$numberFormat(this.selectedDimension.__metadata.price)
-        : 0
+      return this.$numberFormat(this.selectedDimension.price)
     },
   },
   watch: {
@@ -89,18 +89,11 @@ export default {
       },
       immediate: true,
     },
-    product(val) {
-      // reset data
-      if (val.specificationId) {
-        this.dimensionIndex = val.specifications.findIndex(
-          (e) => e.id === val.specificationId
-        )
-      } else {
-        this.dimensionIndex = 0
-      }
-      this.dimensionList = [...val.specifications]
-      this.quantity = 1
-      this.getRemains()
+    product: {
+      handler(val) {
+      if(val.dimension)  this.dimensionList = [...val.dimension]
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -108,22 +101,9 @@ export default {
       const product = {
         ...this.product,
         quantity: this.quantity,
-        specificationId: this.selectedDimension.id,
+        dimension: this.selectedDimension.id,
       }
       this.$store.dispatch('store/toPay', [product])
-    },
-    getRemains() {
-      this.dimensionList.forEach((e, index) => {
-        e.remains ??
-          this.$api
-            .get(`/api/stocks/specifications/${e.id}/remains`)
-            .then((res) => {
-              const { remains } = res.data.find(
-                (i) => i.store.id === this.storeInfo.id
-              )
-              this.$set(this.dimensionList[index], 'remains', remains)
-            })
-      })
     },
     cartChange(cart) {
       this.$store.dispatch('store/setCart', cart)
@@ -141,7 +121,7 @@ export default {
 
       const product = {
         productId: this.product.id,
-        specificationId: this.selectedDimension.id,
+        dimension: this.selectedDimension.id,
         quantity: this.quantity,
       }
       const cart = [...this.cart]
@@ -167,16 +147,10 @@ export default {
 }
 </script>
 <style lang='scss'>
-.cart {
-  background-color: #ed3f14;
-}
-.buy {
-  background-color: #ff7900;
-}
-.product-detail {
+.product {
   padding: 30rpx;
   display: flex;
-  .price {
+  &-price {
     padding-left: 40rpx;
     color: #fa3534;
     font-weight: bold;
@@ -184,7 +158,7 @@ export default {
       font-size: 50rpx;
     }
   }
-  .stock {
+  &-stock {
     padding: 10rpx 40rpx;
     color: #999;
   }
@@ -194,7 +168,7 @@ export default {
   view:first-child {
     margin-bottom: 20rpx;
   }
-  .tag + .tag {
+  u-tag + u-tag {
     margin-left: 20rpx;
   }
 }
@@ -212,9 +186,11 @@ export default {
     width: 50%;
     padding: 20rpx;
   }
-}
-.delete {
-  padding: 20rpx;
-  text-align: center;
+  &-cart {
+    background-color: #ed3f14;
+  }
+  &-buy {
+    background-color: #ff7900;
+  }
 }
 </style>

@@ -1,17 +1,21 @@
 <template>
   <view class="cart-bar-container">
     <view class="left">
-      <navigator class="item" url="/pages/home/home" open-type="switchTab">
+      <navigator class="left-item" url="/pages/home/home" open-type="switchTab">
         <u-icon name="home" :size="40"></u-icon>
         <view>店铺</view>
       </navigator>
-      <view class="item">
+      <view class="left-item">
         <u-icon name="server-fill" :size="40"></u-icon>
         <view>客服</view>
       </view>
-      <navigator class="item car" url="/pages/cart/cart" open-type="switchTab">
+      <navigator
+        class="left-item left-cart"
+        url="/pages/cart/cart"
+        open-type="switchTab"
+      >
         <u-badge
-          class="car-num"
+          class="left-cart-num"
           :count="cartBadge"
           type="error"
           :offset="[-3, -6]"
@@ -21,8 +25,8 @@
       </navigator>
     </view>
     <view class="right">
-      <view class="cart" @click="userClick">加入购物车</view>
-      <view class="buy" @click="userClick">立即购买</view>
+      <view class="right-cart" @click="userClick">加入购物车</view>
+      <view class="right-buy" @click="userClick">立即购买</view>
     </view>
   </view>
 </template>
@@ -55,12 +59,6 @@ export default {
 </script>
 
 <style lang="scss">
-.cart {
-  background-color: #ed3f14;
-}
-.buy {
-  background-color: #ff7900;
-}
 .cart-bar-container {
   width: 100%;
   position: fixed;
@@ -77,16 +75,16 @@ export default {
 .left {
   display: flex;
   font-size: 20rpx;
-  .item {
+  &-item {
     margin: 0 30rpx;
-    &.car {
-      text-align: center;
-      position: relative;
-      .car-num {
-        position: absolute;
-        top: -10rpx;
-        right: -10rpx;
-      }
+  }
+  &-cart {
+    text-align: center;
+    position: relative;
+    &-cart-num {
+      position: absolute;
+      top: -10rpx;
+      right: -10rpx;
     }
   }
 }
@@ -102,6 +100,12 @@ export default {
   view {
     width: 25vw;
     padding: 20rpx 0;
+  }
+  &-cart {
+    background-color: #ed3f14;
+  }
+  &-buy {
+    background-color: #ff7900;
   }
 }
 </style>
