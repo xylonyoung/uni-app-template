@@ -152,7 +152,7 @@ export default {
   display: flex;
   &-price {
     padding-left: 40rpx;
-    color: #fa3534;
+    color: $c-price;
     font-weight: bold;
     text:last-child {
       font-size: 50rpx;

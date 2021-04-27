@@ -62,6 +62,13 @@
         "enablePullDownRefresh": false
       }
     },
+    {
+      "path": "pages/order/order",
+      "style": {
+        "navigationBarTitleText": "我的订单",
+        "enablePullDownRefresh": false
+      }
+    },
     // below for demo
     {
       "path": "demo/pages/demo",
@@ -129,12 +136,6 @@
         "text": "分类"
       },
       {
-        "pagePath": "demo/pages/demo",
-        "iconPath": "static/tab-bar/demo.png",
-        "selectedIconPath": "static/tab-bar/demo-on.png",
-        "text": "demo"
-      },
-      {
         "pagePath": "pages/cart/cart",
         "iconPath": "static/tab-bar/cart.png",
         "selectedIconPath": "static/tab-bar/cart-on.png",
@@ -145,6 +146,12 @@
         "iconPath": "static/tab-bar/me.png",
         "selectedIconPath": "static/tab-bar/me-on.png",
         "text": "我的"
+      },
+      {
+        "pagePath": "demo/pages/demo",
+        "iconPath": "static/tab-bar/demo.png",
+        "selectedIconPath": "static/tab-bar/demo-on.png",
+        "text": "demo"
       }
     ]
   }

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import uQRCode from '@/demo/utils/uqrcode.js'
+import uQRCode from '@/utils/uqrcode.js'
 export default {
   data() {
     return {}

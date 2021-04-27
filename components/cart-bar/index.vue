@@ -5,10 +5,7 @@
         <u-icon name="home" :size="40"></u-icon>
         <view>店铺</view>
       </navigator>
-      <view class="left-item">
-        <u-icon name="server-fill" :size="40"></u-icon>
-        <view>客服</view>
-      </view>
+
       <navigator
         class="left-item left-cart"
         url="/pages/cart/cart"
@@ -23,7 +20,15 @@
         <u-icon name="shopping-cart" :size="40"></u-icon>
         <view>购物车</view>
       </navigator>
+
+      <button open-type="contact" class="reset-button">
+        <view class="left-item">
+          <u-icon name="server-fill" :size="40"></u-icon>
+          <view>客服</view>
+        </view>
+      </button>
     </view>
+
     <view class="right">
       <view class="right-cart" @click="userClick">加入购物车</view>
       <view class="right-buy" @click="userClick">立即购买</view>
@@ -74,9 +79,9 @@ export default {
 }
 .left {
   display: flex;
-  font-size: 20rpx;
   &-item {
     margin: 0 30rpx;
+    font-size: 20rpx;
   }
   &-cart {
     text-align: center;

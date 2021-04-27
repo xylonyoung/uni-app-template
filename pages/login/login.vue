@@ -143,7 +143,7 @@
 					top: 0;
 					left: 0;
 					height: 28rpx;
-					border-left: 1px solid $t-font-color;
+					border-left: 1px solid $c-font;
 					transform: translate3d(-20rpx, 6rpx, 0);
 				}
 			}

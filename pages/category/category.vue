@@ -84,22 +84,27 @@
       :reload.sync="reloadList"
       :height="contentHeight + 'px'"
     >
-      <view
-        class="product"
-        v-for="(item, index) in list"
-        :key="index"
-        @click="navTo(item.id)"
-      >
-        <u-image width="200rpx" height="200rpx" :src="item.cover"></u-image>
-        <view class="description">
-          <view>
-            <view class="description-name">{{ item.name }}</view>
-            <view class="description-quantity">已售{{ item.sold }}件</view>
-          </view>
-          <view class="description-bottom">
-            <view class="description-bottom-price">
+      <view class="product">
+        <view
+          class="product-item"
+          v-for="(item, index) in list"
+          :key="index"
+          @click="navTo(item.id)"
+        >
+          <u-image
+            width="330rpx"
+            height="330rpx"
+            border-radius="16"
+            :src="item.cover"
+          ></u-image>
+          <view class="product-item-name">{{ item.name }}</view>
+          <view class="product-item-bottom">
+            <view class="product-item-bottom-price">
               <text>￥</text>
-              {{ item.price }}
+              {{ $numberFormat(item.price, 0) }}
+            </view>
+            <view class="product-item-bottom-sold">
+              已售{{ $numberFormat(item.sold) }}件
             </view>
           </view>
         </view>
@@ -122,7 +127,7 @@ export default {
       showPopup: false,
       selectedArrow: '',
       list: [],
-      listApi: 'list',
+      listApi: 'mockProducts',
       listQuery: {
         page: 1,
         limit: 10,
@@ -169,6 +174,9 @@ export default {
       return result
     },
   },
+  onShow() {
+    this.$store.dispatch('store/setBadge')
+  },
   mounted() {
     this.getContentHeight()
   },
@@ -192,7 +200,7 @@ export default {
     },
     tabStyle(index) {
       if (index === this.selectedTab) {
-        return { color: '#ff6900' }
+        return { color: this.themeColor }
       }
     },
     tabChange(index) {
@@ -238,9 +246,13 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/store.scss';
+@import '@/styles/product.scss';
+page {
+  background-color: $c-background;
+}
 .search-bar {
-  padding: 20rpx 40rpx 0;
+  padding: 24rpx 40rpx 0;
+  background-color: #fff;
 }
 .tabs {
   height: 80rpx;
@@ -248,6 +260,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   place-items: center;
+  background-color: #fff;
   &-item {
     display: flex;
     &-arrow {
@@ -256,7 +269,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size: 20rpx;
+      font-size: 24rpx;
     }
   }
   &-dropdown {
@@ -271,7 +284,7 @@ export default {
       background-color: #fff;
       z-index: 3;
       &-item {
-        padding: 30rpx 100rpx;
+        padding: 32rpx 80rpx;
         display: flex;
         justify-content: space-between;
         border-top: 1px solid #eee;
@@ -293,20 +306,12 @@ export default {
   position: relative;
   &-bottom {
     width: 100%;
-    padding: 0 20rpx;
+    padding: 16rpx 24rpx;
     position: absolute;
     left: 0;
     bottom: 0;
     display: flex;
     justify-content: space-between;
   }
-}
-.product {
-  width: 100%;
-  padding: 30rpx 20rpx;
-  display: flex;
-  background-color: #fff;
-  border-bottom: 1px solid $t-border-color;
-
 }
 </style>

@@ -1,0 +1,44 @@
+.product {
+  width: 100%;
+  padding: 24rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  &-item {
+    width: 330rpx;
+    margin-bottom: 24rpx;
+    padding: 0 8rpx 16rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16rpx;
+    overflow: hidden;
+    background-color: #fff;
+    &-name {
+      margin-top: 16rpx;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    &-bottom {
+      width: 100%;
+      margin-top: 24rpx;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      &-price {
+        color: $c-price;
+        font-size: 40rpx;
+        line-height: 30rpx;
+        text {
+          font-size: 24rpx;
+        }
+      }
+      &-sold {
+        color: $c-gray;
+        font-size: 24rpx;
+      }
+    }
+  }
+}

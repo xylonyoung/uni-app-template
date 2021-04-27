@@ -135,7 +135,6 @@ export default {
     },
   },
   onShow() {
-    this.$store.dispatch('store/setCart',uni.getStorageSync('cart'))
     this.getProducts()
     this.$store.dispatch('store/setBadge')
   },
@@ -177,7 +176,7 @@ export default {
     },
     findSpecification(item) {
       return (
-        item.specifications.find((e) => e.id === item.specificationId) ?? {}
+        item.dimension.find((e) => e.id === item.specificationId) ?? {}
       )
     },
     toShowCartSelector(item) {
@@ -192,12 +191,11 @@ export default {
         return { ...e, checked: false }
       })
       this.$api
-        .get('list', {
+        .get('mockProducts', {
           '@filter': `entity.getId() in [${products}]`,
         })
         .then((res) => {
-          console.log(res.data,cart)
-           this.products = cart.map((e) => ({
+          this.products = cart.map((e) => ({
             ...res.data.find((i) => i.id === e.productId),
             ...e,
           }))
@@ -207,6 +205,7 @@ export default {
               e.quantity = cart[index].quantity
             })
           })
+          console.log(this.products)
           uni.hideLoading()
         })
     },
@@ -228,7 +227,6 @@ export default {
 }
 </script>
 <style lang='scss'>
-@import '@/styles/store.scss';
 .cart-container {
   padding-bottom: 122rpx;
 }

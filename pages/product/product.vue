@@ -28,7 +28,7 @@
         <view class="introduction-price">
           <view>
             销售价￥
-            <text>{{ product.price }}</text>
+            <text>{{ $numberFormat(product.price) }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sold) }}件</view>
         </view>
@@ -37,7 +37,7 @@
           <view>分享</view>
         </view>
         <view class="introduction-member">
-          <text>会员 最高享受5折优惠</text>
+          <text>会员最高享受5折优惠</text>
           <text @click="$u.route('pages/member/member')">立即开通</text>
         </view>
       </view>
@@ -81,35 +81,6 @@
         <u-parse :html="htmlFormat(product.description)"></u-parse>
       </view>
 
-      <u-popup v-model="showShippingDetail" mode="bottom" closeable>
-        <view class="shipping-detail">
-          <view class="top-title">配送方式</view>
-          <view>
-            <view class="section">
-              <view class="title">
-                <u-icon name="home-fill"></u-icon>
-                支持同城限时达
-              </view>
-              <view class="content">现在下单预计最快12:00配送</view>
-            </view>
-            <view class="section">
-              <view class="title">
-                <u-icon name="car-fill"></u-icon>
-                支持商家配送
-              </view>
-              <view class="content"></view>
-            </view>
-            <u-cell-group>
-              <u-cell-item
-                icon="bag-fill"
-                title="支持到店自提"
-                value="查看到店自提"
-              ></u-cell-item>
-            </u-cell-group>
-          </view>
-        </view>
-      </u-popup>
-
       <c-cart-bar @buy="showCartSelector = true" />
 
       <c-cart-selector
@@ -122,6 +93,35 @@
     <view id="recommend">
       <c-recommend />
     </view>
+
+    <u-popup v-model="showShippingDetail" mode="bottom" closeable>
+      <view class="shipping-detail">
+        <view class="top-title">配送方式</view>
+        <view>
+          <view class="section">
+            <view class="title">
+              <u-icon name="home-fill"></u-icon>
+              支持同城限时达
+            </view>
+            <view class="content">现在下单预计最快12:00配送</view>
+          </view>
+          <view class="section">
+            <view class="title">
+              <u-icon name="car-fill"></u-icon>
+              支持商家配送
+            </view>
+            <view class="content"></view>
+          </view>
+          <u-cell-group>
+            <u-cell-item
+              icon="bag-fill"
+              title="支持到店自提"
+              value="查看到店自提"
+            ></u-cell-item>
+          </u-cell-group>
+        </view>
+      </view>
+    </u-popup>
   </view>
 </template>
 
@@ -191,7 +191,7 @@ export default {
       this.specificationIndex = index
     },
     getProduct(id) {
-      this.$api.get('list').then((res) => {
+      this.$api.get('mockProducts').then((res) => {
         this.product = res.data[0]
         this.swiperList = this.product.images
         // const { images } = this.product
@@ -216,7 +216,7 @@ export default {
 
 <style lang="scss">
 page {
-  background-color: $t-bg-color;
+  background-color: $c-background;
 }
 .introduction {
   background-color: #fff;
@@ -225,7 +225,7 @@ page {
     justify-content: space-between;
     align-items: flex-end;
     padding: 20rpx;
-    color: #fa3534;
+    color: $c-price;
     view {
       text {
         font-size: 60rpx;
@@ -233,7 +233,7 @@ page {
       }
     }
     view:last-child {
-      color: $t-gray;
+      color: $c-gray;
     }
   }
   &-name {

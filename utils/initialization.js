@@ -1,8 +1,8 @@
 import Vue from 'vue'
+import store from '@/store'
 import api from '@/api'
-import getValue from 'get-value'
 import { baseURL } from '@/settings'
-import { getImage, numberFormat } from './index'
+import { getValue,getImage, numberFormat } from './index'
 ;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
   let $api = api
@@ -28,6 +28,8 @@ import { getImage, numberFormat } from './index'
   }
 
   vueUse($api)
+
+  store.dispatch('store/setCart', uni.getStorageSync('cart'))
 })()
 
 /**
