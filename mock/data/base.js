@@ -1,17 +1,17 @@
 const products = {
   'data|10': [
     {
-      'id|+1': 1,
-      name: '@ctitle(10)',
+      'id|1-3': 1,
+      name: '@ctitle(3,10)',
       cover: '@image()',
       price: '@float(6,9999)',
       sold: '@integer(0,9999)',
       'images|3': ['@image()'],
-      'dimension|6': [
+      'dimension|3-6': [
         {
-          'id|+1': 1,
+          'id|1-2': 1,
           name: '@cname()',
-          inventory: '@integer(0,999)',
+          stock: '@integer(0,9)',
           price: '@float(6,9999)',
         },
       ],
@@ -24,16 +24,12 @@ const orders = {
   'data|10': [
     {
       'id|+1': 1,
-      name: '@ctitle(10)',
-      cover: '@image()',
       price: '@float(6,9999)',
-      sold: '@integer(0,9999)',
-      'images|3': ['@image()'],
       'dimension|6': [
         {
           'id|+1': 1,
           name: '@cname()',
-          inventory: '@integer(0,999)',
+          stock: '@integer(0,999)',
           price: '@float(6,9999)',
         },
       ],
@@ -53,6 +49,6 @@ function createList(response, list) {
 }
 
 export default {
-  'mockProducts.get': (response) => createList(response, orders),
-  'mockOrders.get': (response) => createList(response, products),
+  'mockProducts.get': (response) => createList(response, products),
+  'mockOrders.get': (response) => createList(response, orders),
 }

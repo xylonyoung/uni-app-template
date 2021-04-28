@@ -1,7 +1,7 @@
 <template>
   <view class="cart-container">
     <view class="top" v-if="!isEmpty">
-      <view>购物车</view>
+      <view></view>
       <view @click="showDelete = !showDelete">
         {{ showDelete ? '完成' : '管理' }}
       </view>
@@ -17,37 +17,35 @@
         shape="circle"
         :value="item.checked"
         :name="index"
-        :disabled="!item.quantity"
+        :disabled="outOfStock(item)"
         @change="checkboxChange"
       ></u-checkbox>
-      <view class="description" @click="navTo(item.id)">
+      <view class="product-row" @click="navTo(item.id)">
         <u-image
           width="200rpx"
           height="200rpx"
+          border-radius="8"
           :src="$getImage(item.cover)"
         ></u-image>
-        <view class="description">
+        <view class="product-row-detail">
           <view>
-            <view class="description-name">{{ item.name }}</view>
+            <view class="product-row-detail-name">{{ item.name }}</view>
             <u-tag
-              :text="$getValue(findSpecification(item), '__metadata.name')"
+              :text="$getValue(findDimension(item), 'name')"
               type="info"
               @click.native.stop="toShowCartSelector(item)"
             />
           </view>
-          <view class="description-bottom">
-            <view class="description-bottom-price">
+          <view class="product-row-detail-bottom">
+            <view class="product-row-detail-bottom-price">
               <text>￥</text>
-              {{
-                $numberFormat(
-                  $getValue(findSpecification(item), '__metadata.price')
-                )
-              }}
+              {{ $numberFormat($getValue(findDimension(item), 'price')) }}
             </view>
             <!-- component can reactive now! -->
             <u-number-box
               v-model="products[index].quantity"
-              :max="findSpecification(item).remains"
+              min="1"
+              :max="findDimension(item).stock"
               @click.native.stop
             ></u-number-box>
           </view>
@@ -55,28 +53,28 @@
       </view>
     </view>
 
-    <view class="bottom-bar">
+    <view class="bottom">
       <view>
         <u-checkbox v-model="checkAll" @change="checkedAll" shape="circle">
           全选
         </u-checkbox>
-        <view v-if="discount">
+        <!-- <view v-if="discount">
           {{ member.level.__toString + '：' + $numberFormat(discount * 10) }}折
-        </view>
+        </view> -->
       </view>
-      <view class="right" v-if="showDelete">
+      <view class="bottom-right" v-if="showDelete">
         <u-button type="error" plain @click="deleteFromCart">删除</u-button>
       </view>
-      <view class="right" v-else>
-        <view class="price-box">
+      <view class="bottom-right" v-else>
+        <view class="bottom-right-price-box">
           <view>
             合计:
-            <text class="price">
+            <text class="bottom-right-price-box-price">
               ￥
               <text>{{ $numberFormat(amount) }}</text>
             </text>
           </view>
-          <view class="freight">不含运费</view>
+          <view class="bottom-right-price-box-freight">不含运费</view>
         </view>
         <u-button type="error" @click="toPay">结算</u-button>
       </view>
@@ -110,18 +108,13 @@ export default {
     amount() {
       const totalPrice = this.products.reduce((acc, cur) => {
         if (!cur.checked) return acc
-        const item = cur.specifications.find(
-          (e) => e.id === cur.specificationId
-        )
-        return acc + item.__metadata.price * cur.quantity
+        const item = cur.dimension.find((e) => e.id === cur.dimensionId)
+        return acc + item.price * cur.quantity
       }, 0)
       return this.discount ? totalPrice * this.discount : totalPrice
     },
     discount() {
-      const defaultDiscount = this.$getValue(
-        this.member,
-        'level.__metadata.defaultDiscount'
-      )
+      const defaultDiscount = null
       return defaultDiscount ? defaultDiscount : 0
     },
   },
@@ -139,6 +132,10 @@ export default {
     this.$store.dispatch('store/setBadge')
   },
   methods: {
+    outOfStock(item) {
+      const aDimension = item.dimension.find((e) => e.id === item.dimensionId)
+      return aDimension?.stock <= 0
+    },
     toPay() {
       const products = this.products.filter((e) => e.checked)
       if (!products.length) {
@@ -155,59 +152,66 @@ export default {
       const cart = this.cart.filter((e) =>
         this.products.some((i) => i.id === e.productId)
       )
-      this.$store.dispatch('store/setCart', cart)
-      this.$store.dispatch('store/setBadge')
+      this.cartChange(cart)
       uni.showToast({
         title: '删除成功~',
       })
+    },
+    cartChange(cart) {
+      this.$store.dispatch('store/setCart', cart)
+      this.$store.dispatch('store/setBadge')
     },
     cartSelectorChange(index) {
       const productIndex = this.products.findIndex(
         (e) => e.id === this.product.id
       )
-      this.products[productIndex].specificationId = this.product.specifications[
-        index
-      ].id
+      this.products[productIndex].dimensionId = this.product.dimension[index].id
     },
     navTo(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`,
       })
     },
-    findSpecification(item) {
-      return (
-        item.dimension.find((e) => e.id === item.specificationId) ?? {}
-      )
+    findDimension(item) {
+      return item.dimension.find((e) => e.id === item.dimensionId) ?? {}
     },
     toShowCartSelector(item) {
       this.product = item
       this.showCartSelector = true
     },
-    getProducts() {
+    async getProducts() {
       uni.showLoading()
-      const products = []
+      const productsId = []
       const cart = this.cart.map((e) => {
-        products.push(e.productId)
+        productsId.push(e.productId)
         return { ...e, checked: false }
       })
-      this.$api
-        .get('mockProducts', {
-          '@filter': `entity.getId() in [${products}]`,
-        })
-        .then((res) => {
-          this.products = cart.map((e) => ({
-            ...res.data.find((i) => i.id === e.productId),
-            ...e,
-          }))
-          // component change the value, so need to assignment again!
-          this.$nextTick(() => {
-            this.products.forEach((e, index) => {
-              e.quantity = cart[index].quantity
-            })
-          })
-          console.log(this.products)
-          uni.hideLoading()
-        })
+      const res = await this.$api.get('mockProducts', {
+        '@filter': `entity.getId() in [${productsId}]`,
+      })
+
+      const nonentity = []
+      cart.forEach((e) => {
+        const result = res.data.find((i) => i.id === e.productId)
+        if (result) {
+          this.products.push({ ...result, ...e })
+        } else {
+          nonentity.push(e.productId)
+        }
+      })
+
+      // component change the value, so need to assignment again!
+      // this.$nextTick(() => {
+      //   this.products.forEach((e, index) => {
+      //     e.quantity = cart[index].quantity
+      //   })
+      // })
+      uni.hideLoading()
+
+      if (nonentity.length > 0) {
+        const aCart = this.cart.filter((e) => nonentity.includes(e.productId))
+        this.cartChange(aCart)
+      }
     },
     checkboxChange(event) {
       this.products[event.name].checked = event.value
@@ -215,7 +219,7 @@ export default {
     checkedAll(event) {
       if (event.value) {
         this.products.forEach((e) => {
-          if (e.quantity > 0) e.checked = true
+          if (e.quantity > 0 && !this.outOfStock(e)) e.checked = true
         })
       } else {
         this.products.forEach((e) => {
@@ -227,27 +231,61 @@ export default {
 }
 </script>
 <style lang='scss'>
+@import '@/styles/product';
+page {
+  background-color: $c-background;
+}
 .cart-container {
-  padding-bottom: 122rpx;
+  padding-bottom: 124rpx;
 }
 .top {
   position: sticky;
   top: 0;
   z-index: 99;
-  padding: 0 30rpx 20rpx;
+  padding: 24rpx;
   display: flex;
   justify-content: space-between;
   background-color: #fff;
 }
 .empty {
-  padding-top: 50rpx;
+  padding-top: 80rpx;
 }
 .cart-product {
-  margin: 20rpx 0;
-  padding: 20rpx;
+  margin: 24rpx 0;
+  padding: 24rpx;
   display: grid;
   grid-template-columns: 10% 90%;
   place-items: center;
   background-color: #fff;
+}
+.bottom {
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+  width: 100%;
+  padding: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $c-border;
+  background-color: #fff;
+  &-right {
+    display: flex;
+    align-items: flex-end;
+    &-price-box {
+      margin-right: 24rpx;
+      &-freight {
+        color: $c-gray;
+        font-size: 20rpx;
+      }
+      &-price {
+        color: $c-price;
+        text {
+          font-size: 40rpx;
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }
 </style>

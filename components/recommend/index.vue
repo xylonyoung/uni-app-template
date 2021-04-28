@@ -61,7 +61,7 @@ export default {
 }
 </script>
 <style lang='scss'>
-@import '@/styles/product.scss';
+@import '@/styles/product';
 .recommend-container {
   padding: 30rpx 0;
 }

@@ -7,23 +7,20 @@
   &-item {
     width: 330rpx;
     margin-bottom: 24rpx;
-    padding: 0 8rpx 16rpx;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     border-radius: 16rpx;
     overflow: hidden;
     background-color: #fff;
     &-name {
-      margin-top: 16rpx;
+      padding: 16rpx;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
     &-bottom {
       width: 100%;
-      margin-top: 24rpx;
+      padding: 0 16rpx 16rpx;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -38,6 +35,41 @@
       &-sold {
         color: $c-gray;
         font-size: 24rpx;
+      }
+    }
+  }
+}
+
+.product-row {
+  width: 100%;
+  display: flex;
+  position: relative;
+  &-detail {
+    width: calc(100% - 220rpx);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 20rpx;
+    &-name {
+      margin-bottom: 20rpx;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    &-quantity {
+      display: flex;
+      justify-content: space-between;
+      color: $c-gray;
+    }
+    &-bottom {
+      display: flex;
+      justify-content: space-between;
+      &-price {
+        color: $c-price;
+        font-size: 40rpx;
+        text {
+          font-size: 24rpx;
+        }
       }
     }
   }

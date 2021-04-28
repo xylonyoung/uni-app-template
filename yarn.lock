@@ -26,7 +26,7 @@ numbro@^2.3.2:
   dependencies:
     bignumber.js "^8.1.1"
 
-uview-ui@^1.8.3:
+uview-ui@^1.8.4:
   version "1.8.4"
   resolved "https://registry.npm.taobao.org/uview-ui/download/uview-ui-1.8.4.tgz#e32bbf2379421d319022e324e1cb7b5387d3bd44"
   integrity sha1-4yu/I3lCHTGQIuMk4ct7U4fTvUQ=

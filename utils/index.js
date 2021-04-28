@@ -1,15 +1,15 @@
 import numbro from 'numbro'
 import { baseURL } from '@/settings'
 
-export function numberFormat(num = 0, mantissa = 2) {
-  return numbro(num).format({
+export function numberFormat(num, mantissa = 2) {
+  return numbro(num ?? 0).format({
     thousandSeparated: true,
     trimMantissa: true,
     mantissa,
   })
 }
 
-export function numberFormatCn(num = 0) {
+export function numberFormatCn(num) {
   if (num >= 10000) {
     return numberFormat(num / 10000) + '万'
   }
@@ -38,20 +38,17 @@ export function htmlFormat(htmlData = '') {
  * @param {String} key
  * @returns {String | null}
  */
-export function getValue(arg, key) {
-  if (!arg) {
-    return null
-  }
-  
-  if (typeof key === 'string') {
-    return getValue(arg, key.split('.'))
+export function getValue(arg, prop) {
+  if (typeof arg !== 'object' || typeof prop !== 'string') return null
+
+  const keys = prop.split('.')
+
+  let result = arg
+
+  for (const key of keys) {
+    result = result?.[key]
+    if (!result) break
   }
 
-  const result = arg?.[key[0]]
-
-  if (key.length === 1) {
-    return result ?? null
-  } else {
-    return getValue(result, key.slice(1))
-  }
+  return result ?? null
 }

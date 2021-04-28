@@ -15,7 +15,6 @@ const state = {
     { label: '完成', value: '5' },
     { label: '售后中', value: '6' },
   ],
-  categoryQuery: null,
   member: {},
 }
 
@@ -43,16 +42,8 @@ const actions = {
       commit('SET_MEMBER', res.data)
     })
   },
-  setCategoryQuery({ commit }, query) {
-    commit('SET_CATEGORY_QUERY', query)
-  },
   setOrderProducts({ commit }, products) {
     commit('SET_ORDER_PRODUCTS', products)
-  },
-  getStoreInfo({ commit }, storeId) {
-    $api.get('/api/stores/' + storeId).then((res) => {
-      commit('SET_INFO', res.data)
-    })
   },
   setCart({ commit }, cart) {
     commit('SET_CART', cart)

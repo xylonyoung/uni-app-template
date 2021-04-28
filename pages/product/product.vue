@@ -192,7 +192,7 @@ export default {
     },
     getProduct(id) {
       this.$api.get('mockProducts').then((res) => {
-        this.product = res.data[0]
+        this.product = {...res.data[0]}
         this.swiperList = this.product.images
         // const { images } = this.product
         // if (images) this.getSwiperList(images)

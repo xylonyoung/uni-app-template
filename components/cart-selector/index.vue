@@ -16,9 +16,9 @@
       <view>
         <view class="product-price">
           <text>￥</text>
-          <text>{{ dimensionPrice }}</text>
+          <text>{{ $numberFormat(this.selectedDimension.price) }}</text>
         </view>
-        <view class="product-stock">库存{{ inventoryQuantity }}件</view>
+        <view class="product-stock">库存{{ quantityInStock }}件</view>
       </view>
     </view>
 
@@ -44,7 +44,7 @@
         <u-number-box
           v-model="quantity"
           :min="1"
-          :max="inventoryQuantity"
+          :max="quantityInStock"
         ></u-number-box>
       </view>
       <view class="bottom">
@@ -72,14 +72,11 @@ export default {
   },
   computed: {
     ...mapGetters(['cart']),
-    inventoryQuantity() {
-      return this.selectedDimension ? this.selectedDimension.inventory : 0
+    quantityInStock() {
+      return this.selectedDimension ? this.selectedDimension.stock : 0
     },
     selectedDimension() {
       return this.dimensionList[this.dimensionIndex] ?? {}
-    },
-    dimensionPrice() {
-      return this.$numberFormat(this.selectedDimension.price)
     },
   },
   watch: {
@@ -91,7 +88,15 @@ export default {
     },
     product: {
       handler(val) {
-      if(val.dimension)  this.dimensionList = [...val.dimension]
+        if (val.dimension) {
+          this.dimensionList = [...val.dimension]
+          const index = this.dimensionList.findIndex(
+            (e) => e.id === val.dimensionId
+          )
+          if (index !== -1) {
+            this.dimensionIndex = index
+          }
+        }
       },
       immediate: true,
     },
@@ -101,7 +106,7 @@ export default {
       const product = {
         ...this.product,
         quantity: this.quantity,
-        dimension: this.selectedDimension.id,
+        dimensionId: this.selectedDimension.id,
       }
       this.$store.dispatch('store/toPay', [product])
     },
@@ -111,7 +116,7 @@ export default {
       this.popupClose()
     },
     addToCart() {
-      if (this.selectedDimension.remains < 1) {
+      if (this.quantityInStock < 1) {
         uni.showToast({
           title: '库存不足~',
           icon: 'none',
@@ -121,7 +126,7 @@ export default {
 
       const product = {
         productId: this.product.id,
-        dimension: this.selectedDimension.id,
+        dimensionId: this.selectedDimension.id,
         quantity: this.quantity,
       }
       const cart = [...this.cart]
@@ -139,6 +144,7 @@ export default {
     dimensionChange(index) {
       this.dimensionIndex = index
       this.$emit('change', index)
+      if (this.hideButton) this.popupClose()
     },
     popupClose() {
       this.$emit('input', false)

@@ -143,9 +143,9 @@ export default {
     this.setTabList()
     this.findTabIndex(option.status)
   },
-  onPullDownRefresh() {
-    this.$refs.loadList[this.tabIndex].loadData('refresh')
-  },
+  // onPullDownRefresh() {
+  //   this.$refs.loadList[this.tabIndex].loadData('refresh')
+  // },
   methods: {
     setTabList() {
       const tabList = [

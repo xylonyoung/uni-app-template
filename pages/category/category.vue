@@ -246,7 +246,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/product.scss';
+@import '@/styles/product';
 page {
   background-color: $c-background;
 }
