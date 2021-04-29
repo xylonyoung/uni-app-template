@@ -14,6 +14,7 @@
   </view>
 </template>
 <style lang='scss' scoped>
+// https://codepen.io/kowlor/pen/ZYYQoy
 /*
   Malik Dellidj - @Dathink
 
@@ -75,7 +76,6 @@ $asteroids-belt-pl: 210px;
 
 .solar-syst {
   background: radial-gradient(ellipse at bottom, #1c2837 0%, #050608 100%);
-  z-index: -1;
   &:after {
     content: '';
     position: absolute;

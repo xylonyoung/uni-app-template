@@ -1,9 +1,9 @@
 <template>
-  <view>
+  <view class="me-container">
+    <view class="background">
+      <c-solar-system />
+    </view>
     <view class="user">
-      <view class="user-background">
-        <c-solar-system />
-      </view>
       <view class="user-info">
         <u-avatar :src="profile.avatarUrl" @click="getUserProfile"></u-avatar>
         <view class="user-info-name">
@@ -158,18 +158,20 @@ export default {
 </script>
 <style lang='scss'>
 page {
-  background-color: $c-background;
+  // background-color: $c-background;
+  // background: radial-gradient(ellipse at bottom, #1c2837 0%, #050608 100%);
+}
+.background {
+  position: fixed;
+  top: -80vh;
+  left: 0;
+  width: 100%;
+  height: 200vh;
+  z-index: -1;
 }
 .user {
   position: relative;
   height: 500rpx;
-  &-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
   &-info {
     padding: 200rpx 40rpx 0;
     display: flex;

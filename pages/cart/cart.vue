@@ -191,14 +191,17 @@ export default {
       })
 
       const nonentity = []
+      const products = []
       cart.forEach((e) => {
         const result = res.data.find((i) => i.id === e.productId)
         if (result) {
-          this.products.push({ ...result, ...e })
+          products.push({ ...result, ...e })
         } else {
           nonentity.push(e.productId)
         }
       })
+
+      this.products = products
 
       // component change the value, so need to assignment again!
       // this.$nextTick(() => {

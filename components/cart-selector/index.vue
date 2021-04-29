@@ -154,7 +154,7 @@ export default {
 </script>
 <style lang='scss'>
 .product {
-  padding: 30rpx;
+  padding: 24rpx;
   display: flex;
   &-price {
     padding-left: 40rpx;
@@ -165,24 +165,27 @@ export default {
     }
   }
   &-stock {
-    padding: 10rpx 40rpx;
+    padding: 12rpx 40rpx;
     color: #999;
   }
 }
+
 .dimension {
-  padding: 0 30rpx;
+  padding: 0 32rpx;
   view:first-child {
-    margin-bottom: 20rpx;
+    margin-bottom: 24rpx;
   }
   u-tag + u-tag {
-    margin-left: 20rpx;
+    margin-left: 24rpx;
   }
 }
+
 .quantity {
   display: flex;
   justify-content: space-between;
-  padding: 30rpx;
+  padding: 32rpx;
 }
+
 .bottom {
   display: flex;
   align-items: center;
@@ -190,7 +193,7 @@ export default {
   text-align: center;
   view {
     width: 50%;
-    padding: 20rpx;
+    padding: 24rpx;
   }
   &-cart {
     background-color: #ed3f14;

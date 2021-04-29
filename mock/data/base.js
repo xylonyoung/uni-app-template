@@ -25,14 +25,17 @@ const orders = {
     {
       'id|+1': 1,
       price: '@float(6,9999)',
-      'dimension|6': [
+      'status|0-3': 1,
+      'items|1-3': [
         {
-          'id|+1': 1,
-          name: '@cname()',
-          stock: '@integer(0,999)',
+          name: '@ctitle(3,10)',
+          cover: '@image()',
           price: '@float(6,9999)',
+          'quantity|1-9':1,
+          dimension: { id: 1, name: '@cname()' },
         },
       ],
+
       createdTime: '@datetime()',
     },
   ],

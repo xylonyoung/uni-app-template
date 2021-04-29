@@ -63,12 +63,12 @@ export default {
 <style lang='scss'>
 @import '@/styles/product';
 .recommend-container {
-  padding: 30rpx 0;
+  padding: 24rpx 0;
 }
+
 .title {
-  margin-bottom: 30rpx;
   text-align: center;
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: bold;
 }
 </style>

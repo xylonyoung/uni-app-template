@@ -77,24 +77,28 @@ export default {
   background-color: #ffffff;
   padding: 16rpx 0;
 }
+
 .left {
   display: flex;
+  justify-content: space-between;
   &-item {
-    margin: 0 30rpx;
-    font-size: 20rpx;
+    margin: 0 24rpx;
+    font-size: 24rpx;
+    text-align: center;
   }
   &-cart {
     text-align: center;
     position: relative;
     &-cart-num {
       position: absolute;
-      top: -10rpx;
-      right: -10rpx;
+      top: -12rpx;
+      right: -12rpx;
     }
   }
 }
+
 .right {
-  margin-right: 30rpx;
+  margin-right: 32rpx;
   display: flex;
   align-items: center;
   // border-radius: 100rpx;
@@ -104,7 +108,7 @@ export default {
   text-align: center;
   view {
     width: 25vw;
-    padding: 20rpx 0;
+    padding: 24rpx 0;
   }
   &-cart {
     background-color: #ed3f14;

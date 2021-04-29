@@ -82,6 +82,7 @@ export default {
       }, 99)
     },
     resetReload() {
+      this.refresh = false
       this.$emit('update:reload', false)
     },
     async loadData(refresh) {
@@ -129,6 +130,7 @@ export default {
 .swiper-wrapper {
   box-sizing: border-box;
 }
+
 .back-to-top {
   width: 80rpx;
   height: 80rpx;

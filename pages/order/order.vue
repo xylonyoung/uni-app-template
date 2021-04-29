@@ -18,18 +18,17 @@
           :height="height"
         >
           <view
-            class="products"
+            class="order"
             v-for="(order, orderIndex) in tab.list"
             :key="orderIndex"
           >
             <view class="order-top">
-              <text>{{ storeInfo.name }}</text>
               <text>
                 {{ getOrderStatus(order.status) }}
               </text>
             </view>
             <view
-              class="description"
+              class="product-row"
               v-for="(item, index) in order.items"
               :key="index"
               @click="navTo(item)"
@@ -37,41 +36,28 @@
               <u-image
                 width="200rpx"
                 height="200rpx"
-                :src="
-                  $getImage(
-                    $getValue(
-                      item,
-                      '__metadata.specification.__metadata.product.__metadata.cover'
-                    )
-                  )
-                "
+                border-radius="8"
+                :src="$getImage(item.cover)"
               ></u-image>
-              <view class="right">
+              <view class="product-row-detail">
                 <view>
-                  <view class="name">
-                    {{
-                      $getValue(
-                        item,
-                        '__metadata.specification.__metadata.product.__metadata.name'
-                      )
-                    }}
+                  <view class="product-row-detail-name">
+                    {{ item.name }}
                   </view>
-                  <view class="quantity">
+                  <view class="product-row-detail-quantity">
                     <view>
-                      {{
-                        $getValue(
-                          item,
-                          '__metadata.specification.__metadata.name'
-                        )
-                      }}
+                      {{ item.dimension.name }}
                     </view>
-                    <view>x{{ item.__metadata.quantity }}</view>
+                    <view>x{{ item.quantity }}</view>
                   </view>
                 </view>
-                <view class="bottom">
-                  <view class="price" style="color: #999">
+                <view class="product-row-detail-bottom">
+                  <view
+                    class="product-row-detail-bottom-price"
+                    style="color: #999"
+                  >
                     <text>￥</text>
-                    {{ $numberFormat($getValue(item, '__metadata.price')) }}
+                    {{ $numberFormat(item.price) }}
                   </view>
                 </view>
               </view>
@@ -83,12 +69,12 @@
             </view>
 
             <view class="order-bottom">
-              <view class="date">
+              <view class="order-bottom-date">
                 {{ order.createdTime | timeFrom('yyyy-mm-dd hh:MM') }}
               </view>
               <view>
                 <text>共{{ order.items.length }}件商品 实付金额：</text>
-                <text class="price">
+                <text class="order-bottom-price">
                   <text>￥</text>
                   <text>{{ $numberFormat(order.price) }}</text>
                 </text>
@@ -137,15 +123,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['storeInfo', 'orderStatus']),
+    ...mapGetters(['orderStatus']),
   },
   onLoad(option) {
     this.setTabList()
     this.findTabIndex(option.status)
   },
-  // onPullDownRefresh() {
-  //   this.$refs.loadList[this.tabIndex].loadData('refresh')
-  // },
   methods: {
     setTabList() {
       const tabList = [
@@ -212,10 +195,7 @@ export default {
       this.tabIndex = e.detail.current
     },
     navTo(item) {
-      const id = this.$getValue(
-        item,
-        '__metadata.specification.__metadata.product.id'
-      )
+      const id = item.id
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`,
       })
@@ -224,44 +204,59 @@ export default {
 }
 </script>
 <style lang="scss">
-.products {
-  margin-bottom: 30rpx;
+@import '@/styles/product';
+page {
+  background-color: $c-background;
 }
-.order-top,
-.order-bottom {
-  padding: 0 20rpx;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.order-top {
-  margin-bottom: 20rpx;
-  padding-bottom: 10rpx;
-  border-bottom: 1px solid $c-border;
-}
-.order-bottom {
-  margin-top: 20rpx;
-  padding-top: 10rpx;
-  border-top: 1px solid $c-border;
-  .date {
-    color: $c-gray;
-    font-size: 24rpx;
+
+.order {
+  margin-bottom: 24rpx;
+  padding: 24rpx 0;
+  background-color: #fff;
+  &-top,
+  &-bottom {
+    padding: 0 24rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
   }
-  .price {
-    color: $c-price;
+  &-top {
+    margin-bottom: 24rpx;
+    padding-bottom: 12rpx;
+    border-bottom: 1px solid $c-border;
+  }
+  &-bottom {
+    margin-top: 24rpx;
+    padding-top: 12rpx;
     font-size: 24rpx;
-    text:last-child {
-      font-size: 40rpx;
-      font-weight: bold;
+    border-top: 1px solid $c-border;
+    &-date {
+      color: $c-gray;
+    }
+    &-price {
+      color: $c-price;
+      text:last-child {
+        font-size: 40rpx;
+        font-weight: bold;
+      }
+    }
+  }
+  &-comment {
+    padding: 24rpx;
+    text {
+      color: $c-gray;
     }
   }
 }
-.order-comment {
-  padding-top: 20rpx;
-  text {
-    color: $c-gray;
-  }
+
+.product-row {
+  padding: 0 24rpx;
 }
+
+.product-row + .product-row {
+  margin-top: 24rpx;
+}
+
 .bottom-btn {
   margin-top: 20rpx;
   display: flex;
