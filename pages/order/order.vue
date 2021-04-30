@@ -56,7 +56,6 @@
                     class="product-row-detail-bottom-price"
                     style="color: #999"
                   >
-                    <text>￥</text>
                     {{ $numberFormat(item.price) }}
                   </view>
                 </view>
@@ -75,7 +74,6 @@
               <view>
                 <text>共{{ order.items.length }}件商品 实付金额：</text>
                 <text class="order-bottom-price">
-                  <text>￥</text>
                   <text>{{ $numberFormat(order.price) }}</text>
                 </text>
               </view>

@@ -1,4 +1,5 @@
 import { baseURL } from '@/settings'
+import store from '@/store'
 
 export class Api {
   constructor() {

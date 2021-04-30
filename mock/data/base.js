@@ -31,12 +31,21 @@ const orders = {
           name: '@ctitle(3,10)',
           cover: '@image()',
           price: '@float(6,9999)',
-          'quantity|1-9':1,
+          'quantity|1-9': 1,
           dimension: { id: 1, name: '@cname()' },
         },
       ],
 
       createdTime: '@datetime()',
+    },
+  ],
+}
+
+const category = {
+  'data|20': [
+    {
+      'id|+1': 1,
+      name: '@ctitle(3,30)',
     },
   ],
 }
@@ -54,4 +63,5 @@ function createList(response, list) {
 export default {
   'mockProducts.get': (response) => createList(response, products),
   'mockOrders.get': (response) => createList(response, orders),
+  'mockCategory.get': (response) => createList(response, category),
 }

@@ -70,7 +70,7 @@
           :key="index"
           @click="navToOrder(item.status)"
         >
-          <u-icon :name="item.icon" :color="item.color" size="60"></u-icon>
+          <u-icon :name="item.icon" color="#999" size="56"></u-icon>
           <view>{{ item.name }}</view>
         </u-grid-item>
       </u-grid>
@@ -87,7 +87,7 @@
           <u-icon
             style="margin-right: 10rpx"
             slot="icon"
-            size="50"
+            size="56"
             :name="item.icon"
             :color="item.color"
           ></u-icon>
@@ -103,7 +103,7 @@ export default {
     return {
       orderList: [
         { name: '待付款', status: '1', icon: 'rmb-circle' },
-        { name: '待发货', status: '2', icon: 'bag' },
+        { name: '待发货', status: '2', icon: 'gift' },
         { name: '待收货', status: '3', icon: 'car' },
         { name: '待评价', status: '4', icon: 'edit-pen' },
         {
@@ -113,10 +113,10 @@ export default {
         },
       ],
       menuList: [
-        { title: '拼团', icon: 'man-add', color: '#ff0000' },
-        { title: '砍价', icon: 'tags', color: '#ff6700' },
-        { title: '推荐', icon: 'thumb-up', color: '#ff9f00' },
-        { title: '账户与安全', icon: 'setting', color: '#51bbe0' },
+        { title: '拼团', icon: 'man-add', color: '#ee883b' },
+        { title: '砍价', icon: 'tags', color: '#9789f7' },
+        { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
+        { title: '设置', icon: 'setting-fill', color: '#54b4ef' },
       ],
     }
   },

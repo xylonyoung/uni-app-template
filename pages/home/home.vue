@@ -40,7 +40,6 @@
         <view class="product-item-name">{{ item.name }}</view>
         <view class="product-item-bottom">
           <view class="product-item-bottom-price">
-            <text>￥</text>
             {{ $numberFormat(item.price, 0) }}
           </view>
           <view class="product-item-bottom-sold">

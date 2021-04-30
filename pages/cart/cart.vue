@@ -38,7 +38,6 @@
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price">
-              <text>￥</text>
               {{ $numberFormat($getValue(findDimension(item), 'price')) }}
             </view>
             <!-- component can reactive now! -->
@@ -70,7 +69,6 @@
           <view>
             合计:
             <text class="bottom-right-price-box-price">
-              ￥
               <text>{{ $numberFormat(amount) }}</text>
             </text>
           </view>

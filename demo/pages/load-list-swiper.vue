@@ -70,7 +70,7 @@ export default {
       return {
         name: e.name,
         list: [],
-        listApi: 'list',
+        listApi: 'mockProducts',
         listQuery: {
           page: 1,
           limit: 10,

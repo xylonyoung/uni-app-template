@@ -1,6 +1,6 @@
 <template>
-  <view class="category-container">
-    <view class="category-container-top">
+  <view class="list-container">
+    <view id="list-container-top">
       <view class="search-bar">
         <u-search
           placeholder="请输入搜索的商品"
@@ -65,15 +65,17 @@
     </view>
 
     <u-popup v-model="showPopup" mode="right">
-      <view class="popup">
-        <view>出淤泥而不染，濯清涟而不妖</view>
-        <view class="popup-bottom">
-          <u-button @click="popupConfirm('reset')">重置</u-button>
-          <u-button type="warning" @click="popupConfirm('reset')">
-            确定
-          </u-button>
+      <scroll-view scroll-y class="category">
+        <view
+          v-for="(item, index) in categoryList"
+          :key="index"
+          class="category-item"
+          :style="[categoryItemStyle(index)]"
+          @click="categoryConfirm(item, index)"
+        >
+          {{ item.name }}
         </view>
-      </view>
+      </scroll-view>
     </u-popup>
 
     <c-load-list
@@ -100,7 +102,6 @@
           <view class="product-item-name">{{ item.name }}</view>
           <view class="product-item-bottom">
             <view class="product-item-bottom-price">
-              <text>￥</text>
               {{ $numberFormat(item.price, 0) }}
             </view>
             <view class="product-item-bottom-sold">
@@ -135,6 +136,8 @@ export default {
       },
       reloadList: false,
       contentHeight: '',
+      categoryList: [],
+      categoryIndex: [],
     }
   },
   computed: {
@@ -176,11 +179,26 @@ export default {
   },
   onShow() {
     this.$store.dispatch('store/setBadge')
+    this.getCategory()
   },
   mounted() {
     this.getContentHeight()
   },
   methods: {
+    categoryItemStyle(index) {
+      return index === this.categoryIndex ? { color: this.themeColor } : ''
+    },
+    categoryConfirm(item, index) {
+      // TODO
+      this.categoryIndex = index
+      this.showPopup = false
+    },
+    getCategory() {
+      const params = { '@filter': 'entity.getEnabled() && entity.getType()' }
+      this.$api.get('mockCategory', params).then((res) => {
+        this.categoryList = res.data
+      })
+    },
     navTo(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`,
@@ -194,7 +212,7 @@ export default {
     },
     getContentHeight() {
       let windowHeight = this.$u.sys().windowHeight
-      this.$uGetRect('.category-container-top').then((res) => {
+      this.$uGetRect('#list-container-top').then((res) => {
         this.contentHeight = windowHeight - res.bottom
       })
     },
@@ -230,9 +248,7 @@ export default {
       this.showDropdown = false
       this.toReloadList()
     },
-    popupConfirm(reset) {
-      this.showPopup = false
-    },
+
     searchProducts(e) {
       if (!e) {
         this.showToast('请输入搜索内容!', 'warning')
@@ -301,17 +317,16 @@ page {
     }
   }
 }
-.popup {
+.category {
+  width: 60vw;
   height: 100%;
   position: relative;
-  &-bottom {
-    width: 100%;
-    padding: 16rpx 24rpx;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: space-between;
+  &-item {
+    padding: 24rpx;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid $c-border;
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <view class="recommend-container">
     <view class="title">
       <u-icon name="thumb-up-fill" color="#ff6900"></u-icon>
-      为你推荐
+      拆你喜欢
     </view>
 
     <view class="product">

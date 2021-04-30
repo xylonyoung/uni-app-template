@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       list: [],
-      listApi: 'list',
+      listApi: 'mockProducts',
       listQuery: {
         page: 1,
         limit: 10,

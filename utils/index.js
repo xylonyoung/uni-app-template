@@ -34,16 +34,16 @@ export function htmlFormat(htmlData = '') {
 /**
  * get the value in Object or Array
  * key include "." to separate
- * @param {Object | Array} arg
- * @param {String} key
+ * @param {Object | Array} obj
+ * @param {String} prop
  * @returns {String | null}
  */
-export function getValue(arg, prop) {
-  if (typeof arg !== 'object' || typeof prop !== 'string') return null
+ export function getValue(obj, prop) {
+  if (typeof obj !== 'object' || typeof prop !== 'string') return null
 
   const keys = prop.split('.')
 
-  let result = arg
+  let result = obj
 
   for (const key of keys) {
     result = result?.[key]
