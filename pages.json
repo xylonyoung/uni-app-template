@@ -42,6 +42,13 @@
       }
     },
     {
+      "path": "pages/category/category",
+      "style": {
+        "navigationBarTitleText": "商品分类",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
       "path": "pages/product/list",
       "style": {
         "navigationBarTitleText": "商品列表",
@@ -137,7 +144,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/product/list",
+        "pagePath": "pages/category/category",
         "iconPath": "static/tab-bar/category.png",
         "selectedIconPath": "static/tab-bar/category-on.png",
         "text": "分类"
