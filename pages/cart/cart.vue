@@ -15,6 +15,7 @@
     <view class="cart-product" v-for="(item, index) in products" :key="index">
       <u-checkbox
         shape="circle"
+        active-color="#ff6900"
         :value="item.checked"
         :name="index"
         :disabled="outOfStock(item)"
@@ -25,26 +26,31 @@
           width="200rpx"
           height="200rpx"
           border-radius="8"
+          mode="aspectFit"
           :src="$getImage(item.cover)"
         ></u-image>
         <view class="product-row-detail">
           <view>
             <view class="product-row-detail-name">{{ item.name }}</view>
             <u-tag
-              :text="$getValue(findDimension(item), 'name')"
+              :text="$getValue(findDimension(item), '__metadata.name')"
               type="info"
               @click.native.stop="toShowCartSelector(item)"
             />
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price">
-              {{ $numberFormat($getValue(findDimension(item), 'price')) }}
+              {{
+                $numberFormat(
+                  $getValue(findDimension(item), '__metadata.price')
+                )
+              }}
             </view>
             <!-- component can reactive now! -->
             <u-number-box
               v-model="products[index].quantity"
               min="1"
-              :max="findDimension(item).stock"
+              :max="hasStock ? findDimension(item).stock : 999"
               @click.native.stop
             ></u-number-box>
           </view>
@@ -54,7 +60,12 @@
 
     <view class="bottom">
       <view>
-        <u-checkbox v-model="checkAll" @change="checkedAll" shape="circle">
+        <u-checkbox
+          v-model="checkAll"
+          @change="checkedAll"
+          shape="circle"
+          active-color="#ff6900"
+        >
           全选
         </u-checkbox>
         <!-- <view v-if="discount">
@@ -69,10 +80,10 @@
           <view>
             合计:
             <text class="bottom-right-price-box-price">
-              <text>{{ $numberFormat(amount) }}</text>
+              <text>{{ amount }}</text>
             </text>
           </view>
-          <view class="bottom-right-price-box-freight">不含运费</view>
+          <view class="bottom-right-price-box-freight">含运费</view>
         </view>
         <u-button type="error" @click="toPay">结算</u-button>
       </view>
@@ -98,23 +109,23 @@ export default {
       products: [],
       product: {},
       checkList: [],
-      showLoading: false,
+      showLoading: false
     }
   },
   computed: {
-    ...mapGetters(['cart']),
+    ...mapGetters(['cart', 'hasStock']),
     amount() {
       const totalPrice = this.products.reduce((acc, cur) => {
         if (!cur.checked) return acc
-        const item = cur.dimension.find((e) => e.id === cur.dimensionId)
-        return acc + item.price * cur.quantity
+        const item = this.findDimension(cur)
+        return acc + item?.__metadata?.price * cur.quantity
       }, 0)
-      return this.discount ? totalPrice * this.discount : totalPrice
+      return this.$numberFormat(totalPrice * this.discount)
     },
     discount() {
-      const defaultDiscount = null
-      return defaultDiscount ? defaultDiscount : 0
-    },
+      const defaultDiscount = 1
+      return defaultDiscount ? defaultDiscount : 1
+    }
   },
   watch: {
     products: {
@@ -122,27 +133,36 @@ export default {
         this.isEmpty = val.length === 0
         this.checkAll = this.isEmpty ? false : val.every((e) => e.checked)
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   onShow() {
     this.getProducts()
     this.$store.dispatch('store/setBadge')
   },
   methods: {
+    navTo(id) {
+      uni.navigateTo({
+        url: `/pages/product/product?id=${id}`
+      })
+    },
     outOfStock(item) {
-      const aDimension = item.dimension.find((e) => e.id === item.dimensionId)
-      return aDimension?.stock <= 0
+      if (!this.hasStock) {
+        return false
+      } else {
+        return this.findDimension(item)?.stock <= 0
+      }
     },
     toPay() {
       const products = this.products.filter((e) => e.checked)
       if (!products.length) {
         uni.showToast({
           title: '请选商品~',
-          icon: 'none',
+          icon: 'none'
         })
         return
       }
+
       this.$store.dispatch('store/toPay', products)
     },
     deleteFromCart() {
@@ -152,7 +172,7 @@ export default {
       )
       this.cartChange(cart)
       uni.showToast({
-        title: '删除成功~',
+        title: '删除成功~'
       })
     },
     cartChange(cart) {
@@ -163,15 +183,12 @@ export default {
       const productIndex = this.products.findIndex(
         (e) => e.id === this.product.id
       )
-      this.products[productIndex].dimensionId = this.product.dimension[index].id
-    },
-    navTo(id) {
-      uni.navigateTo({
-        url: `/pages/product/product?id=${id}`,
-      })
+      this.products[productIndex].dimensionId = this.product.specifications[
+        index
+      ].id
     },
     findDimension(item) {
-      return item.dimension.find((e) => e.id === item.dimensionId) ?? {}
+      return item.specifications.find((e) => e.id === item.dimensionId) ?? {}
     },
     toShowCartSelector(item) {
       this.product = item
@@ -184,8 +201,8 @@ export default {
         productsId.push(e.productId)
         return { ...e, checked: false }
       })
-      const res = await this.$api.get('mockProducts', {
-        '@filter': `entity.getId() in [${productsId}]`,
+      const res = await this.$api.get('/api/products', {
+        '@filter': `entity.getId() in [${productsId}]`
       })
 
       const nonentity = []
@@ -201,12 +218,6 @@ export default {
 
       this.products = products
 
-      // component change the value, so need to assignment again!
-      // this.$nextTick(() => {
-      //   this.products.forEach((e, index) => {
-      //     e.quantity = cart[index].quantity
-      //   })
-      // })
       uni.hideLoading()
 
       if (nonentity.length > 0) {
@@ -227,8 +238,8 @@ export default {
           e.checked = false
         })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang='scss'>

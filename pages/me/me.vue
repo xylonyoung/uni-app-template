@@ -15,7 +15,7 @@
           </view>
         </view>
       </view>
-      <view class="user-member" v-if="member">
+      <!-- <view class="user-member" v-if="member">
         <text>{{ member.level.__toString }}</text>
         <text class="user-member-btn" @click="navTo('/pages/top-up/top-up')">
           会员充值
@@ -26,7 +26,7 @@
         <text class="user-member-btn" @click="navTo('/pages/member/member')">
           立即申请
         </text>
-      </view>
+      </view> -->
     </view>
 
     <u-grid :col="3" class="balance">
@@ -34,7 +34,7 @@
         <view class="balance-number">
           {{
             $numberFormat(
-              $getValue(this.member, 'user.__metadata.balance.amount')
+              $getValue(user, 'balance.amount')
             )
           }}
         </view>
@@ -44,14 +44,18 @@
         <view class="balance-number">
           {{
             $numberFormat(
-              $getValue(this.member, 'user.__metadata.balance.point')
+              $getValue(user, 'balance.point')
             )
           }}
         </view>
         <view>积分</view>
       </u-grid-item>
       <u-grid-item>
-        <view class="balance-number">0</view>
+        <view class="balance-number">{{
+            $numberFormat(
+              $getValue(user, 'balance.coupon')
+            )
+          }}</view>
         <view>优惠券</view>
       </u-grid-item>
     </u-grid>
@@ -121,7 +125,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['profile', 'user', 'member']),
+    ...mapGetters(['profile', 'user']),
   },
   onShow() {
     this.$store.dispatch('store/setBadge')
@@ -157,10 +161,6 @@ export default {
 }
 </script>
 <style lang='scss'>
-page {
-  // background-color: $c-background;
-  // background: radial-gradient(ellipse at bottom, #1c2837 0%, #050608 100%);
-}
 .background {
   position: fixed;
   top: -80vh;

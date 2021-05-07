@@ -30,16 +30,15 @@
             销售价￥
             <text>{{ $numberFormat(product.price) }}</text>
           </view>
-          <view>已售 {{ $numberFormat(product.sold) }}件</view>
+          <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
         <view class="introduction-name">
           <view>{{ product.name }}</view>
-          <view>分享</view>
         </view>
-        <view class="introduction-member">
+        <!-- <view class="introduction-member">
           <text>会员最高享受5折优惠</text>
           <text @click="$u.route('pages/member/member')">立即开通</text>
-        </view>
+        </view> -->
       </view>
 
       <view class="dimension">
@@ -160,8 +159,8 @@ export default {
   },
   computed: {
     productDimension() {
-      return this.product?.dimension
-        ? `共${this.product.dimension.length}种规格`
+      return this.product?.specifications
+        ? `共${this.product.specifications.length}种规格`
         : ''
     },
     // productPrice() {
@@ -191,18 +190,17 @@ export default {
       this.specificationIndex = index
     },
     getProduct(id) {
-      this.$api.get('mockProducts').then((res) => {
-        this.product = {...res.data[0]}
-        this.swiperList = this.product.images
-        // const { images } = this.product
-        // if (images) this.getSwiperList(images)
+      this.$api.get(`/api/products/${id}`).then((res) => {
+        this.product = res.data
+        const { pictures } = this.product
+        if (pictures) this.getSwiperList(pictures)
         uni.setNavigationBarTitle({
           title: this.product.name,
         })
       })
     },
     getSwiperList(images) {
-      this.swiperList = images.map((e) => this.$getImage(e))
+      this.swiperList = images.map((e) => this.$getImage(e.__toString))
     },
     showPreview(index) {
       uni.previewImage({
@@ -220,11 +218,12 @@ page {
 }
 .introduction {
   background-color: #fff;
+  padding: 24rpx;
   &-price {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 20rpx;
+    padding: 0 24rpx;
     color: $c-price;
     view {
       text {
@@ -237,15 +236,15 @@ page {
     }
   }
   &-name {
-    padding: 0 20rpx;
+    padding: 0 24rpx;
     display: flex;
     font-size: 36rpx;
     font-weight: bold;
   }
   &-member {
     position: relative;
-    margin-top: 20rpx;
-    padding: 20rpx 100rpx;
+    margin-top: 24rpx;
+    padding: 24rpx 80rpx;
     display: flex;
     justify-content: space-between;
     overflow: hidden;
@@ -282,16 +281,16 @@ page {
   }
 }
 .dimension {
-  margin: 20rpx 0;
+  margin: 24rpx 0;
   &-title {
-    margin-left: 20rpx;
+    margin-left: 24rpx;
     u-tag + u-tag {
-      margin-left: 10rpx;
+      margin-left: 12rpx;
     }
     &-shipping {
       display: flex;
       view + view {
-        margin-left: 20rpx;
+        margin-left: 24rpx;
       }
     }
   }

@@ -46,15 +46,16 @@
             <view class="item-container">
               <view
                 class="thumb-box"
-                v-for="(item1, index1) in item.foods"
+                v-for="(item1, index1) in item.children"
                 :key="index1"
+                @click="navTo(item1)"
               >
                 <image
                   class="item-menu-image"
-                  :src="item1.icon"
+                  :src="$getImage($getValue(item1, '__metadata.icon'))"
                   mode=""
                 ></image>
-                <view class="item-menu-name">{{ item1.name }}</view>
+                <view class="item-menu-name">{{ item1.__toString }}</view>
               </view>
             </view>
           </view>
@@ -64,7 +65,6 @@
   </view>
 </template>
 <script>
-import classifyData from './category'
 export default {
   data() {
     return {
@@ -74,18 +74,27 @@ export default {
       menuHeight: 0, // 左边菜单的高度
       menuItemHeight: 0, // 左边菜单item的高度
       itemId: '', // 栏目右边scroll-view用于滚动的id
-      tabbar: classifyData,
+      tabbar: [],
       menuItemPos: [],
       arr: [],
       scrollRightTop: 0, // 右边栏目scroll-view的滚动条高度
-      timer: null, // 定时器
+      timer: null // 定时器
     }
   },
-  onLoad() {},
+  onLoad() {
+    this.$store.dispatch('store/getCategory').then((res) => {
+      this.tabbar = res.data
+    })
+  },
   onReady() {
     this.getMenuItemTop()
   },
   methods: {
+    navTo(item) {
+      uni.navigateTo({
+        url: `/pages/product/list?category=${JSON.stringify([item.id])}`
+      })
+    },
     // 点击左边的栏目切换
     async swichMenu(index) {
       if (this.arr.length == 0) {
@@ -107,7 +116,7 @@ export default {
           .select('.' + elClass)
           .fields(
             {
-              size: true,
+              size: true
             },
             (res) => {
               // 如果节点尚未生成，res值为null，循环调用执行
@@ -132,7 +141,7 @@ export default {
         // 如果跟.right-box底部相交，就动态设置左边栏目的活动状态
         observer
           .relativeTo('.right-box', {
-            top: 0,
+            top: 0
           })
           .observe('#item' + index, (res) => {
             if (res.intersectionRatio > 0) {
@@ -204,8 +213,8 @@ export default {
           }
         }
       }, 10)
-    },
-  },
+    }
+  }
 }
 </script>
 

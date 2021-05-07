@@ -5,7 +5,7 @@ export function numberFormat(num, mantissa = 2) {
   return numbro(num ?? 0).format({
     thousandSeparated: true,
     trimMantissa: true,
-    mantissa,
+    mantissa
   })
 }
 
@@ -16,17 +16,19 @@ export function numberFormatCn(num) {
   return numberFormat(num)
 }
 
-export function getImage(name = '') {
+export function getImage(name) {
   return `${baseURL}/uploads/images/${name}`
 }
 
 export function toCamelCase(str) {
+  if (!str) return
   return str.replace(/\_|\-(\w)/g, function (match, p1, offset) {
     return offset > 0 ? p1.toUpperCase() : p1
   })
 }
 
-export function htmlFormat(htmlData = '') {
+export function htmlFormat(htmlData) {
+  if (!htmlData) return
   const str = `src="${baseURL}/uploads`
   return htmlData.replace(/src="(.*?)uploads/g, str)
 }
@@ -38,7 +40,7 @@ export function htmlFormat(htmlData = '') {
  * @param {String} prop
  * @returns {String | null}
  */
- export function getValue(obj, prop) {
+export function getValue(obj, prop) {
   if (typeof obj !== 'object' || typeof prop !== 'string') return null
 
   const keys = prop.split('.')

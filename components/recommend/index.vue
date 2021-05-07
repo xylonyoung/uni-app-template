@@ -2,34 +2,10 @@
   <view class="recommend-container">
     <view class="title">
       <u-icon name="thumb-up-fill" color="#ff6900"></u-icon>
-      拆你喜欢
+      猜你喜欢
     </view>
 
-    <view class="product">
-      <view
-        class="product-item"
-        v-for="(item, index) in recommendList"
-        :key="index"
-        @click="navTo(item.id)"
-      >
-        <u-image
-          width="330rpx"
-          height="330rpx"
-          border-radius="16"
-          :src="item.cover"
-        ></u-image>
-        <view class="product-item-name">{{ item.name }}</view>
-        <view class="product-item-bottom">
-          <view class="product-item-bottom-price">
-            <text>￥</text>
-            {{ $numberFormat(item.price, 0) }}
-          </view>
-          <view class="product-item-bottom-sold">
-            已售{{ $numberFormat(item.sold) }}件
-          </view>
-        </view>
-      </view>
-    </view>
+    <c-product-list :product-list="recommendList" />
   </view>
 </template>
 <script>
@@ -43,7 +19,7 @@ export default {
   methods: {
     navTo(id) {
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`,
+        url: `/pages/product/product?id=${id}`
       })
     },
     getRecommend() {
@@ -51,13 +27,13 @@ export default {
         page: 1,
         limit: 4,
         '@order': 'modifiedTime|DESC',
-        '@filter': 'entity.getIsRecommended()',
+        '@filter': 'entity.getIsRecommended()'
       }
-      this.$api.get('mockProducts', params).then((res) => {
+      this.$api.get('/api/products', params).then((res) => {
         this.recommendList = res.data
       })
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang='scss'>

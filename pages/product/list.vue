@@ -84,32 +84,10 @@
       :list-api="listApi"
       :list-query.sync="listQuery"
       :reload.sync="reloadList"
+      :auto="autoLoadList"
       :height="contentHeight + 'px'"
     >
-      <view class="product">
-        <view
-          class="product-item"
-          v-for="(item, index) in list"
-          :key="index"
-          @click="navTo(item.id)"
-        >
-          <u-image
-            width="330rpx"
-            height="330rpx"
-            border-radius="16"
-            :src="item.cover"
-          ></u-image>
-          <view class="product-item-name">{{ item.name }}</view>
-          <view class="product-item-bottom">
-            <view class="product-item-bottom-price">
-              {{ $numberFormat(item.price, 0) }}
-            </view>
-            <view class="product-item-bottom-sold">
-              已售{{ $numberFormat(item.sold) }}件
-            </view>
-          </view>
-        </view>
-      </view>
+      <c-product-list :product-list="list" />
     </c-load-list>
 
     <u-toast ref="uToast" />
@@ -117,6 +95,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -128,25 +107,26 @@ export default {
       showPopup: false,
       selectedArrow: '',
       list: [],
-      listApi: 'mockProducts',
+      listApi: '/api/products',
       listQuery: {
         page: 1,
-        limit: 10,
-        '@order': 'id|DESC',
+        limit: 10
       },
       reloadList: false,
+      autoLoadList: false,
       contentHeight: '',
       categoryList: [],
-      categoryIndex: [],
+      categoryIndex: []
     }
   },
   computed: {
+    ...mapGetters(['categoryName']),
     dropdownStyle() {
       const result = {
         height: this.contentHeight + 'px',
         transition: 'opacity 0.4s linear',
         zIndex: -1,
-        opacity: 0,
+        opacity: 0
       }
       if (this.showDropdown) {
         result.zIndex = 1
@@ -157,7 +137,7 @@ export default {
     contentStyle() {
       const result = {
         transform: 'translateY(-100%)',
-        transitionDuration: '.4s',
+        transitionDuration: '.4s'
       }
       if (this.showDropdown) {
         result.transform = 'translateY(0)'
@@ -167,7 +147,7 @@ export default {
     rotateArrow() {
       const result = {
         marginLeft: '8rpx',
-        transition: 'transform .4s',
+        transition: 'transform .4s'
       }
       if (this.showDropdown) {
         result.transform = 'rotate(180deg)'
@@ -175,39 +155,46 @@ export default {
         result.color = '#ccc'
       }
       return result
-    },
+    }
+  },
+  onLoad(option) {
+    const { category } = option
+    if (category) {
+      this.setListQuery(`entity.getCategory().getId() in ${category}`)
+    }
+    this.autoLoadList = true
   },
   onShow() {
     this.$store.dispatch('store/setBadge')
-    this.getCategory()
+    this.$store.dispatch('store/getCategory').then((res) => {
+      this.categoryList = res.data
+    })
   },
   mounted() {
     this.getContentHeight()
   },
   methods: {
+    setListQuery(str) {
+      this.listQuery['@filter'] = str ?? ''
+    },
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
     },
     categoryConfirm(item, index) {
-      // TODO
+      this.setListQuery(`entity.getCategory().getId() == ${item.id}`)
+      this.toReloadList()
       this.categoryIndex = index
       this.showPopup = false
     },
-    getCategory() {
-      const params = { '@filter': 'entity.getEnabled() && entity.getType()' }
-      this.$api.get('mockCategory', params).then((res) => {
-        this.categoryList = res.data
-      })
-    },
-    navTo(id) {
+    navToProduct(id) {
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`,
+        url: `/pages/product/product?id=${id}`
       })
     },
     showToast(title, type) {
       this.$refs.uToast.show({
         title,
-        type,
+        type
       })
     },
     getContentHeight() {
@@ -229,9 +216,12 @@ export default {
           return
         case 1:
           this.selectedArrow = ''
+          this.listQuery['@order'] = 'sales|DESC'
           break
         case 2:
           this.selectedArrow = this.selectedArrow === 'up' ? 'down' : 'up'
+          this.listQuery['@order'] =
+            this.selectedArrow === 'up' ? 'price|ASC' : 'price|DESC'
           break
         default:
           break
@@ -242,27 +232,29 @@ export default {
       this.toReloadList()
     },
     dropdownChange(index) {
+      this.listQuery['@order'] = index === 0 ? '' : 'id|DESC'
       this.selectedArrow = ''
       this.selectedTab = 0
       this.selectedDropdown = index
       this.showDropdown = false
       this.toReloadList()
     },
-
     searchProducts(e) {
       if (!e) {
         this.showToast('请输入搜索内容!', 'warning')
+        return
       }
+      this.listQuery['@filter'] = `entity.getName() matches '/${e}/'`
+      this.toReloadList()
     },
     toReloadList() {
       this.reloadList = true
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-@import '@/styles/product';
 page {
   background-color: $c-background;
 }

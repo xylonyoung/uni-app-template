@@ -13,37 +13,20 @@ const state = {
     { label: '待收货', value: '3' },
     { label: '已收货', value: '4' },
     { label: '完成', value: '5' },
-    { label: '售后中', value: '6' },
+    { label: '售后中', value: '6' }
   ],
   member: {},
+  hasStock: false
 }
 
 const actions = {
-  toPay({ state, dispatch }, products) {
-    if (state.member && state.member.id) {
-      dispatch('setOrderProducts', [...products])
-      uni.navigateTo({
-        url: '/pages/pay/pay',
-      })
-    } else {
-      uni.showToast({
-        title: '请先注册会员~',
-        icon: 'none',
-      })
-      setTimeout(() => {
-        uni.navigateTo({
-          url: '/pages/member/member',
-        })
-      }, 3000)
+  async getCategory() {
+    const params = {
+      '@filter':
+        'entity.getEnabled() && entity.getType().getName() == "产品分类"'
     }
-  },
-  getMember({ commit }) {
-    $api.get('/api/members').then((res) => {
-      commit('SET_MEMBER', res.data)
-    })
-  },
-  setOrderProducts({ commit }, products) {
-    commit('SET_ORDER_PRODUCTS', products)
+    const result = await $api.get('/api/categories', params)
+    return result
   },
   setCart({ commit }, cart) {
     commit('SET_CART', cart)
@@ -53,17 +36,28 @@ const actions = {
     if (state.cart.length > 0) {
       uni.setTabBarBadge({
         index: 2,
-        text: String(state.cart.length),
+        text: String(state.cart.length)
       })
     } else {
       uni.removeTabBarBadge({
-        index: 2,
+        index: 2
       })
     }
   },
+  toPay({ commit }, products) {
+    commit('SET_ORDER_PRODUCTS', products)
+    uni.navigateTo({
+      url: '/pages/pay/pay'
+    })
+  }
+  // getMember({ commit }) {
+  //   $api.get('/api/members').then((res) => {
+  //     commit('SET_MEMBER', res.data)
+  //   })
+  // },
 }
 
 export default {
   state,
-  actions,
+  actions
 }

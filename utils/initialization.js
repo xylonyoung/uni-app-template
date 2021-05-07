@@ -2,7 +2,7 @@ import Vue from 'vue'
 import store from '@/store'
 import api from '@/api'
 import { baseURL } from '@/settings'
-import { getValue,getImage, numberFormat } from './index'
+import { getValue, getImage, numberFormat } from './index'
 ;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
   let $api = api
@@ -28,8 +28,8 @@ import { getValue,getImage, numberFormat } from './index'
   }
 
   vueUse($api)
-
-  store.dispatch('store/setCart', uni.getStorageSync('cart'))
+  
+  store.commit('store/SET_CART', uni.getStorageSync('cart') || [])
 })()
 
 /**
@@ -42,6 +42,6 @@ function vueUse($api) {
       Vue.prototype.$getValue = getValue
       Vue.prototype.$getImage = getImage
       Vue.prototype.$numberFormat = numberFormat
-    },
+    }
   })
 }

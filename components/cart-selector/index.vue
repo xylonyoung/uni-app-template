@@ -15,10 +15,11 @@
       </view>
       <view>
         <view class="product-price">
-          <text>￥</text>
-          <text>{{ $numberFormat(this.selectedDimension.price) }}</text>
+          {{ $numberFormat($getValue(selectedDimension, '__metadata.price')) }}
         </view>
-        <view class="product-stock">库存{{ quantityInStock }}件</view>
+        <view class="product-stock" v-if="haStock">
+          库存{{ quantityInStock }}件
+        </view>
       </view>
     </view>
 
@@ -29,7 +30,7 @@
           class="dimension-tag"
           v-for="(item, index) in dimensionList"
           :key="index"
-          :text="item.name"
+          :text="$getValue(item, '__metadata.name')"
           :type="index === dimensionIndex ? 'error' : 'info'"
           @click="dimensionChange(index)"
         />
@@ -44,7 +45,7 @@
         <u-number-box
           v-model="quantity"
           :min="1"
-          :max="quantityInStock"
+          :max="hasStock ? quantityInStock : 999"
         ></u-number-box>
       </view>
       <view class="bottom">
@@ -60,53 +61,52 @@ export default {
   props: {
     value: { type: Boolean, default: false },
     product: { type: Object, default: () => ({}) },
-    hideButton: { type: Boolean, default: false },
+    hideButton: { type: Boolean, default: false }
   },
   data() {
     return {
       showDimension: false,
       dimensionList: [],
       dimensionIndex: 0,
-      quantity: 1,
+      quantity: 1
     }
   },
   computed: {
-    ...mapGetters(['cart']),
+    ...mapGetters(['cart', 'hasStock']),
     quantityInStock() {
       return this.selectedDimension ? this.selectedDimension.stock : 0
     },
     selectedDimension() {
       return this.dimensionList[this.dimensionIndex] ?? {}
-    },
+    }
   },
   watch: {
     value: {
       handler(val) {
         this.showDimension = val
       },
-      immediate: true,
+      immediate: true
     },
     product: {
       handler(val) {
-        if (val.dimension) {
-          this.dimensionList = [...val.dimension]
-          const index = this.dimensionList.findIndex(
-            (e) => e.id === val.dimensionId
-          )
-          if (index !== -1) {
-            this.dimensionIndex = index
-          }
+        if (!val.specifications) return
+        this.dimensionList = [...val.specifications]
+        const index = this.dimensionList.findIndex(
+          (e) => e.id === val.dimensionId
+        )
+        if (index !== -1) {
+          this.dimensionIndex = index
         }
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     toPay() {
       const product = {
         ...this.product,
         quantity: this.quantity,
-        dimensionId: this.selectedDimension.id,
+        dimensionId: this.selectedDimension.id
       }
       this.$store.dispatch('store/toPay', [product])
     },
@@ -119,7 +119,7 @@ export default {
       if (this.quantityInStock < 1) {
         uni.showToast({
           title: '库存不足~',
-          icon: 'none',
+          icon: 'none'
         })
         return
       }
@@ -127,7 +127,7 @@ export default {
       const product = {
         productId: this.product.id,
         dimensionId: this.selectedDimension.id,
-        quantity: this.quantity,
+        quantity: this.quantity
       }
       const cart = [...this.cart]
       const index = cart.findIndex((e) => e.productId === product.productId)
@@ -138,7 +138,7 @@ export default {
       }
       this.cartChange(cart)
       uni.showToast({
-        title: '加入成功~',
+        title: '加入成功~'
       })
     },
     dimensionChange(index) {
@@ -148,8 +148,8 @@ export default {
     },
     popupClose() {
       this.$emit('input', false)
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang='scss'>
@@ -159,9 +159,10 @@ export default {
   &-price {
     padding-left: 40rpx;
     color: $c-price;
-    font-weight: bold;
-    text:last-child {
-      font-size: 50rpx;
+    font-size: 40rpx;
+    &::before {
+      content: '￥';
+      font-size: 24rpx;
     }
   }
   &-stock {

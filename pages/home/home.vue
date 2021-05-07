@@ -1,9 +1,13 @@
 <template>
   <view>
-    <u-swiper :list="swiperList" height="400"></u-swiper>
+    <u-swiper :list="swiperList" height="375"></u-swiper>
 
     <u-grid :col="4">
-      <u-grid-item v-for="(item, index) in menuList" :key="index">
+      <u-grid-item
+        v-for="(item, index) in menuList"
+        :key="index"
+        @click="navToCategory(item.name)"
+      >
         <u-image width="80" height="80" :src="item.icon"></u-image>
         <view>{{ item.name }}</view>
       </u-grid-item>
@@ -24,30 +28,7 @@
       </scroll-view>
     </view>
 
-    <view class="product">
-      <view
-        class="product-item"
-        v-for="(item, index) in productList"
-        :key="index"
-        @click="navTo(item.id)"
-      >
-        <u-image
-          width="330rpx"
-          height="330rpx"
-          border-radius="16"
-          :src="item.cover"
-        ></u-image>
-        <view class="product-item-name">{{ item.name }}</view>
-        <view class="product-item-bottom">
-          <view class="product-item-bottom-price">
-            {{ $numberFormat(item.price, 0) }}
-          </view>
-          <view class="product-item-bottom-sold">
-            已售{{ $numberFormat(item.sold) }}件
-          </view>
-        </view>
-      </view>
-    </view>
+    <c-product-list :product-list="productList" />
   </view>
 </template>
 
@@ -55,20 +36,7 @@
 export default {
   data() {
     return {
-      swiperList: [
-        {
-          image: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
-          title: '昨夜星辰昨夜风，画楼西畔桂堂东',
-        },
-        {
-          image: 'https://cdn.uviewui.com/uview/swiper/2.jpg',
-          title: '身无彩凤双飞翼，心有灵犀一点通',
-        },
-        {
-          image: 'https://cdn.uviewui.com/uview/swiper/3.jpg',
-          title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-        },
-      ],
+      swiperList: [],
       menuList: [
         { name: '母婴用品', icon: '/static/home/1.png' },
         { name: '潮流服装', icon: '/static/home/2.png' },
@@ -77,27 +45,56 @@ export default {
         { name: '食品饮料', icon: '/static/home/5.png' },
         { name: '家用电器', icon: '/static/home/6.png' },
         { name: '热销商品', icon: '/static/home/7.png' },
-        { name: '更多', icon: '/static/home/8.png' },
+        { name: '更多', icon: '/static/home/8.png' }
       ],
       productList: [],
+      categoryList: []
     }
   },
-  onLoad() {
+  async onLoad() {
     this.$store.dispatch('store/setBadge')
-    this.getProductList()
+    await this.$store.dispatch('user/wechatLogin')
+    this.getData()
   },
   methods: {
-    getProductList() {
-      this.$api.get('mockProducts').then((res) => {
-        this.productList = res.data
+    navToProduct(id) {
+      uni.navigateTo({
+        url: `/pages/product/product?id=${id}`
       })
     },
-  },
+    navToCategory(name) {
+      if (name === '更多') {
+        uni.switchTab({
+          url: '/pages/category/category'
+        })
+      } else {
+        const item = this.categoryList.find((e) => e.name === name)
+        const arr = item.children.map((e) => e.id)
+        uni.navigateTo({
+          url: `/pages/product/list?category=${JSON.stringify(arr)}`
+        })
+      }
+    },
+    getData() {
+      this.$api.get('/api/album/by-title/home-swiper').then((res) => {
+        this.swiperList = res.data?.pictures.map((e) =>
+          this.$getImage(e.__toString)
+        )
+      })
+
+      this.$api.get('/api/products').then((res) => {
+        this.productList = res.data
+      })
+
+      this.$store.dispatch('store/getCategory').then((res) => {
+        this.categoryList = res.data
+      })
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-@import '@/styles/product';
 page {
   background-color: $c-background;
 }

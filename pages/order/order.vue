@@ -69,7 +69,7 @@
 
             <view class="order-bottom">
               <view class="order-bottom-date">
-                {{ order.createdTime | timeFrom('yyyy-mm-dd hh:MM') }}
+                {{ order.createdTime | date('yyyy-mm-dd hh:MM') }}
               </view>
               <view>
                 <text>共{{ order.items.length }}件商品 实付金额：</text>
@@ -152,7 +152,7 @@ export default {
       ]
       this.tabList = tabList.map((e) => ({
         list: [],
-        listApi: 'mockOrders',
+        listApi: '/api/orders',
         listQuery: {
           page: 1,
           limit: 5,
