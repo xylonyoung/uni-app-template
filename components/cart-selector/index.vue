@@ -1,7 +1,6 @@
 <template>
   <u-popup
-    class="cart-selector-container"
-    v-model="showDimension"
+    v-model="showPopup"
     mode="bottom"
     @close="popupClose"
   >
@@ -65,7 +64,7 @@ export default {
   },
   data() {
     return {
-      showDimension: false,
+      showPopup: false,
       dimensionList: [],
       dimensionIndex: 0,
       quantity: 1
@@ -83,7 +82,7 @@ export default {
   watch: {
     value: {
       handler(val) {
-        this.showDimension = val
+        this.showPopup = val
       },
       immediate: true
     },

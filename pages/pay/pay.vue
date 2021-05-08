@@ -64,7 +64,11 @@
           :arrow="false"
         ></u-cell-item>
         <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
-        <u-cell-item title="优惠券" value="无可用"></u-cell-item>
+        <u-cell-item
+          title="优惠券"
+          value="无可用"
+          @click="showCoupon = true"
+        ></u-cell-item>
       </u-cell-group>
     </view>
 
@@ -80,6 +84,12 @@
       </view>
       <u-button type="error" @click="createOrder">支付</u-button>
     </view>
+
+    <u-popup v-model="showCoupon" mode="bottom">
+      <scroll-view scroll-y style="height: 70vh">
+        <c-coupon @change="couponChange" />
+      </scroll-view>
+    </u-popup>
   </view>
 </template>
 
@@ -90,7 +100,9 @@ export default {
   data() {
     return {
       address: null,
-      comment: null
+      comment: null,
+      coupon: null,
+      showCoupon: false
     }
   },
   computed: {
@@ -114,7 +126,7 @@ export default {
     items() {
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
-        specification: e.specificationId
+        specification: e.dimensionId
       }))
     }
   },
@@ -122,11 +134,12 @@ export default {
     this.address = uni.getStorageSync('address')
   },
   methods: {
+    couponChange(id) {
+      this.coupon = id
+    },
     createOrder() {
       const data = {
-        phone: this.member.phone,
-        items: this.items,
-        source: 'onLine'
+        items: this.items
       }
       if (!this.addressDetail) {
         uni.showToast({
@@ -137,13 +150,8 @@ export default {
       }
       data.address = this.addressDetail
 
+      if (this.coupon) data.coupon = this.coupon
       if (this.comment) data.comment = this.comment
-
-      if (this.paidBalance && this.userBalance) {
-        const balance = Number(this.userBalance.amount)
-        data.paidBalance =
-          this.actualPrice > balance ? balance : this.actualPrice
-      }
 
       this.$api.post(`/api/orders`, data).then((res) => {
         const id = res.data.invoice.id

@@ -45,8 +45,8 @@ export default {
     pagesProcess() {
       const result = []
       const files = require.context('./', false, /\.vue$/)
-      const pages = files.keys().map(key => files(key).default)
-      pages.forEach(e => {
+      const pages = files.keys().map((key) => files(key).default)
+      pages.forEach((e) => {
         const title = e.__file.match(/(?<=demo\/pages\/).*?(?=\.vue)/)[0]
         if (title === 'demo') return
         result.push({

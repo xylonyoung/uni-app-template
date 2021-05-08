@@ -83,6 +83,13 @@
         "enablePullDownRefresh": false
       }
     },
+    {
+      "path": "pages/coupon/coupon",
+      "style": {
+        "navigationBarTitleText": "我的优惠券",
+        "enablePullDownRefresh": false
+      }
+    },
     // below for demo
     {
       "path": "demo/pages/demo",

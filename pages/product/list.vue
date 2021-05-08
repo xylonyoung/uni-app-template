@@ -64,7 +64,15 @@
       </view>
     </view>
 
-    <u-popup v-model="showPopup" mode="right">
+    <c-popup-category
+      v-model="showPopup"
+      :list="categoryList"
+      :current.sync="categoryIndex"
+      children
+      @change="categoryConfirm"
+    />
+
+    <!-- <u-popup v-model="showPopup" mode="right">
       <scroll-view scroll-y class="category">
         <view
           v-for="(item, index) in categoryList"
@@ -76,7 +84,7 @@
           {{ item.name }}
         </view>
       </scroll-view>
-    </u-popup>
+    </u-popup> -->
 
     <c-load-list
       ref="loadList"
@@ -120,7 +128,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['categoryName']),
+    ...mapGetters([]),
     dropdownStyle() {
       const result = {
         height: this.contentHeight + 'px',
@@ -167,7 +175,15 @@ export default {
   onShow() {
     this.$store.dispatch('store/setBadge')
     this.$store.dispatch('store/getCategory').then((res) => {
-      this.categoryList = res.data
+      this.categoryList = res.data.map((e) => {
+        const result = { ...e }
+        if (result.children) {
+          result.children = result.children.map((i) => {
+            return i.__metadata
+          })
+        }
+        return result
+      })
     })
   },
   mounted() {
@@ -180,10 +196,11 @@ export default {
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
     },
-    categoryConfirm(item, index) {
-      this.setListQuery(`entity.getCategory().getId() == ${item.id}`)
+    categoryConfirm(arr) {
+      this.setListQuery(
+        `entity.getCategory().getId() in [${arr}]`
+      )
       this.toReloadList()
-      this.categoryIndex = index
       this.showPopup = false
     },
     navToProduct(id) {

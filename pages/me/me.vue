@@ -30,32 +30,22 @@
     </view>
 
     <u-grid :col="3" class="balance">
-      <u-grid-item @click="navTo('/pages/top-up/top-up')">
+      <u-grid-item @click="navTo()">
         <view class="balance-number">
-          {{
-            $numberFormat(
-              $getValue(user, 'balance.amount')
-            )
-          }}
+          {{ $numberFormat($getValue(user, 'balance.amount')) }}
         </view>
         <view>余额</view>
       </u-grid-item>
-      <u-grid-item>
+      <u-grid-item @click="navTo()">
         <view class="balance-number">
-          {{
-            $numberFormat(
-              $getValue(user, 'balance.point')
-            )
-          }}
+          {{ $numberFormat($getValue(user, 'balance.point')) }}
         </view>
         <view>积分</view>
       </u-grid-item>
-      <u-grid-item>
-        <view class="balance-number">{{
-            $numberFormat(
-              $getValue(user, 'balance.coupon')
-            )
-          }}</view>
+      <u-grid-item @click="navTo('coupon/coupon')">
+        <view class="balance-number">
+          {{ $numberFormat($getValue(user, 'balance.coupon')) }}
+        </view>
         <view>优惠券</view>
       </u-grid-item>
     </u-grid>
@@ -113,19 +103,19 @@ export default {
         {
           name: '退款/售后',
           status: '5',
-          icon: 'server-man',
-        },
+          icon: 'server-man'
+        }
       ],
       menuList: [
         { title: '拼团', icon: 'man-add', color: '#ee883b' },
         { title: '砍价', icon: 'tags', color: '#9789f7' },
         { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
-        { title: '设置', icon: 'setting-fill', color: '#54b4ef' },
-      ],
+        { title: '设置', icon: 'setting-fill', color: '#54b4ef' }
+      ]
     }
   },
   computed: {
-    ...mapGetters(['profile', 'user']),
+    ...mapGetters(['profile', 'user'])
   },
   onShow() {
     this.$store.dispatch('store/setBadge')
@@ -135,11 +125,11 @@ export default {
       if (!path) {
         uni.showToast({
           title: '功能维护中~',
-          icon: 'none',
+          icon: 'none'
         })
         return
       }
-      uni.navigateTo({ url: path })
+      uni.navigateTo({ url: '/pages/' + path })
     },
     navToOrder(status) {
       let url = '/pages/order/order'
@@ -154,10 +144,10 @@ export default {
           this.$api.put('/api/user-profile', userInfo).then(() => {
             this.$store.dispatch('user/getUserInformation')
           })
-        },
+        }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang='scss'>

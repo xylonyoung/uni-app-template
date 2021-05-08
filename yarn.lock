@@ -2,31 +2,31 @@
 # yarn lockfile v1
 
 
-bignumber.js@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.npm.taobao.org/bignumber.js/download/bignumber.js-8.1.1.tgz#4b072ae5aea9c20f6730e4e5d529df1271c4d885"
-  integrity sha1-Swcq5a6pwg9nMOTl1SnfEnHE2IU=
+"bignumber.js@^8.1.1":
+  "integrity" "sha1-Swcq5a6pwg9nMOTl1SnfEnHE2IU= sha512-QD46ppGintwPGuL1KqmwhR0O+N2cZUg8JG/VzwI2e28sM9TqHjQB10lI4QAaMHVbLzwVLLAwEglpKPViWX+5NQ=="
+  "resolved" "https://registry.npm.taobao.org/bignumber.js/download/bignumber.js-8.1.1.tgz"
+  "version" "8.1.1"
 
-commander@*:
-  version "7.2.0"
-  resolved "https://registry.nlark.com/commander/download/commander-7.2.0.tgz?cache=0&sync_timestamp=1618847060379&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
-  integrity sha1-o2y1fQtQHOEI5NIFWaFQo5HZerc=
+"commander@*":
+  "integrity" "sha1-o2y1fQtQHOEI5NIFWaFQo5HZerc= sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw=="
+  "resolved" "https://registry.nlark.com/commander/download/commander-7.2.0.tgz?cache=0&sync_timestamp=1618847060379&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-7.2.0.tgz"
+  "version" "7.2.0"
 
-mockjs@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npm.taobao.org/mockjs/download/mockjs-1.1.0.tgz#e6a0c378e91906dbaff20911cc0273b3c7d75b06"
-  integrity sha1-5qDDeOkZBtuv8gkRzAJzs8fXWwY=
+"mockjs@^1.1.0":
+  "integrity" "sha1-5qDDeOkZBtuv8gkRzAJzs8fXWwY= sha512-eQsKcWzIaZzEZ07NuEyO4Nw65g0hdWAyurVol1IPl1gahRwY+svqzfgfey8U8dahLwG44d6/RwEzuK52rSa/JQ=="
+  "resolved" "https://registry.npm.taobao.org/mockjs/download/mockjs-1.1.0.tgz"
+  "version" "1.1.0"
   dependencies:
-    commander "*"
+    "commander" "*"
 
-numbro@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.npm.taobao.org/numbro/download/numbro-2.3.2.tgz#4967c631b0ea99b17dd7f88cdd1eaa4ace4d4971"
-  integrity sha1-SWfGMbDqmbF91/iM3R6qSs5NSXE=
+"numbro@^2.3.2":
+  "integrity" "sha1-SWfGMbDqmbF91/iM3R6qSs5NSXE= sha512-GHRdsyYs6ugRP0mipuBKTybzTPKdlhzKh271PG3hPwL1fg2DKwK/I2nCsh0gW3FfIKBzWIFoBnousQfiAkOuwQ=="
+  "resolved" "https://registry.npm.taobao.org/numbro/download/numbro-2.3.2.tgz"
+  "version" "2.3.2"
   dependencies:
-    bignumber.js "^8.1.1"
+    "bignumber.js" "^8.1.1"
 
-uview-ui@^1.8.4:
-  version "1.8.4"
-  resolved "https://registry.npm.taobao.org/uview-ui/download/uview-ui-1.8.4.tgz#e32bbf2379421d319022e324e1cb7b5387d3bd44"
-  integrity sha1-4yu/I3lCHTGQIuMk4ct7U4fTvUQ=
+"uview-ui@^1.8.4":
+  "integrity" "sha1-4yu/I3lCHTGQIuMk4ct7U4fTvUQ= sha512-Zr+D5dFdNy6CdHQLBEXeGq/w0LkjxzBtsgaaDwLl0P58g67H7fBBDvy6AzWK/k0c7dwPYMBiK7I4Tr9p92+0DA=="
+  "resolved" "https://registry.npm.taobao.org/uview-ui/download/uview-ui-1.8.4.tgz"
+  "version" "1.8.4"

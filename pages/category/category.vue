@@ -1,11 +1,5 @@
 <template>
   <view class="u-wrap">
-    <!-- <view class="u-search-box">
-			<view class="u-search-inner">
-				<u-icon name="search" color="#909399" :size="28"></u-icon>
-				<text class="u-search-text">搜索</text>
-			</view>
-		</view> -->
     <view class="u-menu-wrap">
       <scroll-view
         scroll-y
@@ -277,7 +271,7 @@ export default {
 
 .u-tab-item-active {
   position: relative;
-  color: #000;
+  color: $c-theme;
   font-size: 30rpx;
   font-weight: 600;
   background: #fff;
@@ -286,7 +280,7 @@ export default {
 .u-tab-item-active::before {
   content: '';
   position: absolute;
-  border-left: 4px solid $u-type-primary;
+  border-left: 4px solid $c-theme;
   height: 32rpx;
   left: 0;
   top: 39rpx;
