@@ -117,11 +117,11 @@ export default {
       tabIndex: 0,
       showTabs: true,
       scrollTop: 0,
-      height: 'calc(100vh - 80rpx)',
+      height: 'calc(100vh - 80rpx)'
     }
   },
   computed: {
-    ...mapGetters(['orderStatus']),
+    ...mapGetters(['orderStatus'])
   },
   onLoad(option) {
     this.setTabList()
@@ -131,24 +131,24 @@ export default {
     setTabList() {
       const tabList = [
         {
-          name: '全部',
+          name: '全部'
         },
         {
           name: '待支付',
-          status: '1',
+          status: '1'
         },
         {
           name: '待发货',
-          status: '2',
+          status: '2'
         },
         {
           name: '待收货',
-          status: '3',
+          status: '3'
         },
         {
           name: '待评价',
-          status: '4',
-        },
+          status: '4'
+        }
       ]
       this.tabList = tabList.map((e) => ({
         list: [],
@@ -159,9 +159,9 @@ export default {
           '@order': 'modifiedTime|DESC',
           '@filter': e.status
             ? `entity.getStatus() == ${e.status}`
-            : 'entity.getStatus() > 0',
+            : 'entity.getStatus() > 0'
         },
-        ...e,
+        ...e
       }))
     },
     toCancel(id, orderIndex) {
@@ -170,7 +170,7 @@ export default {
         .then(() => {
           this.tabList[this.tabIndex].list.splice(orderIndex, 1)
           uni.showToast({
-            title: '订单取消成功~',
+            title: '订单取消成功~'
           })
         })
     },
@@ -195,15 +195,15 @@ export default {
     navTo(item) {
       const id = item.id
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`,
+        url: `/pages/product/product?id=${id}`
       })
-    },
-  },
+    }
+  }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/product';
-page {
+.order-container {
   background-color: $c-background;
 }
 

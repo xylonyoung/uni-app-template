@@ -183,7 +183,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/product.scss';
 .pay-container {
   padding-bottom: 122rpx;

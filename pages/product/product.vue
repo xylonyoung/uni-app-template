@@ -212,8 +212,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-page {
+<style lang="scss" scoped>
+.product-container {
   background-color: $c-background;
 }
 .introduction {

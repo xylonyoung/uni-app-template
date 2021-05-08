@@ -34,11 +34,11 @@ export default {
     listApi: { type: String, default: '' },
     listQuery: {
       type: Object,
-      default: () => ({ page: 1, limit: 10 }),
+      default: () => ({ page: 1, limit: 10 })
     },
     reload: { type: Boolean, default: false },
     auto: { type: Boolean, default: true },
-    height: { type: String, default: () => `100vh` },
+    height: { type: String, default: () => `100vh` }
   },
   data() {
     return {
@@ -46,13 +46,13 @@ export default {
       distanceOfTop: 0,
       status: 'loading',
       empty: false,
-      refresh: false,
+      refresh: false
     }
   },
   computed: {
     scrollStyle() {
       return { height: this.height }
-    },
+    }
   },
   watch: {
     reload(val) {
@@ -63,8 +63,8 @@ export default {
       handler(val) {
         if (val && !this.empty && this.list.length === 0) this.loadData()
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     backToTop() {
@@ -121,12 +121,12 @@ export default {
       this.$emit('update:listQuery', listQuery)
       this.$emit('change', { list, listQuery })
       this.resetReload()
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .swiper-wrapper {
   box-sizing: border-box;
 }

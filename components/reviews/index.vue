@@ -31,7 +31,7 @@ export default {
   methods: {}
 }
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
 .reviews-container {
   padding: 20rpx;
   .review {

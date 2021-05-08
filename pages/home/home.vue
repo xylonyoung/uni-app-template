@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="home-container">
     <u-swiper :list="swiperList" height="375"></u-swiper>
 
     <u-grid :col="4">
@@ -94,8 +94,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-page {
+<style lang="scss" scoped>
+.home-container {
   background-color: $c-background;
 }
 

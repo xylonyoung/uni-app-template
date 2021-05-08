@@ -1,38 +1,32 @@
 <template>
   <u-popup v-model="showPopup" :mode="mode">
-    <view
-      class="popup-category-container"
-      :style="'display:flex;background-color:' + bgColor"
-    >
-      <scroll-view
-        scroll-y
-        class="popup-category-container-tabs"
-        :style="[scrollStyle]"
-      >
+    <view class="popup-category-container">
+      <scroll-view scroll-y class="tabs" :style="[scrollStyle]">
         <view
           v-for="(item, index) in list"
           :key="index"
-          class="popup-category-container-tabs-box"
-          :style="[tabItemStyle(index)]"
+          class="tabs-box"
+          :class="index === tempIndex[0] ? 'tabs-box-active' : ''"
           @click="clickTab(index)"
         >
-          <view class="popup-category-container-tabs-box-name">
+          <view class="tabs-box-name">
             {{ item.name }}
           </view>
         </view>
       </scroll-view>
-      <view
-        class="popup-category-container-content"
-        :style="'background-color:' + activeBgColor"
-        v-show="children"
-      >
-        <view :style="[tabChildStyle('all')]" @click="clickChild('all')">
+      <view class="content" v-show="children">
+        <view
+          class="content-item"
+          :class="allSelected ? 'content-item-active' : ''"
+          @click="clickChild('all')"
+        >
           全部
         </view>
         <view
+          class="content-item"
+          :class="index === tempIndex[1] ? 'content-item-active' : ''"
           v-for="(item, index) in childList"
           :key="index"
-          :style="[tabChildStyle(index)]"
           @click="clickChild(index)"
         >
           {{ item.name }}
@@ -51,25 +45,13 @@ export default {
       type: String,
       default: 'right'
     },
-    bgColor: {
-      type: String,
-      default: '#f2f2f2'
-    },
-    activeColor: {
-      type: String,
-      default: '#ff6900'
-    },
-    activeBgColor: {
-      type: String,
-      default: '#fff'
-    },
     width: {
       type: String,
-      default: () => '160rpx'
+      default: '160rpx'
     },
     height: {
       type: String,
-      default: () => `100vh`
+      default: '100vh'
     },
     // is 2-D array?
     children: {
@@ -104,23 +86,6 @@ export default {
     }
   },
   methods: {
-    tabChildStyle(index) {
-      const style = { padding: '16rpx' }
-      const activateStyle = { color: this.activeColor, ...style }
-      if (index === 'all') {
-        return this.allSelected ? activateStyle : style
-      }
-      return index === this.tempIndex[1] ? activateStyle : style
-    },
-    tabItemStyle(index) {
-      const style = {
-        color: this.activeColor,
-        'background-color': this.activeBgColor,
-        'border-left': `8rpx solid ${this.activeColor}`,
-        padding: '16rpx 16rpx 16rpx 12rpx'
-      }
-      return index === this.tempIndex[0] ? style : ''
-    },
     setTempIndex(arg) {
       let result
       if (typeof arg === 'number') {
@@ -162,24 +127,47 @@ export default {
   }
 }
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
 .popup-category-container {
   display: flex;
-  &-tabs {
-    height: 100%;
-    box-sizing: border-box;
-    &-box {
-      padding: 16rpx;
-      transition-duration: 0.3s;
-      &-name {
-        text-align: center;
-      }
+}
+.tabs {
+  height: 100%;
+  box-sizing: border-box;
+  &-box {
+    height: 120rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    background-color: $c-background;
+    transition-duration: 0.3s;
+    &-name {
+      text-align: center;
     }
   }
-  &-content {
-    width: 30vh;
-    box-sizing: border-box;
-    text-align: center;
+  &-box-active {
+    position: relative;
+    color: $c-theme;
+    &::before {
+      content: '';
+      position: absolute;
+      border-left: 4px solid $c-theme;
+      height: 32rpx;
+      left: 0;
+      top: 39rpx;
+    }
+  }
+}
+.content {
+  width: 30vh;
+  box-sizing: border-box;
+  text-align: center;
+  &-item {
+    padding: 16rpx;
+  }
+  &-item-active {
+    color: $c-theme;
   }
 }
 </style>

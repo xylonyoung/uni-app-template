@@ -88,7 +88,7 @@ export default {
   },
 }
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
 .navbar-container {
   position: fixed;
   left: 0;

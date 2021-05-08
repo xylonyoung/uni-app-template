@@ -197,9 +197,7 @@ export default {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
     },
     categoryConfirm(arr) {
-      this.setListQuery(
-        `entity.getCategory().getId() in [${arr}]`
-      )
+      this.setListQuery(`entity.getCategory().getId() in [${arr}]`)
       this.toReloadList()
       this.showPopup = false
     },
@@ -271,10 +269,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
-page {
+<style lang="scss" scoped>
+.list-container {
   background-color: $c-background;
 }
+
 .search-bar {
   padding: 24rpx 40rpx 0;
   background-color: #fff;
