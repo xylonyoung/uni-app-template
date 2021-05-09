@@ -37,18 +37,35 @@
                 width="200rpx"
                 height="200rpx"
                 border-radius="8"
-                :src="$getImage(item.cover)"
+                :src="
+                  $getImage(
+                    $getValue(
+                      item,
+                      '__metadata.specification.__metadata.product.__metadata.cover'
+                    )
+                  )
+                "
               ></u-image>
               <view class="product-row-detail">
                 <view>
                   <view class="product-row-detail-name">
-                    {{ item.name }}
+                    {{
+                      $getValue(
+                        item,
+                        '__metadata.specification.__metadata.product.__metadata.name'
+                      )
+                    }}
                   </view>
                   <view class="product-row-detail-quantity">
                     <view>
-                      {{ item.dimension.name }}
+                      {{
+                        $getValue(
+                          item,
+                          '__metadata.specification.__metadata.name'
+                        )
+                      }}
                     </view>
-                    <view>x{{ item.quantity }}</view>
+                    <view>x{{ $getValue(item, '__metadata.quantity') }}</view>
                   </view>
                 </view>
                 <view class="product-row-detail-bottom">
@@ -56,7 +73,7 @@
                     class="product-row-detail-bottom-price"
                     style="color: #999"
                   >
-                    {{ $numberFormat(item.price) }}
+                    {{ $numberFormat($getValue(item, '__metadata.price')) }}
                   </view>
                 </view>
               </view>
@@ -256,7 +273,7 @@ export default {
 }
 
 .bottom-btn {
-  margin-top: 20rpx;
+  margin: 24rpx 24rpx 0 0;
   display: flex;
   justify-content: flex-end;
   u-button + u-button {

@@ -1,23 +1,48 @@
 <template>
   <view class="coupon-container">
-    <view
-      class="coupon-image"
-      v-for="(item, index) in 8"
-      :key="index"
-      @click="selectConfirm(item.id)"
-    >
-      <u-image mode="widthFix" src="/static/home/coupon.png"></u-image>
+    <u-empty mode="coupon" v-if="empty"></u-empty>
+    <view>
+      <view
+        class="coupon-image"
+        v-for="(item, index) in couponList"
+        :key="index"
+        @click="selectConfirm(item.id)"
+      >
+        <u-image
+          mode="widthFix"
+          :src="$getImage($getValue(item, 'coupon.__metadata.image'))"
+        ></u-image>
+      </view>
+      <view class="not-use" v-if="use">
+        <u-button @click="notUse">不使用优惠券</u-button>
+      </view>
     </view>
   </view>
 </template>
 <script>
 export default {
+  props: {
+    value: { type: Array, default: () => [] },
+    use: { type: Boolean, default: true }
+  },
   data() {
-    return {}
+    return { couponList: [], empty: false }
+  },
+  created() {
+    this.$api
+      .get('/api/user-coupons', { '@filter': 'entity.getIsUsed() == false' })
+      .then((res) => {
+        this.couponList = res.data
+        this.$emit('input', res.data)
+        if (res.data.length === 0) this.empty = true
+      })
   },
   methods: {
     selectConfirm(id) {
       this.$emit('change', id)
+    },
+    notUse() {
+      this.$emit('change', null)
     }
   }
 }
@@ -31,6 +56,9 @@ export default {
   }
   .coupon-image + .coupon-image {
     padding-top: 32rpx;
+  }
+  .not-use {
+    margin: 24rpx;
   }
 }
 </style>

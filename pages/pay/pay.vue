@@ -66,7 +66,7 @@
         <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
         <u-cell-item
           title="优惠券"
-          value="无可用"
+          :value="aCoupon"
           @click="showCoupon = true"
         ></u-cell-item>
       </u-cell-group>
@@ -85,9 +85,9 @@
       <u-button type="error" @click="createOrder">支付</u-button>
     </view>
 
-    <u-popup v-model="showCoupon" mode="bottom">
+    <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
-        <c-coupon @change="couponChange" />
+        <c-coupon @change="couponChange" v-model="couponList" />
       </scroll-view>
     </u-popup>
   </view>
@@ -102,6 +102,7 @@ export default {
       address: null,
       comment: null,
       coupon: null,
+      couponList: [],
       showCoupon: false
     }
   },
@@ -128,6 +129,15 @@ export default {
         quantity: e.quantity,
         specification: e.dimensionId
       }))
+    },
+    aCoupon() {
+      let result
+      if (this.coupon) {
+        result = this.couponList.find((e) => e.id === this.coupon)
+        return this.$getValue(result, 'coupon.__metadata.name')
+      }
+      result = this.couponList.length
+      return result === 0 ? '无可用' : result + '张'
     }
   },
   onLoad() {
@@ -136,6 +146,7 @@ export default {
   methods: {
     couponChange(id) {
       this.coupon = id
+      this.showCoupon = false
     },
     createOrder() {
       const data = {
@@ -150,7 +161,7 @@ export default {
       }
       data.address = this.addressDetail
 
-      if (this.coupon) data.coupon = this.coupon
+      if (this.coupon) data.userCoupon = this.coupon
       if (this.comment) data.comment = this.comment
 
       this.$api.post(`/api/orders`, data).then((res) => {

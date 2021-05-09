@@ -14,7 +14,7 @@
     </u-grid>
 
     <view class="coupon">
-      <view class="coupon-title">优惠券</view>
+      <view class="coupon-title">优惠券 //TODO</view>
       <scroll-view scroll-x class="coupon-scroll">
         <view class="coupon-scroll-image">
           <u-image

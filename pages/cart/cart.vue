@@ -244,9 +244,11 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import '@/styles/product';
-page {
+.cart-container {
+  min-height: 100vh;
   background-color: $c-background;
 }
+
 .cart-container {
   padding-bottom: 124rpx;
 }

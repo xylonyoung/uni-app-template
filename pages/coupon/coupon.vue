@@ -1,6 +1,6 @@
 <template>
   <view>
-    <c-coupon />
+    <c-coupon :use="false" />
   </view>
 </template>
 

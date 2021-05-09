@@ -49,30 +49,17 @@
               <u-tag type="info" :text="productDimension" />
             </view>
           </u-cell-item>
-          <u-cell-item @click="showShippingDetail = true">
-            <text slot="icon">配送</text>
-            <view slot="title" class="dimension-title">
-              <view>
-                <u-icon name="checkmark-circle"></u-icon>
-                <text>同城限时达 | 选择下单预计最快12:00配送</text>
-              </view>
-              <view class="dimension-title-shipping">
-                <view>
-                  <u-icon name="checkmark-circle"></u-icon>
-                  商家配送
-                </view>
-                <view>
-                  <u-icon name="checkmark-circle"></u-icon>
-                  到店自提
-                </view>
-              </view>
-            </view>
-          </u-cell-item>
-          <u-cell-item value="100%好评" id="review">
-            <text slot="icon">商品评论(1)</text>
+          <u-cell-item value="100%好评" id="review" @click="showReviews = true">
+            <text slot="icon">
+              商品评论({{ $numberFormat(productReviews.length) }})
+            </text>
           </u-cell-item>
           <c-reviews />
         </u-cell-group>
+      </view>
+
+      <view>
+        <c-reviews :list="productReviews" :limit="2" />
       </view>
 
       <view id="description">
@@ -93,33 +80,8 @@
       <c-recommend />
     </view>
 
-    <u-popup v-model="showShippingDetail" mode="bottom" closeable>
-      <view class="shipping-detail">
-        <view class="top-title">配送方式</view>
-        <view>
-          <view class="section">
-            <view class="title">
-              <u-icon name="home-fill"></u-icon>
-              支持同城限时达
-            </view>
-            <view class="content">现在下单预计最快12:00配送</view>
-          </view>
-          <view class="section">
-            <view class="title">
-              <u-icon name="car-fill"></u-icon>
-              支持商家配送
-            </view>
-            <view class="content"></view>
-          </view>
-          <u-cell-group>
-            <u-cell-item
-              icon="bag-fill"
-              title="支持到店自提"
-              value="查看到店自提"
-            ></u-cell-item>
-          </u-cell-group>
-        </view>
-      </view>
+    <u-popup v-model="showReviews" mode="bottom" closeable>
+      <c-reviews :list="productReviews" />
     </u-popup>
   </view>
 </template>
@@ -135,26 +97,26 @@ export default {
       tabList: [
         {
           name: '商品',
-          anchor: '#product',
+          anchor: '#product'
         },
         {
           name: '评论',
-          anchor: '#review',
+          anchor: '#review'
         },
         {
           name: '详情',
-          anchor: '#description',
+          anchor: '#description'
         },
         {
           name: '推荐',
-          anchor: '#recommend',
-        },
+          anchor: '#recommend'
+        }
       ],
       tabIndex: 0,
       swiperList: [],
-      showShippingDetail: false,
       showCartSelector: false,
       specificationIndex: 0,
+      showReviews: false
     }
   },
   computed: {
@@ -163,6 +125,10 @@ export default {
         ? `共${this.product.specifications.length}种规格`
         : ''
     },
+    productReviews() {
+      const result = this.product?.evaluations ?? []
+      return result.map((e) => e.__metadata)
+    }
     // productPrice() {
     //   if (this.product.specifications) {
     //     const result = this.product.specifications[0]
@@ -176,7 +142,7 @@ export default {
   watch: {
     product(val) {
       this.nonexistent = !val.name
-    },
+    }
   },
   onLoad(option) {
     this.getProduct(option.id)
@@ -195,7 +161,7 @@ export default {
         const { pictures } = this.product
         if (pictures) this.getSwiperList(pictures)
         uni.setNavigationBarTitle({
-          title: this.product.name,
+          title: this.product.name
         })
       })
     },
@@ -205,10 +171,10 @@ export default {
     showPreview(index) {
       uni.previewImage({
         current: index,
-        urls: this.swiperList,
+        urls: this.swiperList
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -72,20 +72,6 @@
       @change="categoryConfirm"
     />
 
-    <!-- <u-popup v-model="showPopup" mode="right">
-      <scroll-view scroll-y class="category">
-        <view
-          v-for="(item, index) in categoryList"
-          :key="index"
-          class="category-item"
-          :style="[categoryItemStyle(index)]"
-          @click="categoryConfirm(item, index)"
-        >
-          {{ item.name }}
-        </view>
-      </scroll-view>
-    </u-popup> -->
-
     <c-load-list
       ref="loadList"
       :list.sync="list"
