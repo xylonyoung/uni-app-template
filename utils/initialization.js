@@ -29,7 +29,7 @@ import { getValue, getImage, numberFormat } from './index'
 
   vueUse($api)
   
-  store.commit('store/SET_CART', uni.getStorageSync('cart') || [])
+  store.commit('common/SET_CART', uni.getStorageSync('cart') || [])
 })()
 
 /**

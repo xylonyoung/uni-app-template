@@ -2,7 +2,7 @@ import $api from '@/api'
 
 const state = {
   user: {},
-  registered: false,
+  registered: false
 }
 
 const actions = {
@@ -24,29 +24,27 @@ const actions = {
       await putUserSet('recommendedUser', id)
       uni.showToast({
         title: '成功获取分享',
-        duration: 2000,
+        duration: 2000
       })
       dispatch('getUserInformation')
     } else {
       uni.showToast({
         title: '分享失败！',
         icon: 'none',
-        duration: 2000,
+        duration: 2000
       })
     }
     uni.removeStorageSync('shareId')
   },
 
   async getUserInformation({ commit }) {
-    await $api.get('/api/user').then((res) => {
-      const { data } = res
-      commit('SET_USER', data)
-      const { profile } = data
-      if (profile && profile.phone) {
-        commit('SET_REGISTERED', true)
-      }
-    })
-    return 'finished'
+    const res = await $api.get('/api/user')
+    const { data } = res
+    commit('SET_USER', data)
+    if (data?.profile?.__metadata?.phone) {
+      commit('SET_REGISTERED', true)
+    }
+    return
   },
 
   async wechatLogin({ dispatch }, phone) {
@@ -63,16 +61,14 @@ const actions = {
           provider: 'weixin',
           success: (res) => {
             const params = {
-              code: res.code,
+              code: res.code
             }
-            if (phone) {
-              params.phone = phone
-            }
+            if (phone) params.phone = phone
+
             $api
               .get('/wechat/mini/login', params)
               .then((response) => {
-                const { data } = response
-                uni.setStorageSync('token', data.token)
+                uni.setStorageSync('token', response?.data?.token)
                 resolve(data)
               })
               .catch((err) => {
@@ -89,9 +85,9 @@ const actions = {
                 if (res.confirm) {
                   dispatch('wechatLogin')
                 }
-              },
+              }
             })
-          },
+          }
         })
       })
     }
@@ -101,7 +97,7 @@ const actions = {
     uni.showToast({
       title: '登录过期，正在跳转登录~',
       icon: 'none',
-      duration: 3000,
+      duration: 3000
     })
 
     uni.removeStorageSync('token')
@@ -112,7 +108,7 @@ const actions = {
       //#endif
       //#ifndef MP-WEIXIN
       uni.redirectTo({
-        url: '/pages/login/login',
+        url: '/pages/login/login'
       })
       //#endif
     }, 2000)
@@ -133,11 +129,11 @@ const actions = {
 
   switchHomePage() {
     uni.switchTab({
-      url: '/pages/home/home',
+      url: '/pages/home/home'
     })
-  },
+  }
 }
 export default {
   state,
-  actions,
+  actions
 }

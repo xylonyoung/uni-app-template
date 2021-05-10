@@ -15,7 +15,7 @@ export default {
     }
   },
   onLoad() {
-    this.$store.dispatch('store/setBadge')
+    this.$store.dispatch('common/setBadge')
   },
   methods: {},
 }

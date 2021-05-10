@@ -4,27 +4,40 @@
 
     <u-grid :col="4">
       <u-grid-item
-        v-for="(item, index) in menuList"
+        v-for="(item, index) in categoryList"
         :key="index"
-        @click="navToCategory(item.name)"
+        @click="navToCategory(index)"
       >
-        <u-image width="80" height="80" :src="item.icon"></u-image>
+        <u-image width="80" height="80" :src="$getImage(item.icon)"></u-image>
         <view>{{ item.name }}</view>
+      </u-grid-item>
+      <u-grid-item @click="navToCategory(-1)">
+        <u-image width="80" height="80" src="/static/more.png"></u-image>
+        <view>更多</view>
       </u-grid-item>
     </u-grid>
 
     <view class="coupon">
-      <view class="coupon-title">优惠券 //TODO</view>
+      <view class="coupon-title">优惠券</view>
       <scroll-view scroll-x class="coupon-scroll">
-        <view class="coupon-scroll-image">
-          <u-image
-            width="320"
-            mode="widthFix"
-            src="/static/home/coupon.png"
-            v-for="(item, index) in 3"
+        <u-empty mode="coupon" v-if="couponList.length === 0"></u-empty>
+        <template v-else>
+          <view
+            class="coupon-scroll-box"
+            v-for="(item, index) in couponList"
             :key="index"
-          ></u-image>
-        </view>
+            @click="getCoupon(item.id)"
+          >
+            <u-image
+              class="coupon-scroll-box-image"
+              width="320"
+              height="160"
+              mode="aspectFit"
+              :src="$getImage(item.image)"
+            ></u-image>
+            <view class="coupon-scroll-box-get">立即领取</view>
+          </view>
+        </template>
       </scroll-view>
     </view>
 
@@ -37,41 +50,39 @@ export default {
   data() {
     return {
       swiperList: [],
-      menuList: [
-        { name: '母婴用品', icon: '/static/home/1.png' },
-        { name: '潮流服装', icon: '/static/home/2.png' },
-        { name: '护肤美妆', icon: '/static/home/3.png' },
-        { name: '居家用品', icon: '/static/home/4.png' },
-        { name: '食品饮料', icon: '/static/home/5.png' },
-        { name: '家用电器', icon: '/static/home/6.png' },
-        { name: '热销商品', icon: '/static/home/7.png' },
-        { name: '更多', icon: '/static/home/8.png' }
-      ],
+      couponList: [],
       productList: [],
       categoryList: []
     }
   },
   async onLoad() {
-    this.$store.dispatch('store/setBadge')
+    this.$store.dispatch('common/setBadge')
     await this.$store.dispatch('user/wechatLogin')
     this.getData()
   },
   methods: {
+    getCoupon(id) {
+      this.$api.post('/api/user-coupons', { coupon: id }).then((res) => {
+        uni.showToast({
+          title: '领取成功',
+          duration: 2000
+        })
+      })
+    },
     navToProduct(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`
       })
     },
-    navToCategory(name) {
-      if (name === '更多') {
+    navToCategory(index) {
+      if (index === -1) {
         uni.switchTab({
           url: '/pages/category/category'
         })
       } else {
-        const item = this.categoryList.find((e) => e.name === name)
-        const arr = item.children.map((e) => e.id)
+        const result = this.categoryList[index]?.children.map((e) => e.id)
         uni.navigateTo({
-          url: `/pages/product/list?category=${JSON.stringify(arr)}`
+          url: `/pages/product/list?category=${JSON.stringify(result)}`
         })
       }
     },
@@ -82,12 +93,18 @@ export default {
         )
       })
 
-      this.$api.get('/api/products').then((res) => {
-        this.productList = res.data
+      this.$api
+        .get('/api/coupons', { '@filter': 'entity.getEnabled()' })
+        .then((res) => {
+          this.couponList = res.data
+        })
+
+      this.$store.dispatch('common/getCategory').then((res) => {
+        this.categoryList = res.data.slice(0, 7)
       })
 
-      this.$store.dispatch('store/getCategory').then((res) => {
-        this.categoryList = res.data
+      this.$api.get('/api/products').then((res) => {
+        this.productList = res.data
       })
     }
   }
@@ -108,12 +125,24 @@ export default {
     font-weight: bold;
   }
   &-scroll {
-    height: 160rpx;
-    &-image {
-      margin-top: 24rpx;
+    height: 164rpx;
+    margin-top: 24rpx;
+    display: flex;
+    &-box + &-box {
+      margin-left: 24rpx;
+    }
+    &-box {
       display: flex;
-      u-image + u-image {
-        margin-left: 24rpx;
+      &-image{
+        border: 1px solid $c-gray;
+        border-right: none;
+      }
+      &-get {
+        width: 48rpx;
+        padding: 0 8 rpx;
+        color: $c-gray;
+        text-align: center;
+        border: 1px dashed $c-gray;
       }
     }
   }

@@ -27,7 +27,7 @@
       <view class="introduction">
         <view class="introduction-price">
           <view>
-            销售价￥
+            <text>销售价</text>
             <text>{{ $numberFormat(product.price) }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
@@ -81,7 +81,9 @@
     </view>
 
     <u-popup v-model="showReviews" mode="bottom" closeable>
-      <c-reviews :list="productReviews" />
+      <scroll-view scroll-y style="height: 70vh">
+        <c-reviews :list="productReviews" />
+      </scroll-view>
     </u-popup>
   </view>
 </template>
@@ -192,9 +194,14 @@ export default {
     padding: 0 24rpx;
     color: $c-price;
     view {
-      text {
+      text:last-child {
         font-size: 60rpx;
         font-weight: bold;
+        &::before {
+          content: '£';
+          padding-right: 4rpx;
+          font-size: 24rpx;
+        }
       }
     }
     view:last-child {

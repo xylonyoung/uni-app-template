@@ -138,7 +138,7 @@ export default {
   },
   onShow() {
     this.getProducts()
-    this.$store.dispatch('store/setBadge')
+    this.$store.dispatch('common/setBadge')
   },
   methods: {
     navTo(id) {
@@ -163,7 +163,7 @@ export default {
         return
       }
 
-      this.$store.dispatch('store/toPay', products)
+      this.$store.dispatch('common/toPay', products)
     },
     deleteFromCart() {
       this.products = this.products.filter((e) => !e.checked)
@@ -176,8 +176,8 @@ export default {
       })
     },
     cartChange(cart) {
-      this.$store.dispatch('store/setCart', cart)
-      this.$store.dispatch('store/setBadge')
+      this.$store.dispatch('common/setCart', cart)
+      this.$store.dispatch('common/setBadge')
     },
     cartSelectorChange(index) {
       const productIndex = this.products.findIndex(
@@ -295,8 +295,14 @@ export default {
       &-price {
         color: $c-price;
         text {
+          padding-left: 4rpx;
           font-size: 40rpx;
           font-weight: bold;
+          &::before {
+            content: '£';
+            padding-right: 4rpx;
+            font-size: 24rpx;
+          }
         }
       }
     }

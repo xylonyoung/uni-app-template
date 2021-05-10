@@ -8,6 +8,7 @@
     <template v-else>
       <u-navbar :title="title"></u-navbar>
       <u-tabs
+        active-color="#ff6900"
         :list="list"
         :is-scroll="false"
         :current="tabIndex"
@@ -23,7 +24,7 @@ export default {
     scrollTop: { type: Number, default: 0 },
     list: { type: Array, default: () => [] },
     current: { type: Number, default: null },
-    container: { type: String, default: null },
+    container: { type: String, default: null }
   },
   data() {
     return { tabIndex: null, anchorList: [] }
@@ -43,7 +44,7 @@ export default {
   computed: {
     navbarHide() {
       return this.scrollTop < 100
-    },
+    }
   },
   watch: {
     scrollTop(val) {
@@ -53,7 +54,7 @@ export default {
           break
         }
       }
-    },
+    }
   },
   methods: {
     getOffset(index) {
@@ -75,7 +76,7 @@ export default {
                   const distance = data.top - res.top - this.getOffset(index)
                   uni.pageScrollTo({
                     duration: 333,
-                    scrollTop: distance,
+                    scrollTop: distance
                   })
                 })
                 .exec()
@@ -84,8 +85,8 @@ export default {
           break
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang='scss' scoped>

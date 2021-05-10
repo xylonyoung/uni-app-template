@@ -1,9 +1,5 @@
 <template>
-  <u-popup
-    v-model="showPopup"
-    mode="bottom"
-    @close="popupClose"
-  >
+  <u-popup v-model="showPopup" mode="bottom" @close="popupClose">
     <view class="product">
       <view class="product-cover">
         <u-image
@@ -107,11 +103,11 @@ export default {
         quantity: this.quantity,
         dimensionId: this.selectedDimension.id
       }
-      this.$store.dispatch('store/toPay', [product])
+      this.$store.dispatch('common/toPay', [product])
     },
     cartChange(cart) {
-      this.$store.dispatch('store/setCart', cart)
-      this.$store.dispatch('store/setBadge')
+      this.$store.dispatch('common/setCart', cart)
+      this.$store.dispatch('common/setBadge')
       this.popupClose()
     },
     addToCart() {
@@ -160,7 +156,9 @@ export default {
     color: $c-price;
     font-size: 40rpx;
     &::before {
-      content: '￥';
+      content: '£';
+      padding-right: 4rpx;
+
       font-size: 24rpx;
     }
   }

@@ -70,7 +70,7 @@
       </u-grid>
     </view>
 
-    <view class="menu">
+    <!-- <view class="menu">
       <u-cell-group>
         <u-cell-item
           :title="item.title"
@@ -87,7 +87,7 @@
           ></u-icon>
         </u-cell-item>
       </u-cell-group>
-    </view>
+    </view> -->
   </view>
 </template>
 <script>
@@ -118,7 +118,7 @@ export default {
     ...mapGetters(['profile', 'user'])
   },
   onShow() {
-    this.$store.dispatch('store/setBadge')
+    this.$store.dispatch('common/setBadge')
   },
   methods: {
     navTo(path) {

@@ -23,7 +23,8 @@ const actions = {
   async getCategory() {
     const params = {
       '@filter':
-        'entity.getEnabled() && entity.getType().getName() == "产品分类"'
+        'entity.getEnabled() && entity.getType().getName() == "产品分类"',
+      '@order': 'sequence|ASC'
     }
     const result = await $api.get('/api/categories', params)
     return result

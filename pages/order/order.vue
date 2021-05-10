@@ -2,6 +2,7 @@
   <view class="order-container">
     <u-tabs
       ref="uTabs"
+      active-color="#ff6900"
       :list="tabList"
       :current="tabIndex"
       :is-scroll="false"

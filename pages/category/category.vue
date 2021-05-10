@@ -76,7 +76,7 @@ export default {
     }
   },
   onLoad() {
-    this.$store.dispatch('store/getCategory').then((res) => {
+    this.$store.dispatch('common/getCategory').then((res) => {
       this.tabbar = res.data
     })
   },

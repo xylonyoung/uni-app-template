@@ -60,7 +60,7 @@
       <u-cell-group>
         <u-cell-item
           title="商品总价"
-          :value="`￥${amount}`"
+          :value="`£ ${amount}`"
           :arrow="false"
         ></u-cell-item>
         <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
@@ -85,6 +85,13 @@
       <u-button type="error" @click="createOrder">支付</u-button>
     </view>
 
+    <u-select
+      v-model="showAddress"
+      mode="mutil-column"
+      :list="addressList"
+      @confirm="addressConfirm"
+    ></u-select>
+
     <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
         <c-coupon @change="couponChange" v-model="couponList" />
@@ -100,6 +107,8 @@ export default {
   data() {
     return {
       address: null,
+      addressList: [],
+      showAddress: false,
       comment: null,
       coupon: null,
       couponList: [],
@@ -168,7 +177,7 @@ export default {
         const id = res.data.invoice.id
         if (id) {
           wechatPay(id).then(() => {
-            this.$store.dispatch('store/setCart', [])
+            this.$store.dispatch('common/setCart', [])
             uni.navigateBack({
               delta: 2
             })
@@ -183,12 +192,19 @@ export default {
       return this.findDimension(item)?.__metadata?.name
     },
     chooseAddress() {
-      uni.chooseAddress({
-        success: (res) => {
-          uni.setStorageSync('address', res)
-          this.address = res
-        }
+      this.showAddress = true
+      this.$api.get('/api/regions').then(res=>{
+        this.addressList = res.data
       })
+      // uni.chooseAddress({
+      //   success: (res) => {
+      //     uni.setStorageSync('address', res)
+      //     this.address = res
+      //   }
+      // })
+    },
+    addressConfirm(e){
+      console.log(e)
     }
   }
 }
@@ -239,7 +255,8 @@ export default {
       color: $c-price;
       font-size: 40rpx;
       &::before {
-        content: '￥';
+        content: '£';
+        padding-right: 4rpx;
         font-size: 24rpx;
       }
     }

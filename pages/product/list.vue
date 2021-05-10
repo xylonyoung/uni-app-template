@@ -159,8 +159,8 @@ export default {
     this.autoLoadList = true
   },
   onShow() {
-    this.$store.dispatch('store/setBadge')
-    this.$store.dispatch('store/getCategory').then((res) => {
+    this.$store.dispatch('common/setBadge')
+    this.$store.dispatch('common/getCategory').then((res) => {
       this.categoryList = res.data.map((e) => {
         const result = { ...e }
         if (result.children) {
