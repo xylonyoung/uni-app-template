@@ -9,22 +9,13 @@ export function numberFormat(num, mantissa = 2) {
   })
 }
 
-export function numberFormatCn(num) {
-  if (num >= 10000) {
-    return numberFormat(num / 10000) + '万'
-  }
-  return numberFormat(num)
+
+export function buildFullPath(relativeURL) {
+  return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
 }
 
 export function getImage(name) {
-  return `${baseURL}/uploads/images/${name}`
-}
-
-export function toCamelCase(str) {
-  if (!str) return
-  return str.replace(/\_|\-(\w)/g, function (match, p1, offset) {
-    return offset > 0 ? p1.toUpperCase() : p1
-  })
+  return buildFullPath(`/uploads/images/${name}`)
 }
 
 export function htmlFormat(htmlData) {
@@ -36,16 +27,16 @@ export function htmlFormat(htmlData) {
 /**
  * get the value in Object or Array
  * key include "." to separate
- * @param {Object | Array} obj
- * @param {String} prop
+ * @param {Object | Array} arg
+ * @param {String} key
  * @returns {String | null}
  */
-export function getValue(obj, prop) {
-  if (typeof obj !== 'object' || typeof prop !== 'string') return null
+ export function getValue(arg, prop) {
+  if (typeof arg !== 'object' || typeof prop !== 'string') return null
 
   const keys = prop.split('.')
 
-  let result = obj
+  let result = arg
 
   for (const key of keys) {
     result = result?.[key]

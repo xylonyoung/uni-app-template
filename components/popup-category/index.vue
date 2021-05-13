@@ -1,5 +1,5 @@
 <template>
-  <u-popup v-model="showPopup" :mode="mode">
+  <u-popup v-model="showPopup" :mode="mode" @close="onClose">
     <view class="popup-category-container">
       <scroll-view scroll-y class="tabs" :style="[scrollStyle]">
         <view
@@ -105,6 +105,7 @@ export default {
       } else {
         this.$emit('update:current', index)
         this.$emit('change', index)
+        this.onClose()
       }
     },
     clickChild(index) {
@@ -123,6 +124,10 @@ export default {
         result = [this.list[this.tempIndex[0]].children[index].id]
       }
       this.$emit('change', result)
+      this.onClose()
+    },
+    onClose() {
+      this.$emit('input', false)
     }
   }
 }

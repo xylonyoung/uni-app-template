@@ -185,7 +185,6 @@ export default {
     categoryConfirm(arr) {
       this.setListQuery(`entity.getCategory().getId() in [${arr}]`)
       this.toReloadList()
-      this.showPopup = false
     },
     navToProduct(id) {
       uni.navigateTo({

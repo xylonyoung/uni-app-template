@@ -4,7 +4,16 @@
       <u-cell-item value="选择地址" @click="chooseAddress">
         <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
         <view slot="title">
-          <template v-if="address.telNumber">
+          <template v-if="address.phone">
+            <view class="address-user">
+              <text>{{ address.name }}</text>
+              <text>{{ address.phone }}</text>
+            </view>
+            <view class="address-detail">
+              {{ addressDetail }}
+            </view>
+          </template>
+          <!-- <template v-if="address.telNumber">
             <view class="address-user">
               <text>{{ address.userName }}</text>
               <text>{{ address.telNumber }}</text>
@@ -12,7 +21,7 @@
             <view class="address-detail">
               {{ addressDetail }}
             </view>
-          </template>
+          </template> -->
           <view v-else>暂未设置收货地址</view>
         </view>
       </u-cell-item>
@@ -85,18 +94,17 @@
       <u-button type="error" @click="createOrder">支付</u-button>
     </view>
 
-    <u-select
-      v-model="showAddress"
-      mode="mutil-column"
-      :list="addressList"
-      @confirm="addressConfirm"
-    ></u-select>
-
     <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
         <c-coupon @change="couponChange" v-model="couponList" />
       </scroll-view>
     </u-popup>
+
+    <c-address
+      v-model="showAddress"
+      :regions="regionList"
+      @confirm="addressConfirm"
+    />
   </view>
 </template>
 
@@ -107,7 +115,7 @@ export default {
   data() {
     return {
       address: null,
-      addressList: [],
+      regionList: [],
       showAddress: false,
       comment: null,
       coupon: null,
@@ -126,12 +134,16 @@ export default {
     },
     addressDetail() {
       if (!this.address) return ''
-      return (
-        this.address.provinceName +
-        this.address.cityName +
-        this.address.countyName +
-        this.address.detailInfo
-      )
+      const result = this.address.region.reduce((acc, cur) => {
+        return acc + ' ' + cur.label
+      }, '')
+      return result + ' ' + this.address.detailInfo
+      // return (
+      //   this.address.provinceName +
+      //   this.address.cityName +
+      //   this.address.countyName +
+      //   this.address.detailInfo
+      // )
     },
     items() {
       return this.orderProducts.map((e) => ({
@@ -151,8 +163,14 @@ export default {
   },
   onLoad() {
     this.address = uni.getStorageSync('address')
+    this.getRegion()
   },
   methods: {
+    getRegion() {
+      this.$api.get('/api/regions').then((res) => {
+        this.regionList = res.data
+      })
+    },
     couponChange(id) {
       this.coupon = id
       this.showCoupon = false
@@ -193,9 +211,6 @@ export default {
     },
     chooseAddress() {
       this.showAddress = true
-      this.$api.get('/api/regions').then(res=>{
-        this.addressList = res.data
-      })
       // uni.chooseAddress({
       //   success: (res) => {
       //     uni.setStorageSync('address', res)
@@ -203,8 +218,8 @@ export default {
       //   }
       // })
     },
-    addressConfirm(e){
-      console.log(e)
+    addressConfirm(obj) {
+      this.address = { ...obj }
     }
   }
 }

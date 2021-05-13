@@ -1,9 +1,6 @@
 <template>
   <view class="recommend-container">
-    <view class="title">
-      <u-icon name="thumb-up-fill" color="#ff6900"></u-icon>
-      猜你喜欢
-    </view>
+    <view class="title">精选推荐</view>
 
     <c-product-list :product-list="recommendList" />
   </view>
@@ -43,6 +40,7 @@ export default {
 }
 
 .title {
+  color: $c-theme;
   text-align: center;
   font-size: 32rpx;
   font-weight: bold;

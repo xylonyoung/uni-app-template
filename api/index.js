@@ -1,5 +1,5 @@
-import { baseURL } from '@/settings'
 import store from '@/store'
+import { buildFullPath } from '@/utils'
 
 export class Api {
   constructor() {
@@ -16,16 +16,12 @@ export class Api {
     })
   }
 
-  buildFullPath(relativeURL) {
-    return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
-  }
-
   request(method, requestedURL, data = {}) {
     const token = uni.getStorageSync('token')
-    const url = this.buildFullPath(requestedURL)
+    const url = buildFullPath(requestedURL)
     const header = {
       'Content-Type': 'application/json;charset=UTF-8',
-      'X-Auth-Token': token,
+      'X-Auth-Token': token
     }
     return new Promise((resolve, reject) => {
       uni.request({
@@ -37,7 +33,7 @@ export class Api {
         responseType: 'text',
         complete: (res) => {
           this.responseProcess(res, resolve, reject)
-        },
+        }
       })
     })
   }
@@ -69,7 +65,7 @@ export class Api {
       console.log(res)
       uni.showToast({
         title: message || '服务器繁忙！',
-        icon: 'none',
+        icon: 'none'
       })
     }
   }

@@ -1,4 +1,4 @@
-import { Api } from '@/api'
+import Api from '@/api'
 import { getFiles, createMock } from './mock-utils'
 
 class MockApi extends Api {

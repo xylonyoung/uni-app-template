@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import store from '@/store'
 import api from '@/api'
+import lodash from 'lodash'
 import { baseURL } from '@/settings'
 import { getValue, getImage, numberFormat } from './index'
 ;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
-  let $api = api
-  const needMock =
-    process.env.NODE_ENV === 'development' && baseURL === 'https://mockjs'
+  let $api
 
-  if (needMock) {
+  // when development need mock or not?
+  if (process.env.NODE_ENV === 'development' && baseURL === 'https://mockjs') {
     consoleStr += 'mock'
     //#ifndef MP-WEIXIN
     import('@/mock')
@@ -19,8 +19,11 @@ import { getValue, getImage, numberFormat } from './index'
       $api = module.default
     })
     //#endif
+  } else {
+    $api = api
   }
 
+  // debug console hint
   try {
     console?.log && console.log('%c' + consoleStr, 'font-size:50px;')
   } catch (e) {
@@ -28,12 +31,12 @@ import { getValue, getImage, numberFormat } from './index'
   }
 
   vueUse($api)
-  
+
   store.commit('common/SET_CART', uni.getStorageSync('cart') || [])
 })()
 
 /**
- * set global functions, variables, components, etc.
+ ** set global functions, variables, components, etc.
  */
 function vueUse($api) {
   Vue.use({
@@ -42,6 +45,7 @@ function vueUse($api) {
       Vue.prototype.$getValue = getValue
       Vue.prototype.$getImage = getImage
       Vue.prototype.$numberFormat = numberFormat
+      Vue.prototype._ = lodash
     }
   })
 }

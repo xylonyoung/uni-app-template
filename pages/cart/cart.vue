@@ -50,7 +50,7 @@
             <u-number-box
               v-model="products[index].quantity"
               min="1"
-              :max="hasStock ? findDimension(item).stock : 999"
+              :max="stockHasLimit ? findDimension(item).stock : 999"
               @click.native.stop
             ></u-number-box>
           </view>
@@ -113,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'hasStock']),
+    ...mapGetters(['cart', 'stockHasLimit']),
     amount() {
       const totalPrice = this.products.reduce((acc, cur) => {
         if (!cur.checked) return acc
@@ -147,7 +147,7 @@ export default {
       })
     },
     outOfStock(item) {
-      if (!this.hasStock) {
+      if (!this.stockHasLimit) {
         return false
       } else {
         return this.findDimension(item)?.stock <= 0

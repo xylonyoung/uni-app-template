@@ -1,5 +1,5 @@
 <template>
-  <u-popup v-model="showPopup" mode="bottom" @close="popupClose">
+  <u-popup v-model="showPopup" mode="bottom" @close="onClose">
     <view class="product">
       <view class="product-cover">
         <u-image
@@ -40,7 +40,7 @@
         <u-number-box
           v-model="quantity"
           :min="1"
-          :max="hasStock ? quantityInStock : 999"
+          :max="stockHasLimit ? quantityInStock : 999"
         ></u-number-box>
       </view>
       <view class="bottom">
@@ -67,7 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'hasStock']),
+    ...mapGetters(['cart', 'stockHasLimit']),
     quantityInStock() {
       return this.selectedDimension ? this.selectedDimension.stock : 0
     },
@@ -108,7 +108,7 @@ export default {
     cartChange(cart) {
       this.$store.dispatch('common/setCart', cart)
       this.$store.dispatch('common/setBadge')
-      this.popupClose()
+      this.onClose()
     },
     addToCart() {
       if (this.quantityInStock < 1) {
@@ -139,9 +139,9 @@ export default {
     dimensionChange(index) {
       this.dimensionIndex = index
       this.$emit('change', index)
-      if (this.hideButton) this.popupClose()
+      if (this.hideButton) this.onClose()
     },
-    popupClose() {
+    onClose() {
       this.$emit('input', false)
     }
   }

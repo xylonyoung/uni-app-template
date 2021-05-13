@@ -1,8 +1,8 @@
 import $api from '@/api'
 
 const state = {
-  info: {},
   cart: [],
+  stockHasLimit: false,
   orderProducts: [],
   orderStatus: [
     { label: '失败', value: '-2' },
@@ -15,8 +15,7 @@ const state = {
     { label: '完成', value: '5' },
     { label: '售后中', value: '6' }
   ],
-  member: {},
-  hasStock: false
+  member: {}
 }
 
 const actions = {
