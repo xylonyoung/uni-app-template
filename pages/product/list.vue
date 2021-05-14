@@ -154,22 +154,14 @@ export default {
   onLoad(option) {
     const { category } = option
     if (category) {
-      this.setListQuery(`entity.getCategory().getId() in ${category}`)
+      this.setListQuery(`category = ${category}`)
     }
     this.autoLoadList = true
   },
   onShow() {
     this.$store.dispatch('common/setBadge')
     this.$store.dispatch('common/getCategory').then((res) => {
-      this.categoryList = res.data.map((e) => {
-        const result = { ...e }
-        if (result.children) {
-          result.children = result.children.map((i) => {
-            return i.__metadata
-          })
-        }
-        return result
-      })
+      this.categoryList = res
     })
   },
   mounted() {
@@ -183,7 +175,7 @@ export default {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
     },
     categoryConfirm(arr) {
-      this.setListQuery(`entity.getCategory().getId() in [${arr}]`)
+      this.setListQuery(`category = ${arr}`)
       this.toReloadList()
     },
     navToProduct(id) {

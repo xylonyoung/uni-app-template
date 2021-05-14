@@ -38,10 +38,9 @@ const actions = {
   },
 
   async getUserInformation({ commit }) {
-    const res = await $api.get('/api/user')
-    const { data } = res
-    commit('SET_USER', data)
-    if (data?.profile?.__metadata?.phone) {
+    const res = await $api.get('/api/users/me')
+    commit('SET_USER', res)
+    if (res?.profile?.__metadata?.phone) {
       commit('SET_REGISTERED', true)
     }
     return

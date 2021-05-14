@@ -21,12 +21,20 @@ const state = {
 const actions = {
   async getCategory() {
     const params = {
-      '@filter':
-        'entity.getEnabled() && entity.getType().getName() == "产品分类"',
-      '@order': 'sequence|ASC'
+      '@filter': 'type = 1',
+      '@order': 'listOrder|ASC'
     }
-    const result = await $api.get('/api/categories', params)
-    return result
+    const res = await $api.get('/api/categories', params)
+    const result = res.content.filter((e) => e.parent === null)
+    return result.map((e) => {
+      const children = []
+      res.content.forEach((i) => {
+        if (i.parent === e.id) {
+          children.push(i)
+        }
+      })
+      return { children, ...e }
+    })
   },
   setCart({ commit }, cart) {
     commit('SET_CART', cart)

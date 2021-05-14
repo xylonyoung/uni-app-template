@@ -159,16 +159,12 @@ export default {
     },
     getProduct(id) {
       this.$api.get(`/api/products/${id}`).then((res) => {
-        this.product = res.data
-        const { pictures } = this.product
-        if (pictures) this.getSwiperList(pictures)
+        this.product = res
+        this.swiperList = res.pictures
         uni.setNavigationBarTitle({
           title: this.product.name
         })
       })
-    },
-    getSwiperList(images) {
-      this.swiperList = images.map((e) => this.$getImage(e.__toString))
     },
     showPreview(index) {
       uni.previewImage({
@@ -198,7 +194,7 @@ export default {
         font-size: 60rpx;
         font-weight: bold;
         &::before {
-          content: '£';
+          content: '￥';
           padding-right: 4rpx;
           font-size: 24rpx;
         }

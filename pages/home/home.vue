@@ -6,9 +6,9 @@
       <u-grid-item
         v-for="(item, index) in categoryList"
         :key="index"
-        @click="navToCategory(index)"
+        @click="navToCategory(item.id)"
       >
-        <u-image width="80" height="80" :src="$getImage(item.icon)"></u-image>
+        <u-image width="80" height="80" :src="item.icon"></u-image>
         <view>{{ item.name }}</view>
       </u-grid-item>
       <u-grid-item @click="navToCategory(-1)">
@@ -17,31 +17,20 @@
       </u-grid-item>
     </u-grid>
 
-    <view class="coupon">
-      <view class="coupon-title">优惠券</view>
-      <scroll-view scroll-x class="coupon-scroll">
-        <u-empty mode="coupon" v-if="couponList.length === 0"></u-empty>
-        <template v-else>
-          <view
-            class="coupon-scroll-box"
-            v-for="(item, index) in couponList"
-            :key="index"
-            @click="getCoupon(item.id)"
-          >
-            <u-image
-              class="coupon-scroll-box-image"
-              width="320"
-              height="160"
-              mode="aspectFit"
-              :src="$getImage(item.image)"
-            ></u-image>
-            <view class="coupon-scroll-box-get">立即领取</view>
-          </view>
-        </template>
-      </scroll-view>
+    <view class="section">
+      <view class="section-title">限时特价</view>
+      <c-product-list :product-list="productList" />
     </view>
 
-    <c-product-list :product-list="productList" />
+    <view class="section">
+      <view class="section-title">预售</view>
+      <c-product-list :product-list="productList" />
+    </view>
+
+    <view class="section">
+      <view class="section-title">推荐</view>
+      <c-product-list :product-list="productList" />
+    </view>
   </view>
 </template>
 
@@ -50,9 +39,8 @@ export default {
   data() {
     return {
       swiperList: [],
-      couponList: [],
       productList: [],
-      categoryList: []
+      categoryList: [],
     }
   },
   async onLoad() {
@@ -61,50 +49,35 @@ export default {
     this.getData()
   },
   methods: {
-    getCoupon(id) {
-      this.$api.post('/api/user-coupons', { coupon: id }).then((res) => {
-        uni.showToast({
-          title: '领取成功',
-          duration: 2000
-        })
-      })
-    },
     navToProduct(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`
       })
     },
-    navToCategory(index) {
-      if (index === -1) {
+    navToCategory(id) {
+      if (id === -1) {
         uni.switchTab({
           url: '/pages/category/category'
         })
       } else {
-        const result = this.categoryList[index]?.children.map((e) => e.id)
         uni.navigateTo({
-          url: `/pages/product/list?category=${JSON.stringify(result)}`
+          url: `/pages/product/list?category=${id}`
         })
       }
     },
     getData() {
-      this.$api.get('/api/album/by-title/home-swiper').then((res) => {
-        this.swiperList = res.data?.pictures.map((e) =>
-          this.$getImage(e.__toString)
-        )
-      })
-
       this.$api
-        .get('/api/coupons', { '@filter': 'entity.getEnabled()' })
+        .get('/api/albums', { '@filter': 'name = homeSwiper' })
         .then((res) => {
-          this.couponList = res.data
+          this.swiperList = res.content?.[0]?.pictures ?? []
         })
 
       this.$store.dispatch('common/getCategory').then((res) => {
-        this.categoryList = res.data.slice(0, 7)
+        this.categoryList = res.slice(0, 7) ?? []
       })
 
       this.$api.get('/api/products').then((res) => {
-        this.productList = res.data
+        this.productList = res.content
       })
     }
   }
@@ -116,12 +89,12 @@ export default {
   background-color: $c-background;
 }
 
-.coupon {
+.section {
   margin-top: 24rpx;
-  padding: 24rpx;
-  background-color: #fff;
   &-title {
-    font-size: 40rpx;
+    padding: 24rpx;
+    background-color: #fff;
+    font-size: 32rpx;
     font-weight: bold;
   }
   &-scroll {
@@ -133,7 +106,7 @@ export default {
     }
     &-box {
       display: flex;
-      &-image{
+      &-image {
         border: 1px solid $c-gray;
         border-right: none;
       }

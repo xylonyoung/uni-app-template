@@ -42,14 +42,14 @@
                 class="thumb-box"
                 v-for="(item1, index1) in item.children"
                 :key="index1"
-                @click="navTo(item1)"
+                @click="navTo(item1.id)"
               >
                 <image
                   class="item-menu-image"
-                  :src="$getImage($getValue(item1, '__metadata.icon'))"
+                  :src="item1.icon"
                   mode=""
                 ></image>
-                <view class="item-menu-name">{{ item1.__toString }}</view>
+                <view class="item-menu-name">{{ item1.name }}</view>
               </view>
             </view>
           </view>
@@ -77,16 +77,16 @@ export default {
   },
   onLoad() {
     this.$store.dispatch('common/getCategory').then((res) => {
-      this.tabbar = res.data
+      this.tabbar = res
     })
   },
   onReady() {
     this.getMenuItemTop()
   },
   methods: {
-    navTo(item) {
+    navTo(id) {
       uni.navigateTo({
-        url: `/pages/product/list?category=${JSON.stringify([item.id])}`
+        url: `/pages/product/list?category=${id}`
       })
     },
     // 点击左边的栏目切换

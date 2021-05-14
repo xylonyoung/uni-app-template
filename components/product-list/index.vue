@@ -11,7 +11,7 @@
         height="330rpx"
         border-radius="16"
         mode="aspectFit"
-        :src="$getImage(item.cover)"
+        :src="item.cover"
       ></u-image>
       <view class="product-item-name">{{ item.name }}</view>
       <view class="product-item-bottom">

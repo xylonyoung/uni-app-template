@@ -156,7 +156,7 @@ export default {
     color: $c-price;
     font-size: 40rpx;
     &::before {
-      content: '£';
+      content: '￥';
       padding-right: 4rpx;
 
       font-size: 24rpx;
