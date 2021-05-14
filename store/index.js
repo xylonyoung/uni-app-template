@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
+import { snakeCase } from 'lodash'
 
 Vue.use(Vuex)
 
@@ -24,26 +25,17 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
  */
 function createMutations(storeData) {
   // https://next.vuex.vuejs.org/guide/modules.html#namespacing
-  const result = { ...storeData, namespaced: true }
-  const { state } = result
+  const { state } = storeData
   const mutations = Object.keys(state).reduce((mutations, current) => {
-    mutations[snakeCase(current)] = function (state, data) {
+    mutations[`SET_${snakeCase(current).toUpperCase()}`] = function(state, data) {
       state[current] = data
     }
     return mutations
   }, {})
-  result.mutations = { ...mutations }
-  return result
-
-  function snakeCase(str) {
-    const result = str.replace(/[A-Z]/g, function (match) {
-      return `_${match}`
-    })
-    return `SET_${result.toUpperCase()}`
-  }
+  return { mutations, namespaced: true, ...storeData }
 }
 
 export default new Vuex.Store({
   modules,
-  getters,
+  getters
 })

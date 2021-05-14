@@ -9,7 +9,6 @@ export function numberFormat(num, mantissa = 2) {
   })
 }
 
-
 export function buildFullPath(relativeURL) {
   return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
 }
@@ -31,7 +30,7 @@ export function htmlFormat(htmlData) {
  * @param {String} key
  * @returns {String | null}
  */
- export function getValue(arg, prop) {
+export function getValue(arg, prop) {
   if (typeof arg !== 'object' || typeof prop !== 'string') return null
 
   const keys = prop.split('.')
