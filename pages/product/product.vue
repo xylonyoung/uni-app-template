@@ -123,9 +123,8 @@ export default {
   },
   computed: {
     productDimension() {
-      return this.product?.specifications
-        ? `共${this.product.specifications.length}种规格`
-        : ''
+      const result = this.product?.metadata?.specification
+      return result ? `共${result.length}种规格` : ''
     },
     productReviews() {
       const result = this.product?.evaluations ?? []

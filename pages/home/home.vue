@@ -19,12 +19,12 @@
 
     <view class="section">
       <view class="section-title">限时特价</view>
-      <c-product-list :product-list="productList" />
+      <c-product-list :product-list="specialPriceList" />
     </view>
 
     <view class="section">
       <view class="section-title">预售</view>
-      <c-product-list :product-list="productList" />
+      <c-product-list :product-list="presellList" />
     </view>
 
     <view class="section">
@@ -41,6 +41,8 @@ export default {
       swiperList: [],
       productList: [],
       categoryList: [],
+      specialPriceList: [],
+      presellList: []
     }
   },
   async onLoad() {
@@ -76,8 +78,41 @@ export default {
         this.categoryList = res.slice(0, 7) ?? []
       })
 
-      this.$api.get('/api/products').then((res) => {
-        this.productList = res.content
+      this.$api.get('/api/special-prices').then((response) => {
+        const waitSpecialPrice = []
+        const waitPresell = []
+        const specialPrice = []
+        const presellPrice = []
+        response.content.forEach((e) => {
+          if (e.type === 'DEFAULT') {
+            waitSpecialPrice.push(
+              this.$api.get('/api/specifications/' + e.specification)
+            )
+            specialPrice.push(e)
+          }
+          if (e.type === 'PRE_SALE') {
+            waitPresell.push(
+              this.$api.get('/api/specifications/' + e.specification)
+            )
+            presellPrice.push(e)
+          }
+        })
+        Promise.all(waitSpecialPrice).then((res) => {
+          this.specialPriceList = res.map((e, index) => {
+            return {
+              ...(e?.metadata?.product ?? {}),
+              specialPrice: { ...specialPrice[index] }
+            }
+          })
+        })
+        Promise.all(waitPresell).then((res) => {
+          this.presellList = res.map((e, index) => {
+            return {
+              ...(e?.metadata?.product ?? {}),
+              specialPrice: { ...presellPrice[index] }
+            }
+          })
+        })
       })
     }
   }

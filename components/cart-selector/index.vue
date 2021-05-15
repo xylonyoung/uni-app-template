@@ -5,12 +5,12 @@
         <u-image
           width="200rpx"
           height="200rpx"
-          :src="$getImage(product.cover)"
+          :src="product.cover"
         ></u-image>
       </view>
       <view>
         <view class="product-price">
-          {{ $numberFormat($getValue(selectedDimension, '__metadata.price')) }}
+          {{ $numberFormat(selectedDimension.price) }}
         </view>
         <view class="product-stock" v-if="haStock">
           库存{{ quantityInStock }}件
@@ -25,7 +25,7 @@
           class="dimension-tag"
           v-for="(item, index) in dimensionList"
           :key="index"
-          :text="$getValue(item, '__metadata.name')"
+          :text="item.name"
           :type="index === dimensionIndex ? 'error' : 'info'"
           @click="dimensionChange(index)"
         />
@@ -84,8 +84,9 @@ export default {
     },
     product: {
       handler(val) {
-        if (!val.specifications) return
-        this.dimensionList = [...val.specifications]
+        const result = val?.metadata?.specification
+        if (!result) return
+        this.dimensionList = result
         const index = this.dimensionList.findIndex(
           (e) => e.id === val.dimensionId
         )
