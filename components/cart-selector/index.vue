@@ -84,11 +84,10 @@ export default {
     },
     product: {
       handler(val) {
-        if (!val.specifications) return
-        this.dimensionList = [...val.specifications]
-        const index = this.dimensionList.findIndex(
-          (e) => e.id === val.dimensionId
-        )
+        const dimensionList = val.specifications
+        if (!dimensionList) return
+        this.dimensionList = dimensionList
+        const index = dimensionList.findIndex((e) => e.id === val.dimensionId)
         if (index !== -1) {
           this.dimensionIndex = index
         }

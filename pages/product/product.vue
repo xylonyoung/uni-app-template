@@ -123,23 +123,13 @@ export default {
   },
   computed: {
     productDimension() {
-      return this.product?.specifications
-        ? `共${this.product.specifications.length}种规格`
-        : ''
+      const result = this.product?.specifications
+      return result ? `共${result.length}种规格` : '暂无规格'
     },
     productReviews() {
       const result = this.product?.evaluations ?? []
       return result.map((e) => e.__metadata)
     }
-    // productPrice() {
-    //   if (this.product.specifications) {
-    //     const result = this.product.specifications[0]
-    //     if (!result) return 0
-    //     return this.$numberFormat(result.__metadata.price)
-    //   } else {
-    //     return 0
-    //   }
-    // },
   },
   watch: {
     product(val) {
