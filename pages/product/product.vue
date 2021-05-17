@@ -28,22 +28,24 @@
         <view class="introduction-price">
           <view>
             <text>销售价</text>
-            <text>{{ $numberFormat(product.price) }}</text>
+            <text>{{ productPrice }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
         <view class="introduction-name">
           <view>{{ product.name }}</view>
         </view>
-        <!-- <view class="introduction-member">
-          <text>会员最高享受5折优惠</text>
-          <text @click="$u.route('pages/member/member')">立即开通</text>
-        </view> -->
       </view>
 
       <view class="dimension">
         <u-cell-group>
-          <u-cell-item @click="showCartSelector = true">
+          <u-cell-item v-if="specialPrice.id">
+            <text slot="icon">{{ specialPriceName }}</text>
+            <view slot="title" class="dimension-title">
+              <u-tag type="error" :text="specialPriceDimension" />
+            </view>
+          </u-cell-item>
+          <u-cell-item v-else @click="showCartSelector = true">
             <text slot="icon">规格</text>
             <view slot="title" class="dimension-title">
               <u-tag type="info" :text="productDimension" />
@@ -67,7 +69,19 @@
         <u-parse :html="htmlFormat(product.description)"></u-parse>
       </view>
 
-      <c-cart-bar @buy="showCartSelector = true" />
+      <view v-if="specialPrice.id" class="buy-button">
+        <view class="buy-button-quantity">
+          <view>购买数量</view>
+          <u-number-box
+            v-model="quantity"
+            :min="1"
+            :max="specialPrice.remains"
+          ></u-number-box>
+        </view>
+        <u-button type="error" @click="toPay">立即购买</u-button>
+      </view>
+
+      <c-cart-bar v-else @buy="showCartSelector = true" />
 
       <c-cart-selector
         v-model="showCartSelector"
@@ -118,7 +132,9 @@ export default {
       swiperList: [],
       showCartSelector: false,
       specificationIndex: 0,
-      showReviews: false
+      showReviews: false,
+      specialPrice: {},
+      quantity: 1
     }
   },
   computed: {
@@ -129,16 +145,16 @@ export default {
     productReviews() {
       const result = this.product?.evaluations ?? []
       return result.map((e) => e.__metadata)
+    },
+    productPrice() {
+      return this.specialPrice?.price ?? this.$numberFormat(this.product.price)
+    },
+    specialPriceName() {
+      return this.specialPrice?.type === 'DEFAULT' ? '特价' : '预售'
+    },
+    specialPriceDimension() {
+      return this.specialPrice?.metadata?.specification?.name
     }
-    // productPrice() {
-    //   if (this.product.specifications) {
-    //     const result = this.product.specifications[0]
-    //     if (!result) return 0
-    //     return this.$numberFormat(result.__metadata.price)
-    //   } else {
-    //     return 0
-    //   }
-    // },
   },
   watch: {
     product(val) {
@@ -147,12 +163,26 @@ export default {
   },
   onLoad(option) {
     this.getProduct(option.id)
+    const specialPriceId = option?.specialPriceId
+    if (specialPriceId) {
+      this.$api.get(`/api/special-prices/${specialPriceId}`).then((res) => {
+        this.specialPrice = res
+      })
+    }
   },
   onPageScroll(e) {
     this.scrollTop = e.scrollTop
   },
   methods: {
     htmlFormat,
+    toPay() {
+      const product = {
+        ...this.product,
+        specialPrice: { ...this.specialPrice },
+        quantity: this.quantity
+      }
+      this.$store.dispatch('common/toPay', [product])
+    },
     cartSelectorChange(index) {
       this.specificationIndex = index
     },
@@ -295,5 +325,24 @@ export default {
 }
 #recommend {
   margin-bottom: 114rpx;
+}
+.buy-button {
+  width: 100%;
+  height: 114rpx;
+  position: fixed;
+  padding: 0 10%;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  &-quantity {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 </style>

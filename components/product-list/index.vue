@@ -6,7 +6,7 @@
         class="product-item"
         v-for="(item, index) in productList"
         :key="index"
-        @click="navTo(item.id)"
+        @click="navTo(item)"
       >
         <u-image
           width="330rpx"
@@ -18,7 +18,7 @@
         <view class="product-item-name">{{ item.name }}</view>
         <view class="product-item-bottom">
           <view class="product-item-bottom-price">
-            {{ $numberFormat(item.price, 0) }}
+            {{ productPrice(item) }}
           </view>
           <view class="product-item-bottom-sold">
             已售{{ $numberFormat(item.sales) }}件
@@ -34,9 +34,18 @@ export default {
     productList: { type: Array, required: true }
   },
   methods: {
-    navTo(id) {
+    productPrice(item) {
+      const { specialPrice } = item
+      const result = specialPrice ? specialPrice.price : item.price
+      return this.$numberFormat(result)
+    },
+    navTo(item) {
+      let result = item.id
+      if (item?.specialPrice) {
+        result += '&specialPriceId=' + item?.specialPrice?.id
+      }
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`
+        url: `/pages/product/product?id=${result}`
       })
     }
   }

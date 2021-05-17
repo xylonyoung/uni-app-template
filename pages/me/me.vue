@@ -42,7 +42,7 @@
         </view>
         <view>积分</view>
       </u-grid-item>
-      <u-grid-item @click="navTo('coupon/coupon')">
+      <u-grid-item>
         <view class="balance-number">
           {{ $numberFormat($getValue(user, 'balance.coupon')) }}
         </view>
@@ -70,7 +70,7 @@
       </u-grid>
     </view>
 
-    <!-- <view class="menu">
+    <view class="menu">
       <u-cell-group>
         <u-cell-item
           :title="item.title"
@@ -87,7 +87,7 @@
           ></u-icon>
         </u-cell-item>
       </u-cell-group>
-    </view> -->
+    </view>
   </view>
 </template>
 <script>
@@ -107,10 +107,10 @@ export default {
         }
       ],
       menuList: [
-        { title: '拼团', icon: 'man-add', color: '#ee883b' },
-        { title: '砍价', icon: 'tags', color: '#9789f7' },
-        { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
-        { title: '设置', icon: 'setting-fill', color: '#54b4ef' }
+        { title: '加盟', icon: 'man-add', color: '#ee883b' }
+        // { title: '砍价', icon: 'tags', color: '#9789f7' },
+        // { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
+        // { title: '设置', icon: 'setting-fill', color: '#54b4ef' }
       ]
     }
   },

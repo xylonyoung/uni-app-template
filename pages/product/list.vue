@@ -103,8 +103,8 @@ export default {
       list: [],
       listApi: '/api/products',
       listQuery: {
-        page: 1,
-        limit: 10
+        page: 0,
+        size: 10
       },
       reloadList: false,
       autoLoadList: false,
@@ -151,18 +151,21 @@ export default {
       return result
     }
   },
-  onLoad(option) {
+  async onLoad(option) {
     const { category } = option
-    if (category) {
-      this.setListQuery(`category = ${category}`)
-    }
+    // await this.$store.dispatch('common/getCategory').then((res) => {
+    //   this.categoryList = res
+    // })
+    // if (category) {
+    //   const params = this.categoryList
+    //     .filter((e) => e.parent === category)
+    //     .map((e) => e.id)
+    //   this.setListQuery(`category in ${params}`)
+    // }
     this.autoLoadList = true
   },
   onShow() {
     this.$store.dispatch('common/setBadge')
-    this.$store.dispatch('common/getCategory').then((res) => {
-      this.categoryList = res
-    })
   },
   mounted() {
     this.getContentHeight()

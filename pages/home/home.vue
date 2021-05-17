@@ -51,11 +51,6 @@ export default {
     this.getData()
   },
   methods: {
-    navToProduct(id) {
-      uni.navigateTo({
-        url: `/pages/product/product?id=${id}`
-      })
-    },
     navToCategory(id) {
       if (id === -1) {
         uni.switchTab({

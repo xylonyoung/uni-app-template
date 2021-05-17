@@ -30,7 +30,7 @@
             </view>
             <view
               class="product-row"
-              v-for="(item, index) in order.items"
+              v-for="(item, index) in order.metaData.items"
               :key="index"
               @click="navTo(item)"
             >
@@ -38,35 +38,18 @@
                 width="200rpx"
                 height="200rpx"
                 border-radius="8"
-                :src="
-                  $getImage(
-                    $getValue(
-                      item,
-                      '__metadata.specification.__metadata.product.__metadata.cover'
-                    )
-                  )
-                "
+                :src="item.image"
               ></u-image>
               <view class="product-row-detail">
                 <view>
                   <view class="product-row-detail-name">
-                    {{
-                      $getValue(
-                        item,
-                        '__metadata.specification.__metadata.product.__metadata.name'
-                      )
-                    }}
+                    {{ item.productName }}
                   </view>
                   <view class="product-row-detail-quantity">
                     <view>
-                      {{
-                        $getValue(
-                          item,
-                          '__metadata.specification.__metadata.name'
-                        )
-                      }}
+                      {{ item.specificationName }}
                     </view>
-                    <view>x{{ $getValue(item, '__metadata.quantity') }}</view>
+                    <view>x{{ item.quantity }}</view>
                   </view>
                 </view>
                 <view class="product-row-detail-bottom">
@@ -74,7 +57,7 @@
                     class="product-row-detail-bottom-price"
                     style="color: #999"
                   >
-                    {{ $numberFormat($getValue(item, '__metadata.price')) }}
+                    {{ $numberFormat(item.unitPrice) }}
                   </view>
                 </view>
               </view>
@@ -172,12 +155,12 @@ export default {
         list: [],
         listApi: '/api/orders',
         listQuery: {
-          page: 1,
-          limit: 5,
-          '@order': 'modifiedTime|DESC',
-          '@filter': e.status
-            ? `entity.getStatus() == ${e.status}`
-            : 'entity.getStatus() > 0'
+          page: 0,
+          size: 5
+          // '@order': 'modifiedTime|DESC',
+          // '@filter': e.status
+          //   ? `entity.getStatus() == ${e.status}`
+          //   : 'entity.getStatus() > 0'
         },
         ...e
       }))

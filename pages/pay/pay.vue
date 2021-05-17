@@ -4,16 +4,7 @@
       <u-cell-item value="选择地址" @click="chooseAddress">
         <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
         <view slot="title">
-          <template v-if="address.phone">
-            <view class="address-user">
-              <text>{{ address.name }}</text>
-              <text>{{ address.phone }}</text>
-            </view>
-            <view class="address-detail">
-              {{ addressDetail }}
-            </view>
-          </template>
-          <!-- <template v-if="address.telNumber">
+          <template v-if="address.telNumber">
             <view class="address-user">
               <text>{{ address.userName }}</text>
               <text>{{ address.telNumber }}</text>
@@ -21,7 +12,7 @@
             <view class="address-detail">
               {{ addressDetail }}
             </view>
-          </template> -->
+          </template>
           <view v-else>暂未设置收货地址</view>
         </view>
       </u-cell-item>
@@ -38,7 +29,7 @@
           width="200rpx"
           height="200rpx"
           border-radius="8"
-          :src="$getImage(item.cover)"
+          :src="item.cover"
         ></u-image>
         <view class="product-row-detail">
           <view>
@@ -54,7 +45,7 @@
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price" style="color: #999">
-              {{ $numberFormat(item.price) }}
+              {{ productPrice(item) }}
             </view>
           </view>
         </view>
@@ -73,11 +64,11 @@
           :arrow="false"
         ></u-cell-item>
         <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
-        <u-cell-item
+        <!-- <u-cell-item
           title="优惠券"
           :value="aCoupon"
           @click="showCoupon = true"
-        ></u-cell-item>
+        ></u-cell-item> -->
       </u-cell-group>
     </view>
 
@@ -94,17 +85,11 @@
       <u-button type="error" @click="createOrder">支付</u-button>
     </view>
 
-    <u-popup v-model="showCoupon" mode="bottom" closeable>
+    <!-- <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
         <c-coupon @change="couponChange" v-model="couponList" />
       </scroll-view>
-    </u-popup>
-
-    <c-address
-      v-model="showAddress"
-      :regions="regionList"
-      @confirm="addressConfirm"
-    />
+    </u-popup> -->
   </view>
 </template>
 
@@ -114,9 +99,8 @@ import wechatPay from '@/utils/wechat-pay'
 export default {
   data() {
     return {
-      address: null,
+      address: {},
       regionList: [],
-      showAddress: false,
       comment: null,
       coupon: null,
       couponList: [],
@@ -127,49 +111,57 @@ export default {
     ...mapGetters(['orderProducts', 'user']),
     amount() {
       const totalPrice = this.orderProducts.reduce((acc, cur) => {
-        const item = this.findDimension(cur)
-        return acc + item?.__metadata?.price * cur.quantity
+        if (cur.specialPrice) {
+          return acc + cur.specialPrice.price * cur.quantity
+        } else {
+          const item = this.findDimension(cur)
+          return acc + item?.price * cur.quantity
+        }
       }, 0)
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-      if (!this.address) return ''
-      const result = this.address.region.reduce((acc, cur) => {
-        return acc + ' ' + cur.label
-      }, '')
-      return result + ' ' + this.address.detailInfo
-      // return (
-      //   this.address.provinceName +
-      //   this.address.cityName +
-      //   this.address.countyName +
-      //   this.address.detailInfo
-      // )
+      return (
+        this.address.provinceName +
+        this.address.cityName +
+        this.address.countyName +
+        this.address.detailInfo
+      )
     },
     items() {
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
-        specification: e.dimensionId
+        specificationId: e.dimensionId,
+        shippingAddress:this.addressDetail,
+        shippingPhone:this.address.telNumber
       }))
-    },
-    aCoupon() {
-      let result
-      if (this.coupon) {
-        result = this.couponList.find((e) => e.id === this.coupon)
-        return this.$getValue(result, 'coupon.__metadata.name')
-      }
-      result = this.couponList.length
-      return result === 0 ? '无可用' : result + '张'
     }
+    // aCoupon() {
+    //   let result
+    //   if (this.coupon) {
+    //     result = this.couponList.find((e) => e.id === this.coupon)
+    //     return this.$getValue(result, 'coupon.__metadata.name')
+    //   }
+    //   result = this.couponList.length
+    //   return result === 0 ? '无可用' : result + '张'
+    // }
   },
   onLoad() {
-    this.address = uni.getStorageSync('address')
-    this.getRegion()
+    this.address = uni.getStorageSync('address') || {}
+    // this.getRegion()
   },
   methods: {
-    getRegion() {
-      this.$api.get('/api/regions').then((res) => {
-        this.regionList = res.data
-      })
+    // getRegion() {
+    //   this.$api.get('/api/regions').then((res) => {
+    //     this.regionList = res.data
+    //   })
+    // },
+    productPrice(item) {
+      const { specialPrice } = item
+      const result = specialPrice
+        ? specialPrice.price
+        : this.findDimension(item).price
+      return this.$numberFormat(result)
     },
     couponChange(id) {
       this.coupon = id
@@ -186,9 +178,8 @@ export default {
         })
         return
       }
-      data.address = this.addressDetail
 
-      if (this.coupon) data.userCoupon = this.coupon
+      // if (this.coupon) data.userCoupon = this.coupon
       if (this.comment) data.comment = this.comment
 
       this.$api.post(`/api/orders`, data).then((res) => {
@@ -204,22 +195,29 @@ export default {
       })
     },
     findDimension(item) {
-      return item.specifications.find((e) => e.id === item.dimensionId) ?? {}
+      if (item.specialPrice) {
+        return item.specialPrice
+      } else {
+        return (
+          item.metadata.specification.find((e) => e.id === item.dimensionId) ??
+          {}
+        )
+      }
     },
     findDimensionName(item) {
-      return this.findDimension(item)?.__metadata?.name
+      if (item.specialPrice) {
+        return item.specialPrice?.metadata?.specification?.name
+      } else {
+        return this.findDimension(item).name
+      }
     },
     chooseAddress() {
-      this.showAddress = true
-      // uni.chooseAddress({
-      //   success: (res) => {
-      //     uni.setStorageSync('address', res)
-      //     this.address = res
-      //   }
-      // })
-    },
-    addressConfirm(obj) {
-      this.address = { ...obj }
+      uni.chooseAddress({
+        success: (res) => {
+          uni.setStorageSync('address', res)
+          this.address = res
+        }
+      })
     }
   }
 }

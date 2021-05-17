@@ -105,16 +105,15 @@ export default {
         return
       }
 
-      const { paginator, data } = res
-      const list = refresh ? data : [...this.list, ...data]
+      const { content } = res
+      const list = refresh ? content : [...this.list, ...content]
 
-      if (res.data.length === 0) {
+      if (res.content.length === 0) {
         this.empty = true
       } else {
-        listQuery.page = paginator.next
-        listQuery.totalCount = paginator.totalCount
-        this.status =
-          paginator.current === paginator.last ? 'nomore' : 'loadmore'
+        listQuery.page++
+        listQuery.totalPages = res.totalPages
+        this.status = res.number + 1 === res.totalPages ? 'nomore' : 'loadmore'
       }
 
       this.$emit('update:list', list)

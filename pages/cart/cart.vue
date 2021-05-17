@@ -27,24 +27,20 @@
           height="200rpx"
           border-radius="8"
           mode="aspectFit"
-          :src="$getImage(item.cover)"
+          :src="item.cover"
         ></u-image>
         <view class="product-row-detail">
           <view>
             <view class="product-row-detail-name">{{ item.name }}</view>
             <u-tag
-              :text="$getValue(findDimension(item), '__metadata.name')"
+              :text="$getValue(findDimension(item), 'name')"
               type="info"
               @click.native.stop="toShowCartSelector(item)"
             />
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price">
-              {{
-                $numberFormat(
-                  $getValue(findDimension(item), '__metadata.price')
-                )
-              }}
+              {{ $numberFormat($getValue(findDimension(item), 'price')) }}
             </view>
             <!-- component can reactive now! -->
             <u-number-box
@@ -118,7 +114,7 @@ export default {
       const totalPrice = this.products.reduce((acc, cur) => {
         if (!cur.checked) return acc
         const item = this.findDimension(cur)
-        return acc + item?.__metadata?.price * cur.quantity
+        return acc + item?.price * cur.quantity
       }, 0)
       return this.$numberFormat(totalPrice * this.discount)
     },
@@ -183,12 +179,15 @@ export default {
       const productIndex = this.products.findIndex(
         (e) => e.id === this.product.id
       )
-      this.products[productIndex].dimensionId = this.product.specifications[
-        index
-      ].id
+      this.products[
+        productIndex
+      ].dimensionId = this.product.metadata.specification[index].id
     },
     findDimension(item) {
-      return item.specifications.find((e) => e.id === item.dimensionId) ?? {}
+      return (
+        item?.metadata?.specification.find((e) => e.id === item.dimensionId) ??
+        {}
+      )
     },
     toShowCartSelector(item) {
       this.product = item
@@ -208,7 +207,7 @@ export default {
       const nonentity = []
       const products = []
       cart.forEach((e) => {
-        const result = res.data.find((i) => i.id === e.productId)
+        const result = res.content.find((i) => i.id === e.productId)
         if (result) {
           products.push({ ...result, ...e })
         } else {
