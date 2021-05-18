@@ -1,5 +1,5 @@
-export default{
-  computed:{
+export default {
+  computed: {
     selectedDimension() {
       return (
         this.product?.specifications?.find(
@@ -9,7 +9,6 @@ export default{
     },
     dimensionPrice() {
       return this.$numberFormat(this.selectedDimension?.__metadata?.price)
-    },
-
+    }
   }
 }

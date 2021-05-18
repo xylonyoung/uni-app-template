@@ -38,6 +38,7 @@
           width="200rpx"
           height="200rpx"
           border-radius="8"
+          mode="aspectFit"
           :src="$getImage(item.cover)"
         ></u-image>
         <view class="product-row-detail">
@@ -133,7 +134,7 @@ export default {
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-      if (!this.address) return ''
+      if (!this.address?.region) return ''
       const result = this.address.region.reduce((acc, cur) => {
         return acc + ' ' + cur.label
       }, '')
@@ -251,6 +252,9 @@ export default {
 
 .products {
   padding: 24rpx;
+  .product-row + .product-row {
+    padding-top: 32rpx;
+  }
 }
 
 .order {

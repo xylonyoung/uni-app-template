@@ -18,10 +18,15 @@
         <view class="product-item-name">{{ item.name }}</view>
         <view class="product-item-bottom">
           <view class="product-item-bottom-price">
-            {{ $numberFormat(item.price, 0) }}
+            {{ productPrice(item) }}
           </view>
           <view class="product-item-bottom-sold">
-            已售{{ $numberFormat(item.sales) }}件
+            已售{{
+              $numberFormat(item.sales, {
+                average: true,
+                mantissa: 0
+              })
+            }}件
           </view>
         </view>
       </view>
@@ -40,6 +45,9 @@ export default {
     }
   },
   methods: {
+    productPrice(item) {
+      return this.$numberFormat(item?.specifications?.[0]?.__metadata?.price)
+    },
     navTo(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`
