@@ -47,7 +47,7 @@ export default {
   methods: {
     productPrice(item) {
       const { specialPrice } = item
-      const result = specialPrice ? specialPrice.price : item?.specifications?.[0]?.__metadata?.price
+      const result = specialPrice ? specialPrice.price : item?.metadata?.specification?.[0]?.price
       return this.$numberFormat(result)
     },
     navTo(item) {
