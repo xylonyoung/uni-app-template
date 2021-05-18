@@ -8,7 +8,7 @@
       container=".product-container"
     />
 
-    <view v-if="nonexistent" style="padding-top: 300rpx; height: 300rpx">
+    <view v-if="inexistent" style="padding-top: 300rpx; height: 300rpx">
       <u-empty text="商品过期不存在" mode="page"></u-empty>
     </view>
 
@@ -28,7 +28,7 @@
         <view class="introduction-price">
           <view>
             <text>销售价</text>
-            <text>{{ $numberFormat(product.price) }}</text>
+            <text>{{ dimensionPrice }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
@@ -47,6 +47,7 @@
             <text slot="icon">规格</text>
             <view slot="title" class="dimension-title">
               <u-tag type="info" :text="productDimension" />
+              <u-tag v-if="dimensionName" type="error" :text="dimensionName" />
             </view>
           </u-cell-item>
           <u-cell-item value="100%好评" id="review" @click="showReviews = true">
@@ -71,7 +72,7 @@
 
       <c-cart-selector
         v-model="showCartSelector"
-        :product="product"
+        :product.sync="product"
         @change="cartSelectorChange"
       />
     </view>
@@ -90,10 +91,12 @@
 
 <script>
 import { htmlFormat } from '@/utils'
+import mixin from '@/components/cart-selector/mixin'
 export default {
+  mixins: [mixin],
   data() {
     return {
-      nonexistent: false,
+      inexistent: false,
       product: {},
       scrollTop: 0,
       tabList: [
@@ -129,11 +132,14 @@ export default {
     productReviews() {
       const result = this.product?.evaluations ?? []
       return result.map((e) => e.__metadata)
+    },
+    dimensionName() {
+      return this.selectedDimension?.__metadata?.name ?? null
     }
   },
   watch: {
     product(val) {
-      this.nonexistent = !val.name
+      this.inexistent = !val.name
     }
   },
   onLoad(option) {

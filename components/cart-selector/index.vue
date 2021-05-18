@@ -12,7 +12,7 @@
         <view class="product-price">
           {{ $numberFormat($getValue(selectedDimension, '__metadata.price')) }}
         </view>
-        <view class="product-stock" v-if="haStock">
+        <view class="product-stock" v-if="stockHasLimit">
           库存{{ quantityInStock }}件
         </view>
       </view>
@@ -26,8 +26,8 @@
           v-for="(item, index) in dimensionList"
           :key="index"
           :text="$getValue(item, '__metadata.name')"
-          :type="index === dimensionIndex ? 'error' : 'info'"
-          @click="dimensionChange(index)"
+          :type="dimensionTag(item.id)"
+          @click="dimensionChange(item.id)"
         />
       </view>
     </view>
@@ -52,7 +52,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import mixin from './mixin'
 export default {
+  mixins: [mixin],
   props: {
     value: { type: Boolean, default: false },
     product: { type: Object, default: () => ({}) },
@@ -61,18 +63,16 @@ export default {
   data() {
     return {
       showPopup: false,
-      dimensionList: [],
-      dimensionIndex: 0,
       quantity: 1
     }
   },
   computed: {
     ...mapGetters(['cart', 'stockHasLimit']),
     quantityInStock() {
-      return this.selectedDimension ? this.selectedDimension.stock : 0
+      return this.selectedDimension?.remains ?? 0
     },
-    selectedDimension() {
-      return this.dimensionList[this.dimensionIndex] ?? {}
+    dimensionList() {
+      return this.product?.specifications ?? []
     }
   },
   watch: {
@@ -81,22 +81,24 @@ export default {
         this.showPopup = val
       },
       immediate: true
-    },
-    product: {
-      handler(val) {
-        const dimensionList = val.specifications
-        if (!dimensionList) return
-        this.dimensionList = dimensionList
-        const index = dimensionList.findIndex((e) => e.id === val.dimensionId)
-        if (index !== -1) {
-          this.dimensionIndex = index
-        }
-      },
-      immediate: true
     }
   },
   methods: {
+    withoutDimension() {
+      const result = this.dimensionList.length === 0
+      if (result) {
+        uni.showToast({
+          title: '暂无规格~',
+          icon: 'none'
+        })
+      }
+      return result
+    },
+    dimensionTag(id) {
+      return id === this.selectedDimension?.id ? 'error' : 'info'
+    },
     toPay() {
+      if (this.withoutDimension()) return
       const product = {
         ...this.product,
         quantity: this.quantity,
@@ -104,13 +106,9 @@ export default {
       }
       this.$store.dispatch('common/toPay', [product])
     },
-    cartChange(cart) {
-      this.$store.dispatch('common/setCart', cart)
-      this.$store.dispatch('common/setBadge')
-      this.onClose()
-    },
     addToCart() {
-      if (this.quantityInStock < 1) {
+      if (this.withoutDimension()) return
+      if (this.stockHasLimit && this.quantityInStock < 1) {
         uni.showToast({
           title: '库存不足~',
           icon: 'none'
@@ -130,14 +128,20 @@ export default {
       } else {
         cart.unshift(product)
       }
+      console.log(cart)
       this.cartChange(cart)
       uni.showToast({
         title: '加入成功~'
       })
     },
-    dimensionChange(index) {
-      this.dimensionIndex = index
-      this.$emit('change', index)
+    cartChange(cart) {
+      this.$store.dispatch('common/setCart', cart)
+      this.$store.dispatch('common/setBadge')
+      this.onClose()
+    },
+    dimensionChange(id) {
+      const product = { ...this.product, dimensionId: id }
+      this.$emit('update:product', product)
       if (this.hideButton) this.onClose()
     },
     onClose() {

@@ -205,23 +205,21 @@ export default {
         '@filter': `entity.getId() in [${productsId}]`
       })
 
-      const nonentity = []
       const products = []
       cart.forEach((e) => {
         const result = res.data.find((i) => i.id === e.productId)
         if (result) {
           products.push({ ...result, ...e })
-        } else {
-          nonentity.push(e.productId)
         }
       })
-
       this.products = products
-
       uni.hideLoading()
 
-      if (nonentity.length > 0) {
-        const aCart = this.cart.filter((e) => nonentity.includes(e.productId))
+      // remove inexistent products
+      if (this.cart.length > products.length) {
+        const aCart = this.cart.filter((e) =>
+          products.some((i) => i.id === e.productId)
+        )
         this.cartChange(aCart)
       }
     },

@@ -81,7 +81,7 @@
       :auto="autoLoadList"
       :height="contentHeight + 'px'"
     >
-      <c-product-list :product-list="list" />
+      <c-product-list :product-list="list" :show-empty="false" />
     </c-load-list>
 
     <u-toast ref="uToast" />

@@ -1,6 +1,6 @@
 <template>
   <view>
-    <u-empty v-if="productList.length === 0" margin-top="32"></u-empty>
+    <u-empty v-if="empty" margin-top="32"></u-empty>
     <view class="product">
       <view
         class="product-item"
@@ -31,7 +31,13 @@
 <script>
 export default {
   props: {
-    productList: { type: Array, required: true }
+    productList: { type: Array, required: true },
+    showEmpty: { type: Boolean, default: true }
+  },
+  computed: {
+    empty() {
+      return this.showEmpty && this.productList.length === 0
+    }
   },
   methods: {
     navTo(id) {
