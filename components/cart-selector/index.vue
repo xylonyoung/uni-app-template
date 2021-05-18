@@ -72,7 +72,7 @@ export default {
       return this.selectedDimension?.remains ?? 0
     },
     dimensionList() {
-      return this.product?.specifications ?? []
+      return this.product?.metadata?.specification ?? []
     }
   },
   watch: {

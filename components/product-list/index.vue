@@ -6,7 +6,7 @@
         class="product-item"
         v-for="(item, index) in productList"
         :key="index"
-        @click="navTo(item.id)"
+        @click="navTo(item)"
       >
         <u-image
           width="330rpx"

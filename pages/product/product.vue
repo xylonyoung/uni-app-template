@@ -28,7 +28,7 @@
         <view class="introduction-price">
           <view>
             <text>销售价</text>
-            <text>{{ dimensionPrice }}</text>
+            <text>{{ productPrice }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
@@ -150,7 +150,9 @@ export default {
       return result.map((e) => e.__metadata)
     },
     productPrice() {
-      return this.specialPrice?.price ?? this.$numberFormat(this.product.price)
+      return this.specialPrice?.price
+        ? this.$numberFormat(this.specialPrice?.price)
+        : this.dimensionPrice
     },
     specialPriceName() {
       return this.specialPrice?.type === 'DEFAULT' ? '特价' : '预售'
@@ -159,7 +161,7 @@ export default {
       return this.specialPrice?.metadata?.specification?.name
     },
     dimensionName() {
-      return this.selectedDimension?.__metadata?.name ?? null
+      return this.selectedDimension?.name ?? null
     }
   },
   watch: {
