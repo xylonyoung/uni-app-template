@@ -37,7 +37,9 @@
       </view>
     </view>
 
-    <u-button @click="onSubmit">确定</u-button>
+    <view style="padding: 0 20%">
+      <u-button @click="onSubmit" type="success">确定</u-button>
+    </view>
 
     <u-select
       v-model="showRegionSelect"

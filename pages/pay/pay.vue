@@ -29,6 +29,7 @@
           width="200rpx"
           height="200rpx"
           border-radius="8"
+          mode="aspectFit"
           :src="item.cover"
         ></u-image>
         <view class="product-row-detail">
@@ -249,6 +250,9 @@ export default {
 
 .products {
   padding: 24rpx;
+  .product-row + .product-row {
+    padding-top: 32rpx;
+  }
 }
 
 .order {

@@ -1,12 +1,14 @@
 import numbro from 'numbro'
 import { baseURL } from '@/settings'
 
-export function numberFormat(num, mantissa = 2) {
-  return numbro(num ?? 0).format({
+export function numberFormat(num, option) {
+  const options = {
     thousandSeparated: true,
     trimMantissa: true,
-    mantissa
-  })
+    mantissa: 2,
+    ...option
+  }
+  return numbro(num ?? 0).format(options)
 }
 
 export function buildFullPath(relativeURL) {

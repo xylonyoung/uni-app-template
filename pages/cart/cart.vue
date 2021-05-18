@@ -35,7 +35,7 @@
             <u-tag
               :text="$getValue(findDimension(item), 'name')"
               type="info"
-              @click.native.stop="toShowCartSelector(item)"
+              @click.native.stop="toShowCartSelector(item, index)"
             />
           </view>
           <view class="product-row-detail-bottom">
@@ -87,7 +87,7 @@
 
     <c-cart-selector
       v-model="showCartSelector"
-      :product="product"
+      :product.sync="product"
       hide-button
       @change="cartSelectorChange"
     />
@@ -104,6 +104,7 @@ export default {
       showCartSelector: false,
       products: [],
       product: {},
+      productIndex: 0,
       checkList: [],
       showLoading: false
     }
@@ -128,6 +129,12 @@ export default {
       handler(val) {
         this.isEmpty = val.length === 0
         this.checkAll = this.isEmpty ? false : val.every((e) => e.checked)
+      },
+      deep: true
+    },
+    product: {
+      handler(val) {
+        this.products.splice(this.productIndex, 1, { ...val })
       },
       deep: true
     }
@@ -158,7 +165,6 @@ export default {
         })
         return
       }
-
       this.$store.dispatch('common/toPay', products)
     },
     deleteFromCart() {
@@ -175,22 +181,15 @@ export default {
       this.$store.dispatch('common/setCart', cart)
       this.$store.dispatch('common/setBadge')
     },
-    cartSelectorChange(index) {
-      const productIndex = this.products.findIndex(
-        (e) => e.id === this.product.id
-      )
-      this.products[
-        productIndex
-      ].dimensionId = this.product.metadata.specification[index].id
-    },
     findDimension(item) {
       return (
         item?.metadata?.specification.find((e) => e.id === item.dimensionId) ??
         {}
       )
     },
-    toShowCartSelector(item) {
-      this.product = item
+    toShowCartSelector(item, index) {
+      this.product = { ...item }
+      this.productIndex = index
       this.showCartSelector = true
     },
     async getProducts() {
