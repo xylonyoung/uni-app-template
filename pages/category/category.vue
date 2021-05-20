@@ -11,7 +11,7 @@
         :show-scrollbar="false"
       >
         <view
-          v-for="(item, index) in tabbar"
+          v-for="(item, index) in categoryList"
           :key="index"
           class="u-tab-item"
           :class="[current == index ? 'u-tab-item-active' : '']"
@@ -31,7 +31,7 @@
           <view
             class="class-item"
             :id="'item' + index"
-            v-for="(item, index) in tabbar"
+            v-for="(item, index) in categoryList"
             :key="index"
           >
             <view class="item-title">
@@ -59,6 +59,7 @@
   </view>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
@@ -75,10 +76,8 @@ export default {
       timer: null // 定时器
     }
   },
-  onLoad() {
-    this.$store.dispatch('common/getCategory').then((res) => {
-      this.tabbar = res
-    })
+  computed:{
+    ...mapGetters(['categoryList'])
   },
   onReady() {
     this.getMenuItemTop()
@@ -129,7 +128,7 @@ export default {
     },
     // 观测元素相交状态
     async observer() {
-      this.tabbar.map((val, index) => {
+      this.categoryList.map((val, index) => {
         let observer = uni.createIntersectionObserver(this)
         // 检测右边scroll-view的id为itemxx的元素与right-box的相交状态
         // 如果跟.right-box底部相交，就动态设置左边栏目的活动状态

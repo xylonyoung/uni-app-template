@@ -90,6 +90,13 @@
         "enablePullDownRefresh": false
       }
     },
+    {
+      "path": "pages/join/join",
+      "style": {
+        "navigationBarTitleText": "加盟申请",
+        "enablePullDownRefresh": false
+      }
+    },
     // below for demo
     {
       "path": "demo/pages/demo",

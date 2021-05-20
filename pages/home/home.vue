@@ -46,6 +46,12 @@ export default {
     }
   },
   async onLoad() {
+    await this.$api
+      .post('/auth/login', { password: '123456', username: 'xylon' })
+      .then((res) => {
+        uni.setStorageSync('token', 'Bearer ' + res.token)
+      })
+      
     this.$store.dispatch('common/setBadge')
     await this.$store.dispatch('user/wechatLogin')
     this.getData()

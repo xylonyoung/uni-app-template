@@ -107,7 +107,7 @@ export default {
         }
       ],
       menuList: [
-        { title: '加盟', icon: 'man-add', color: '#ee883b' }
+        { title: '加盟', icon: 'man-add', color: '#ee883b', path: 'join/join' }
         // { title: '砍价', icon: 'tags', color: '#9789f7' },
         // { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
         // { title: '设置', icon: 'setting-fill', color: '#54b4ef' }

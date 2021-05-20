@@ -4,6 +4,7 @@ const getters = {
   cart: (state) => state.common.cart,
   stockHasLimit: (state) => state.common.stockHasLimit,
   orderStatus: (state) => state.common.orderStatus,
-  orderProducts: (state) => state.common.orderProducts
+  orderProducts: (state) => state.common.orderProducts,
+  categoryList: (state) => state.common.categoryList
 }
 export default getters

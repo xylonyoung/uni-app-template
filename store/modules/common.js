@@ -15,26 +15,27 @@ const state = {
     { label: '完成', value: '5' },
     { label: '售后中', value: '6' }
   ],
+  categoryList: [],
   member: {}
 }
 
 const actions = {
-  async getCategory() {
-    const params = {
-      '@filter': 'type = 1',
-      '@order': 'listOrder|ASC'
-    }
-    const res = await $api.get('/api/categories', params)
-    const result = res.content.filter((e) => e.parent === null)
-    return result.map((e) => {
-      const children = []
-      res.content.forEach((i) => {
-        if (i.parent === e.id) {
-          children.push(i)
-        }
+  async getCategory({ commit }) {
+    const res = await $api.get('/api/categories')
+    const aType = res.content.find((e) => e?.type?.name === '总分类')
+    const result = res.content
+      .filter((e) => aType.type.id === (e.type?.id ?? e.type))
+      .map((e) => {
+        const children = []
+        res.content.forEach((i) => {
+          if (i.parent === e.id) {
+            children.push(i)
+          }
+        })
+        return { children, ...e }
       })
-      return { children, ...e }
-    })
+    commit('SET_CATEGORY_LIST', result)
+    return result
   },
   setCart({ commit }, cart) {
     commit('SET_CART', cart)

@@ -109,12 +109,11 @@ export default {
       reloadList: false,
       autoLoadList: false,
       contentHeight: '',
-      categoryList: [],
       categoryIndex: []
     }
   },
   computed: {
-    ...mapGetters([]),
+    ...mapGetters(['categoryList']),
     dropdownStyle() {
       const result = {
         height: this.contentHeight + 'px',
@@ -151,17 +150,14 @@ export default {
       return result
     }
   },
-  async onLoad(option) {
+  onLoad(option) {
     const { category } = option
-    // await this.$store.dispatch('common/getCategory').then((res) => {
-    //   this.categoryList = res
-    // })
-    // if (category) {
-    //   const params = this.categoryList
-    //     .filter((e) => e.parent === category)
-    //     .map((e) => e.id)
-    //   this.setListQuery(`category in ${params}`)
-    // }
+    if (category) {
+      const params = this.categoryList
+        .find((e) => e.id === +category)
+        ?.children.map((e) => e.id)
+      this.setListQuery(`category.id in ${params}`)
+    }
     this.autoLoadList = true
   },
   onShow() {
