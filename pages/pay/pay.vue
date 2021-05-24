@@ -48,14 +48,14 @@
             </view>
             <view class="product-row-detail-quantity">
               <view>
-                {{ findDimensionName(item) }}
+                {{ dimensionName(item) }}
               </view>
               <view>x{{ item.quantity }}</view>
             </view>
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price" style="color: #999">
-              {{ $numberFormat(item.price) }}
+              {{ dimensionPrice(item) }}
             </view>
           </view>
         </view>
@@ -112,7 +112,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import wechatPay from '@/utils/wechat-pay'
+import dimension from '@/mixins/dimension'
 export default {
+  mixins: [dimension],
   data() {
     return {
       address: null,
@@ -203,12 +205,6 @@ export default {
           })
         }
       })
-    },
-    findDimension(item) {
-      return item.specifications.find((e) => e.id === item.dimensionId) ?? {}
-    },
-    findDimensionName(item) {
-      return this.findDimension(item)?.__metadata?.name
     },
     chooseAddress() {
       this.showAddress = true
