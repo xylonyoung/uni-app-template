@@ -33,14 +33,14 @@
           <view>
             <view class="product-row-detail-name">{{ item.name }}</view>
             <u-tag
-              :text="$getValue(findDimension(item), 'name')"
+              :text="dimensionName(item)"
               type="info"
               @click.native.stop="toShowCartSelector(item, index)"
             />
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price">
-              {{ $numberFormat($getValue(findDimension(item), 'price')) }}
+              {{ dimensionPrice(item) }}
             </view>
             <!-- component can reactive now! -->
             <u-number-box
@@ -95,7 +95,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import dimension from '@/mixins/dimension'
 export default {
+  mixins: [dimension],
   data() {
     return {
       checkAll: false,
@@ -180,12 +182,6 @@ export default {
     cartChange(cart) {
       this.$store.dispatch('common/setCart', cart)
       this.$store.dispatch('common/setBadge')
-    },
-    findDimension(item) {
-      return (
-        item?.metadata?.specification.find((e) => e.id === item.dimensionId) ??
-        {}
-      )
     },
     toShowCartSelector(item, index) {
       this.product = { ...item }
