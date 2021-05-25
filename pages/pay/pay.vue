@@ -23,7 +23,7 @@
         class="product-row"
         v-for="(item, index) in orderProducts"
         :key="index"
-        @click="navTo(item)"
+        @click="navTo(item.id)"
       >
         <u-image
           width="200rpx"
@@ -135,8 +135,8 @@ export default {
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
         specificationId: e.dimensionId,
-        shippingAddress:this.addressDetail,
-        shippingPhone:this.address.telNumber
+        shippingAddress: this.addressDetail,
+        shippingPhone: this.address.telNumber
       }))
     }
     // aCoupon() {
@@ -159,6 +159,11 @@ export default {
     //     this.regionList = res.data
     //   })
     // },
+    navTo(id) {
+      uni.navigateTo({
+        url: `/pages/product/product?id=${id}`
+      })
+    },
     productPrice(item) {
       const { specialPrice } = item
       const result = specialPrice
