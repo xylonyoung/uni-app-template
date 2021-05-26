@@ -59,20 +59,21 @@ const actions = {
         uni.login({
           provider: 'weixin',
           success: (res) => {
+            console.log(res)
             const params = {
               code: res.code
             }
             if (phone) params.phone = phone
 
-            $api
-              .get('/wechat/mini/login', params)
-              .then((response) => {
-                uni.setStorageSync('token', response?.data?.token)
-                resolve(data)
-              })
-              .catch((err) => {
-                reject(err)
-              })
+            // $api
+            //   .post('/auth/wechat/mini-login', params)
+            //   .then((response) => {
+            //     uni.setStorageSync('token', response?.data?.token)
+            //     resolve(data)
+            //   })
+            //   .catch((err) => {
+            //     reject(err)
+            //   })
           },
           fail: (err) => {
             console.log('error' + err)
