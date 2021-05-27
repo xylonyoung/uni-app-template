@@ -103,11 +103,11 @@ export default {
     },
     onSuccess(data, name) {
       console.log(data, name)
-      this.formData[name].push(data[0])
+      this.formData[name] = data[0]
     },
     onRemove(index, name) {
       console.log(index, name)
-      this.formData[name].splice(index, 1)
+      this.formData[name] = null
     }
   }
 }

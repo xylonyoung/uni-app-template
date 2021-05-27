@@ -2,7 +2,9 @@ import $api from '@/api'
 
 const state = {
   user: {},
-  registered: false
+  profile:{},
+  registered: false,
+  sessionKey: ''
 }
 
 const actions = {
@@ -40,17 +42,16 @@ const actions = {
   async getUserInformation({ commit }) {
     const res = await $api.get('/api/users/me')
     commit('SET_USER', res)
-    if (res?.profile?.__metadata?.phone) {
+    const response = await $api.get('/api/wechat-users')
+    commit('SET_PROFILE', response)
+    if (res?.phone) {
       commit('SET_REGISTERED', true)
     }
     return
   },
 
-  async wechatLogin({ dispatch }, phone) {
-    let result
-    if (!uni.getStorageSync('token') || phone) {
-      result = await login()
-    }
+  async wechatLogin({ commit, dispatch }, phone) {
+    const result = await login()
     dispatch('getUserInformation')
     return result
 
@@ -59,21 +60,24 @@ const actions = {
         uni.login({
           provider: 'weixin',
           success: (res) => {
-            console.log(res)
             const params = {
               code: res.code
             }
             if (phone) params.phone = phone
 
-            // $api
-            //   .post('/auth/wechat/mini-login', params)
-            //   .then((response) => {
-            //     uni.setStorageSync('token', response?.data?.token)
-            //     resolve(data)
-            //   })
-            //   .catch((err) => {
-            //     reject(err)
-            //   })
+            $api
+              .post('/auth/wechat/mini-login', params)
+              .then((response) => {
+                const token = response?.token
+                  ? 'Bearer ' + response?.token
+                  : undefined
+                uni.setStorageSync('token', token)
+                commit('SET_SESSION_KEY', response?.session?.sessionKey)
+                resolve(response)
+              })
+              .catch((err) => {
+                reject(err)
+              })
           },
           fail: (err) => {
             console.log('error' + err)

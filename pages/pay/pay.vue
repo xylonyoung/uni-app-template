@@ -4,7 +4,16 @@
       <u-cell-item value="选择地址" @click="chooseAddress">
         <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
         <view slot="title">
-          <template v-if="address.telNumber">
+          <template v-if="address.phone">
+            <view class="address-user">
+              <text>{{ address.name }}</text>
+              <text>{{ address.phone }}</text>
+            </view>
+            <view class="address-detail">
+              {{ addressDetail }}
+            </view>
+          </template>
+          <!-- <template v-if="address.telNumber">
             <view class="address-user">
               <text>{{ address.userName }}</text>
               <text>{{ address.telNumber }}</text>
@@ -12,7 +21,7 @@
             <view class="address-detail">
               {{ addressDetail }}
             </view>
-          </template>
+          </template> -->
           <view v-else>暂未设置收货地址</view>
         </view>
       </u-cell-item>
@@ -91,6 +100,12 @@
         <c-coupon @change="couponChange" v-model="couponList" />
       </scroll-view>
     </u-popup> -->
+
+    <c-address
+      v-model="showAddress"
+      :regions="regionList"
+      @confirm="addressConfirm"
+    />
   </view>
 </template>
 
@@ -102,8 +117,9 @@ export default {
   mixins: [dimension],
   data() {
     return {
-      address: {},
+      address: null,
       regionList: [],
+      showAddress: false,
       comment: null,
       coupon: null,
       couponList: [],
@@ -124,12 +140,17 @@ export default {
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-      return (
-        this.address.provinceName +
-        this.address.cityName +
-        this.address.countyName +
-        this.address.detailInfo
-      )
+        if (!this.address?.region) return ''
+      const result = this.address.region.reduce((acc, cur) => {
+        return acc + ' ' + cur.label
+      }, '')
+      return result + ' ' + this.address.detailInfo
+      // return (
+      //   this.address.provinceName +
+      //   this.address.cityName +
+      //   this.address.countyName +
+      //   this.address.detailInfo
+      // )
     },
     items() {
       return this.orderProducts.map((e) => ({
@@ -151,14 +172,14 @@ export default {
   },
   onLoad() {
     this.address = uni.getStorageSync('address') || {}
-    // this.getRegion()
+    this.getRegion()
   },
   methods: {
-    // getRegion() {
-    //   this.$api.get('/api/regions').then((res) => {
-    //     this.regionList = res.data
-    //   })
-    // },
+    getRegion() {
+      this.$api.get('/api/regions').then((res) => {
+        this.regionList = res.data
+      })
+    },
     navTo(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`
@@ -203,12 +224,16 @@ export default {
       })
     },
     chooseAddress() {
-      uni.chooseAddress({
-        success: (res) => {
-          uni.setStorageSync('address', res)
-          this.address = res
-        }
-      })
+      this.showAddress = true
+      // uni.chooseAddress({
+      //   success: (res) => {
+      //     uni.setStorageSync('address', res)
+      //     this.address = res
+      //   }
+      // })
+    },
+    addressConfirm(obj) {
+      this.address = { ...obj }
     }
   }
 }

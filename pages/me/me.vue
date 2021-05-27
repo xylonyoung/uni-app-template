@@ -115,7 +115,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['profile', 'user'])
+    ...mapGetters(['profile', 'user', 'sessionKey'])
   },
   onShow() {
     this.$store.dispatch('common/setBadge')
@@ -140,8 +140,13 @@ export default {
       uni.getUserProfile({
         desc: '用于完善会员资料',
         success: (res) => {
-          const { userInfo } = res
-          this.$api.put('/api/user-profile', userInfo).then(() => {
+          console.log(res)
+          const data = {
+            encryptedData: res.encryptedData,
+            iv: res.iv,
+            sessionKey: this.sessionKey
+          }
+          this.$api.post('/api/wechat-users', data).then(() => {
             this.$store.dispatch('user/getUserInformation')
           })
         }
