@@ -52,9 +52,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import mixin from './mixin'
+import dimension from '@/mixins/dimension'
 export default {
-  mixins: [mixin],
+  mixins: [dimension],
   props: {
     value: { type: Boolean, default: false },
     product: { type: Object, default: () => ({}) },

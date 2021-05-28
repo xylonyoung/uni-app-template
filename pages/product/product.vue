@@ -91,9 +91,9 @@
 
 <script>
 import { htmlFormat } from '@/utils'
-import mixin from '@/components/cart-selector/mixin'
+import dimension from '@/mixins/dimension'
 export default {
-  mixins: [mixin],
+  mixins: [dimension],
   data() {
     return {
       inexistent: false,
