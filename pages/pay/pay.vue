@@ -140,7 +140,7 @@ export default {
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-        if (!this.address?.region) return ''
+      if (!this.address?.region) return ''
       const result = this.address.region.reduce((acc, cur) => {
         return acc + ' ' + cur.label
       }, '')
@@ -177,6 +177,7 @@ export default {
   methods: {
     getRegion() {
       this.$api.get('/api/regions').then((res) => {
+        console.log(res)
         this.regionList = res.data
       })
     },

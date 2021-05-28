@@ -2,7 +2,6 @@ import $api from '@/api'
 
 const state = {
   user: {},
-  profile:{},
   registered: false,
   sessionKey: ''
 }
@@ -42,8 +41,6 @@ const actions = {
   async getUserInformation({ commit }) {
     const res = await $api.get('/api/users/me')
     commit('SET_USER', res)
-    const response = await $api.get('/api/wechat-users')
-    commit('SET_PROFILE', response)
     if (res?.phone) {
       commit('SET_REGISTERED', true)
     }

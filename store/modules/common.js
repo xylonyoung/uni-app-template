@@ -1,4 +1,5 @@
 import $api from '@/api'
+import store from '@/store'
 
 const state = {
   cart: [],
@@ -54,10 +55,22 @@ const actions = {
     }
   },
   toPay({ commit }, products) {
-    commit('SET_ORDER_PRODUCTS', products)
-    uni.navigateTo({
-      url: '/pages/pay/pay'
-    })
+    if (store.getters?.user?.join) {
+      commit('SET_ORDER_PRODUCTS', products)
+      uni.navigateTo({
+        url: '/pages/pay/pay'
+      })
+    } else {
+      uni.showToast({
+        title: '请先加盟',
+        icon: 'none'
+      })
+      setTimeout(() => {
+        uni.navigateTo({
+          url: '/pages/join/join'
+        })
+      }, 2222)
+    }
   }
   // getMember({ commit }) {
   //   $api.get('/api/members').then((res) => {

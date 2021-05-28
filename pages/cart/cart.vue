@@ -175,6 +175,7 @@ export default {
         this.products.some((i) => i.id === e.productId)
       )
       this.cartChange(cart)
+      this.showDelete = false
       uni.showToast({
         title: '删除成功~'
       })

@@ -128,7 +128,6 @@ export default {
       } else {
         cart.unshift(product)
       }
-      console.log(cart)
       this.cartChange(cart)
       uni.showToast({
         title: '加入成功~'

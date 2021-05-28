@@ -11,6 +11,7 @@
         <u-upload
           :action="action"
           :header="header"
+          max-count="1"
           @on-success="
             (data) => {
               onSuccess(data, 'idCard')
@@ -27,7 +28,17 @@
         <u-upload
           :action="action"
           :header="header"
-          name="businessLicence"
+          max-count="1"
+          @on-success="
+            (data) => {
+              onSuccess(data, 'businessLicence')
+            }
+          "
+          @on-remove="
+            (index) => {
+              onRemove(index, 'businessLicence')
+            }
+          "
         ></u-upload>
       </u-form-item>
     </u-form>

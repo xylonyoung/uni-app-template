@@ -59,7 +59,7 @@
   </view>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -76,11 +76,14 @@ export default {
       timer: null // 定时器
     }
   },
-  computed:{
+  computed: {
     ...mapGetters(['categoryList'])
   },
   onReady() {
     this.getMenuItemTop()
+  },
+  onShow() {
+    this.$store.dispatch('common/setBadge')
   },
   methods: {
     navTo(id) {

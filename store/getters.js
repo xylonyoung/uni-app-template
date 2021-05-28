@@ -1,6 +1,6 @@
 const getters = {
   user: (state) => state.user.user,
-  profile: (state) => state.user.profile,
+  profile: (state) => state.user.user?.wechatUser ?? {},
   sessionKey:(state) => state.user.sessionKey,
   cart: (state) => state.common.cart,
   stockHasLimit: (state) => state.common.stockHasLimit,
