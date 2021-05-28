@@ -80,6 +80,9 @@ export default {
       this.tabbar = res.data
     })
   },
+  onShow() {
+    this.$store.dispatch('common/setBadge')
+  },
   onReady() {
     this.getMenuItemTop()
   },

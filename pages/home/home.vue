@@ -56,9 +56,11 @@ export default {
     }
   },
   async onLoad() {
-    this.$store.dispatch('common/setBadge')
     await this.$store.dispatch('user/wechatLogin')
     this.getData()
+  },
+  onShow() {
+    this.$store.dispatch('common/setBadge')
   },
   methods: {
     getCoupon(id) {
@@ -133,7 +135,7 @@ export default {
     }
     &-box {
       display: flex;
-      &-image{
+      &-image {
         border: 1px solid $c-gray;
         border-right: none;
       }
