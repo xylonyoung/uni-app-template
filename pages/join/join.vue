@@ -12,16 +12,8 @@
           :action="action"
           :header="header"
           max-count="1"
-          @on-success="
-            (data) => {
-              onSuccess(data, 'idCard')
-            }
-          "
-          @on-remove="
-            (index) => {
-              onRemove(index, 'idCard')
-            }
-          "
+          @on-success="onSuccess('idCard', $event)"
+          @on-remove="onRemove('idCard', $event)"
         ></u-upload>
       </u-form-item>
       <u-form-item label="营业执照" prop="businessLicence">
@@ -29,16 +21,8 @@
           :action="action"
           :header="header"
           max-count="1"
-          @on-success="
-            (data) => {
-              onSuccess(data, 'businessLicence')
-            }
-          "
-          @on-remove="
-            (index) => {
-              onRemove(index, 'businessLicence')
-            }
-          "
+          @on-success="onSuccess('businessLicence', $event)"
+          @on-remove="onRemove('businessLicence', $event)"
         ></u-upload>
       </u-form-item>
     </u-form>
@@ -112,12 +96,10 @@ export default {
         }
       })
     },
-    onSuccess(data, name) {
-      console.log(data, name)
+    onSuccess(name, data) {
       this.formData[name] = data[0]
     },
-    onRemove(index, name) {
-      console.log(index, name)
+    onRemove(name, index) {
       this.formData[name] = null
     }
   }

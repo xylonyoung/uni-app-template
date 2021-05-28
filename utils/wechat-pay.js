@@ -1,7 +1,7 @@
 import $api from '@/api'
 export default async function wechatPay(id) {
   uni.showLoading()
-  const { data } = await $api.post(`/api/invoices/${id}/pay/wechat`, {
+  const { data } = await $api.post(`/api/invoices/${id}/pay`, {
     gateway: 'JSAPI'
   })
   return new Promise((resolve, reject) => {

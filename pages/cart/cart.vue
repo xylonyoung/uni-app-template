@@ -33,14 +33,14 @@
           <view>
             <view class="product-row-detail-name">{{ item.name }}</view>
             <u-tag
-              :text="dimensionName(item)"
+              :text="getDimensionName(item)"
               type="info"
               @click.native.stop="toShowCartSelector(item, index)"
             />
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price">
-              {{ dimensionPrice(item) }}
+              {{ getDimensionPrice(item) }}
             </view>
             <!-- component can reactive now! -->
             <u-number-box

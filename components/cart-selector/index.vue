@@ -2,11 +2,7 @@
   <u-popup v-model="showPopup" mode="bottom" @close="onClose">
     <view class="product">
       <view class="product-cover">
-        <u-image
-          width="200rpx"
-          height="200rpx"
-          :src="product.cover"
-        ></u-image>
+        <u-image width="200rpx" height="200rpx" :src="product.cover"></u-image>
       </view>
       <view>
         <view class="product-price">
@@ -52,9 +48,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import mixin from './mixin'
+import dimension from '@/mixins/dimension'
 export default {
-  mixins: [mixin],
+  mixins: [dimension],
   props: {
     value: { type: Boolean, default: false },
     product: { type: Object, default: () => ({}) },

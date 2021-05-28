@@ -4,16 +4,7 @@
       <u-cell-item value="选择地址" @click="chooseAddress">
         <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
         <view slot="title">
-          <template v-if="address.phone">
-            <view class="address-user">
-              <text>{{ address.name }}</text>
-              <text>{{ address.phone }}</text>
-            </view>
-            <view class="address-detail">
-              {{ addressDetail }}
-            </view>
-          </template>
-          <!-- <template v-if="address.telNumber">
+          <template v-if="address.telNumber">
             <view class="address-user">
               <text>{{ address.userName }}</text>
               <text>{{ address.telNumber }}</text>
@@ -21,7 +12,7 @@
             <view class="address-detail">
               {{ addressDetail }}
             </view>
-          </template> -->
+          </template>
           <view v-else>暂未设置收货地址</view>
         </view>
       </u-cell-item>
@@ -48,14 +39,14 @@
             </view>
             <view class="product-row-detail-quantity">
               <view>
-                {{ dimensionName(item) }}
+                {{ getDimensionName(item) }}
               </view>
               <view>x{{ item.quantity }}</view>
             </view>
           </view>
           <view class="product-row-detail-bottom">
             <view class="product-row-detail-bottom-price" style="color: #999">
-              {{ dimensionPrice(item) }}
+              {{ getDimensionPrice(item) }}
             </view>
           </view>
         </view>
@@ -101,11 +92,7 @@
       </scroll-view>
     </u-popup> -->
 
-    <c-address
-      v-model="showAddress"
-      :regions="regionList"
-      @confirm="addressConfirm"
-    />
+    <c-address v-model="showAddress" @confirm="addressConfirm" />
   </view>
 </template>
 
@@ -117,8 +104,7 @@ export default {
   mixins: [dimension],
   data() {
     return {
-      address: null,
-      regionList: [],
+      address: {},
       showAddress: false,
       comment: null,
       coupon: null,
@@ -140,24 +126,20 @@ export default {
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-      if (!this.address?.region) return ''
-      const result = this.address.region.reduce((acc, cur) => {
-        return acc + ' ' + cur.label
-      }, '')
-      return result + ' ' + this.address.detailInfo
-      // return (
-      //   this.address.provinceName +
-      //   this.address.cityName +
-      //   this.address.countyName +
-      //   this.address.detailInfo
-      // )
+      return (
+        this.address.provinceName +
+        this.address.cityName +
+        this.address.countyName +
+        this.address.detailInfo
+      )
     },
     items() {
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
         specificationId: e.dimensionId,
         shippingAddress: this.addressDetail,
-        shippingPhone: this.address.telNumber
+        shippingPhone: this.address.telNumber,
+        // region:this.address.county
       }))
     }
     // aCoupon() {
@@ -172,15 +154,8 @@ export default {
   },
   onLoad() {
     this.address = uni.getStorageSync('address') || {}
-    this.getRegion()
   },
   methods: {
-    getRegion() {
-      this.$api.get('/api/regions').then((res) => {
-        console.log(res)
-        this.regionList = res.data
-      })
-    },
     navTo(id) {
       uni.navigateTo({
         url: `/pages/product/product?id=${id}`
@@ -213,7 +188,7 @@ export default {
       if (this.comment) data.comment = this.comment
 
       this.$api.post(`/api/orders`, data).then((res) => {
-        const id = res.data.invoice.id
+        const id = res.invoice
         if (id) {
           wechatPay(id).then(() => {
             this.$store.dispatch('common/setCart', [])
