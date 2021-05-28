@@ -8,7 +8,7 @@
       container=".product-container"
     />
 
-    <view v-if="inexistent" style="padding-top: 300rpx; height: 300rpx">
+    <view v-if="inexistent" style="height: 50vh">
       <u-empty text="商品过期不存在" mode="page"></u-empty>
     </view>
 
@@ -178,6 +178,7 @@ export default {
 
 <style lang="scss" scoped>
 .product-container {
+  min-height: 100vh;
   background-color: $c-background;
 }
 .introduction {
