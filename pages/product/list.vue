@@ -39,9 +39,10 @@
             ></u-icon>
           </view>
         </view>
-        <view class="tabs-item" @click="showPopup = true">
+        <!-- TODO -->
+        <!-- <view class="tabs-item" @click="showPopup = true">
           <view>筛选</view>
-        </view>
+        </view> -->
 
         <view class="tabs-dropdown" :style="[dropdownStyle]">
           <view class="tabs-dropdown-content" :style="[contentStyle]">
@@ -159,7 +160,7 @@ export default {
           .find((e) => e.id === category)
           ?.children.map((e) => e.id) || category
       this.setListQuery(`category.id = ${params}`)
-    }else{
+    } else {
       this.setListQuery()
     }
     this.autoLoadList = true
@@ -172,7 +173,9 @@ export default {
   },
   methods: {
     setListQuery(str) {
-      this.listQuery['@filter'] = str ? this.defaultFilter + ',' + str : this.defaultFilter
+      this.listQuery['@filter'] = str
+        ? this.defaultFilter + ',' + str
+        : this.defaultFilter
     },
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
@@ -211,7 +214,8 @@ export default {
           return
         case 1:
           this.selectedArrow = ''
-          this.listQuery['@order'] = 'sales|DESC'
+          // TODO
+          // this.listQuery['@order'] = 'sales|DESC'
           break
         case 2:
           this.selectedArrow = this.selectedArrow === 'up' ? 'down' : 'up'
@@ -227,7 +231,11 @@ export default {
       this.toReloadList()
     },
     dropdownChange(index) {
-      this.listQuery['@order'] = index === 0 ? '' : 'id|DESC'
+      if (index === 0) {
+        delete this.listQuery['@order']
+      } else {
+        this.listQuery['@order'] = 'id|DESC'
+      }
       this.selectedArrow = ''
       this.selectedTab = 0
       this.selectedDropdown = index
@@ -239,7 +247,7 @@ export default {
         this.showToast('请输入搜索内容!', 'warning')
         return
       }
-      this.listQuery['@filter'] = this.defaultFilter + `, name matches '/${e}/'`
+      this.listQuery['@filter'] = this.defaultFilter + `, name ~ ${e}`
       this.toReloadList()
     },
     toReloadList() {

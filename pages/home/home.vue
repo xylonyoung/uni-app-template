@@ -80,7 +80,9 @@ export default {
         const waitPresell = []
         const specialPrice = []
         const presellPrice = []
+        const now = new Date().valueOf()
         response.content.forEach((e) => {
+          if (now > new Date(e.endTime).valueOf()) return
           if (e.type === 'DEFAULT') {
             waitSpecialPrice.push(
               this.$api.get('/api/specifications/' + e.specification)
