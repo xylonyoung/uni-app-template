@@ -89,7 +89,7 @@ export default {
       const listQuery = { ...this.listQuery }
 
       if (refresh) {
-        listQuery.page = 1
+        listQuery.page = 0
         this.empty = false
         this.refresh = true
         this.$emit('update:list', [])

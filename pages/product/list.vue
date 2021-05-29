@@ -109,7 +109,8 @@ export default {
       reloadList: false,
       autoLoadList: false,
       contentHeight: '',
-      categoryIndex: []
+      categoryIndex: [],
+      defaultFilter: 'isOnSale = true'
     }
   },
   computed: {
@@ -153,10 +154,13 @@ export default {
   onLoad(option) {
     const { category } = option
     if (category) {
-      const params = this.categoryList
-        .find((e) => e.id === +category)
-        ?.children.map((e) => e.id)
+      const params =
+        this.categoryList
+          .find((e) => e.id === category)
+          ?.children.map((e) => e.id) || category
       this.setListQuery(`category.id in ${params}`)
+    }else{
+      this.setListQuery()
     }
     this.autoLoadList = true
   },
@@ -168,7 +172,7 @@ export default {
   },
   methods: {
     setListQuery(str) {
-      this.listQuery['@filter'] = str ?? ''
+      this.listQuery['@filter'] = str ? this.defaultFilter + ' && ' + str : this.defaultFilter
     },
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
@@ -235,7 +239,7 @@ export default {
         this.showToast('请输入搜索内容!', 'warning')
         return
       }
-      this.listQuery['@filter'] = `entity.getName() matches '/${e}/'`
+      this.listQuery['@filter'] = this.defaultFilter + ` && name matches '/${e}/'`
       this.toReloadList()
     },
     toReloadList() {
