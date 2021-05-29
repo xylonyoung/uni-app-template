@@ -69,7 +69,7 @@ const actions = {
               .get('/wechat/mini/login', params)
               .then((response) => {
                 uni.setStorageSync('token', response?.data?.token)
-                resolve(data)
+                resolve(response?.data)
               })
               .catch((err) => {
                 reject(err)
