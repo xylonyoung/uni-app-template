@@ -1,18 +1,19 @@
 import $api from '@/api'
 export default async function wechatPay(id) {
   uni.showLoading()
-  const { data } = await $api.post(`/api/invoices/${id}/pay`, {
-    gateway: 'JSAPI'
+  const res = await $api.post(`/api/invoices/${id}/pay`, {
+    method: 'WECHAT',
+    tradeType: 'JSAPI'
   })
   return new Promise((resolve, reject) => {
     uni.requestPayment({
       provider: 'wxpay',
-      timeStamp: data.jssdk.timestamp,
-      nonceStr: data.jssdk.nonceStr,
-      package: data.jssdk.package,
-      signType: data.jssdk.signType,
-      paySign: data.jssdk.paySign,
-      success: res => {
+      timeStamp: res.timeStamp,
+      nonceStr: res.nonceStr,
+      package: res.packageValue,
+      signType: res.signType,
+      paySign: res.paySign,
+      success: (res) => {
         console.log('success:' + JSON.stringify(res))
         uni.hideLoading()
         uni.showToast({
@@ -20,7 +21,7 @@ export default async function wechatPay(id) {
         })
         resolve()
       },
-      fail: err => {
+      fail: (err) => {
         console.log('fail:' + JSON.stringify(err))
         uni.hideLoading()
         uni.showToast({
