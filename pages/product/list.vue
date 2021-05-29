@@ -158,7 +158,7 @@ export default {
         this.categoryList
           .find((e) => e.id === category)
           ?.children.map((e) => e.id) || category
-      this.setListQuery(`category.id in ${params}`)
+      this.setListQuery(`category.id = ${params}`)
     }else{
       this.setListQuery()
     }
@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     setListQuery(str) {
-      this.listQuery['@filter'] = str ? this.defaultFilter + ' && ' + str : this.defaultFilter
+      this.listQuery['@filter'] = str ? this.defaultFilter + ',' + str : this.defaultFilter
     },
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
@@ -239,7 +239,7 @@ export default {
         this.showToast('请输入搜索内容!', 'warning')
         return
       }
-      this.listQuery['@filter'] = this.defaultFilter + ` && name matches '/${e}/'`
+      this.listQuery['@filter'] = this.defaultFilter + `, name matches '/${e}/'`
       this.toReloadList()
     },
     toReloadList() {

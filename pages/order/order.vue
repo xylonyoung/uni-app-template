@@ -116,7 +116,6 @@ export default {
     return {
       tabList: [],
       tabIndex: 0,
-      showTabs: true,
       scrollTop: 0,
       height: 'calc(100vh - 80rpx)'
     }
