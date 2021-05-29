@@ -163,7 +163,7 @@ export default {
   position: relative;
   height: 500rpx;
   &-info {
-    padding: 200rpx 40rpx 0;
+    padding: 244rpx 40rpx 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
