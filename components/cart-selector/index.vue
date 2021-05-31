@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'stockHasLimit']),
+    ...mapGetters(['cart', 'stockHasLimit', 'user']),
     quantityInStock() {
       return this.selectedDimension?.remains ?? 0
     },
@@ -109,6 +109,19 @@ export default {
           title: '库存不足~',
           icon: 'none'
         })
+        return
+      }
+
+      if (!this.user?.join) {
+        uni.showToast({
+          title: '请先加盟',
+          icon: 'none'
+        })
+        setTimeout(() => {
+          uni.navigateTo({
+            url: '/pages/join/join'
+          })
+        }, 2222)
         return
       }
 

@@ -6,15 +6,12 @@ const state = {
   stockHasLimit: false,
   orderProducts: [],
   orderStatus: [
-    { label: '失败', value: '-2' },
-    { label: '已取消', value: '-1' },
-    { label: '等待', value: '0' },
-    { label: '待支付', value: '1' },
-    { label: '待发货', value: '2' },
-    { label: '待收货', value: '3' },
-    { label: '已收货', value: '4' },
-    { label: '完成', value: '5' },
-    { label: '售后中', value: '6' }
+    { label: '失败', value: 'FAILED' },
+    { label: '已取消', value: 'CANCELLED' },
+    { label: '等待', value: 'PENDING' },
+    { label: '待支付', value: 'SUBMITTED' },
+    { label: '待发货', value: 'PAID' },
+    { label: '完成', value: 'COMPLETE' },
   ],
   categoryList: [],
   member: {}
@@ -23,9 +20,8 @@ const state = {
 const actions = {
   async getCategory({ commit }) {
     const res = await $api.get('/api/categories')
-    const aType = res.content.find((e) => e?.type?.name === '总分类')
     const result = res.content
-      .filter((e) => aType.type.id === (e.type?.id ?? e.type))
+      .filter((e) => !e?.parent)
       .map((e) => {
         const children = []
         res.content.forEach((i) => {

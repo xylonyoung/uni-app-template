@@ -58,7 +58,7 @@
           @click="navToOrder"
         ></u-cell-item>
       </u-cell-group>
-      <u-grid :col="5">
+      <u-grid :col="3">
         <u-grid-item
           v-for="(item, index) in orderList"
           :key="index"
@@ -96,15 +96,15 @@ export default {
   data() {
     return {
       orderList: [
-        { name: '待付款', status: '1', icon: 'rmb-circle' },
-        { name: '待发货', status: '2', icon: 'gift' },
-        { name: '待收货', status: '3', icon: 'car' },
-        { name: '待评价', status: '4', icon: 'edit-pen' },
-        {
-          name: '退款/售后',
-          status: '5',
-          icon: 'server-man'
-        }
+        { name: '待支付', status: 'SUBMITTED', icon: 'rmb-circle' },
+        { name: '待发货', status: 'PAID', icon: 'gift' },
+        { name: '完成', status: 'COMPLETE', icon: 'car' },
+        // { name: '待评价', status: '4', icon: 'edit-pen' },
+        // {
+        //   name: '退款/售后',
+        //   status: '5',
+        //   icon: 'server-man'
+        // }
       ],
       menuList: [
         { title: '申请加盟', icon: 'man-add', color: '#ee883b', path: 'join/join' }

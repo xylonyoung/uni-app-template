@@ -21,10 +21,8 @@ export default {
     },
     getRecommend() {
       const params = {
-        page: 1,
-        limit: 4,
-        '@order': 'modifiedTime|DESC',
-        '@filter': 'isRecommended = true'
+        '@filter': 'isHot = true',
+        '@order': 'listOrder|ASC'
       }
       this.$api.get('/api/products', params).then((res) => {
         this.recommendList = res.data

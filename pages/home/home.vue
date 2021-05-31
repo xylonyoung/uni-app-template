@@ -17,12 +17,12 @@
       </u-grid-item>
     </u-grid>
 
-    <view class="section">
+    <view class="section" v-if="specialPriceList.length > 0">
       <view class="section-title">限时特价</view>
       <c-product-list :product-list="specialPriceList" />
     </view>
 
-    <view class="section">
+    <view class="section" v-if="presellList.length > 0">
       <view class="section-title">预售</view>
       <c-product-list :product-list="presellList" />
     </view>
@@ -113,6 +113,15 @@ export default {
           })
         })
       })
+
+      this.$api
+        .get('/api/products', {
+          '@filter': 'isHot = true',
+          '@order': 'listOrder|ASC'
+        })
+        .then((res) => {
+          this.productList = res.content
+        })
     }
   }
 }

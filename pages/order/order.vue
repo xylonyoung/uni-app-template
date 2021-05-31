@@ -24,7 +24,6 @@
             :key="orderIndex"
           >
             <view class="order-top">
-              //TODO
               <text>
                 {{ getOrderStatus(order.status) }}
               </text>
@@ -136,34 +135,33 @@ export default {
         },
         {
           name: '待支付',
-          status: '1'
+          status: 'SUBMITTED'
         },
         {
           name: '待发货',
-          status: '2'
+          status: 'PAID'
         },
         {
-          name: '待收货',
-          status: '3'
-        },
-        {
-          name: '待评价',
-          status: '4'
+          name: '完成',
+          status: 'COMPLETE'
         }
       ]
-      this.tabList = tabList.map((e) => ({
-        list: [],
-        listApi: '/api/orders',
-        listQuery: {
-          page: 0,
-          size: 5
-          // '@order': 'modifiedTime|DESC',
-          // '@filter': e.status
-          //   ? `entity.getStatus() == ${e.status}`
-          //   : 'entity.getStatus() > 0'
-        },
-        ...e
-      }))
+      this.tabList = tabList.map((e) => {
+        const result = {
+          list: [],
+          listApi: '/api/orders',
+          listQuery: {
+            page: 0,
+            size: 5,
+            '@order': 'id|DESC'
+          },
+          ...e
+        }
+        if (e.status) {
+          result['@filter'] = `status = ${e.status}`
+        }
+        return result
+      })
     },
     toCancel(id, orderIndex) {
       this.$api
