@@ -11,7 +11,7 @@ const state = {
     { label: '等待', value: 'PENDING' },
     { label: '待支付', value: 'SUBMITTED' },
     { label: '待发货', value: 'PAID' },
-    { label: '完成', value: 'COMPLETE' },
+    { label: '完成', value: 'COMPLETE' }
   ],
   categoryList: [],
   member: {}
@@ -51,7 +51,7 @@ const actions = {
     }
   },
   toPay({ commit }, products) {
-    if (store.getters?.user?.join) {
+    if (store.getters?.hasJoin) {
       commit('SET_ORDER_PRODUCTS', products)
       uni.navigateTo({
         url: '/pages/pay/pay'

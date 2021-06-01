@@ -25,7 +25,7 @@ export default {
         '@order': 'listOrder|ASC'
       }
       this.$api.get('/api/products', params).then((res) => {
-        this.recommendList = res.data
+        this.recommendList = res.content
       })
     }
   }

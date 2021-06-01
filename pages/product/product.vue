@@ -67,7 +67,7 @@
 
       <view id="description">
         <view class="title">详情介绍</view>
-        <u-parse :html="htmlFormat(product.description)"></u-parse>
+        <u-parse :html="product.description"></u-parse>
       </view>
 
       <view v-if="specialPrice.id" class="buy-button">

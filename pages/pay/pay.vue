@@ -138,7 +138,7 @@ export default {
         quantity: e.quantity,
         specificationId: e.dimensionId,
         shippingAddress: this.addressDetail,
-        shippingPhone: this.address.telNumber,
+        shippingPhone: this.address.telNumber
         // region:this.address.county
       }))
     }
@@ -188,15 +188,12 @@ export default {
       if (this.comment) data.comment = this.comment
 
       this.$api.post(`/api/orders`, data).then((res) => {
-        const id = res.invoice
-        if (id) {
-          wechatPay(id).then(() => {
-            this.$store.dispatch('common/setCart', [])
-            uni.navigateBack({
-              delta: 2
-            })
+        wechatPay(res.invoice).then(() => {
+          this.$store.dispatch('common/setCart', [])
+          uni.navigateBack({
+            delta: 2
           })
-        }
+        })
       })
     },
     chooseAddress() {

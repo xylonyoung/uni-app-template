@@ -76,42 +76,24 @@ export default {
       })
 
       this.$api.get('/api/special-prices').then((response) => {
-        const waitSpecialPrice = []
-        const waitPresell = []
         const specialPrice = []
         const presellPrice = []
         const now = new Date().valueOf()
         response.content.forEach((e) => {
           if (now > new Date(e.endTime).valueOf()) return
+          const result = {
+            specialPrice: { ...e },
+            ...e?.metadata?.specification?.product
+          }
           if (e.type === 'DEFAULT') {
-            waitSpecialPrice.push(
-              this.$api.get('/api/specifications/' + e.specification)
-            )
-            specialPrice.push(e)
+            specialPrice.push(result)
           }
           if (e.type === 'PRE_SALE') {
-            waitPresell.push(
-              this.$api.get('/api/specifications/' + e.specification)
-            )
-            presellPrice.push(e)
+            presellPrice.push(result)
           }
         })
-        Promise.all(waitSpecialPrice).then((res) => {
-          this.specialPriceList = res.map((e, index) => {
-            return {
-              ...(e?.metadata?.product ?? {}),
-              specialPrice: { ...specialPrice[index] }
-            }
-          })
-        })
-        Promise.all(waitPresell).then((res) => {
-          this.presellList = res.map((e, index) => {
-            return {
-              ...(e?.metadata?.product ?? {}),
-              specialPrice: { ...presellPrice[index] }
-            }
-          })
-        })
+        this.specialPriceList = specialPrice
+        this.presellPriceList = presellPrice
       })
 
       this.$api

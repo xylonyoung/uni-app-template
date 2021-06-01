@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'stockHasLimit', 'user']),
+    ...mapGetters(['cart', 'stockHasLimit', 'user', 'hasJoin']),
     quantityInStock() {
       return this.selectedDimension?.remains ?? 0
     },
@@ -112,7 +112,7 @@ export default {
         return
       }
 
-      if (!this.user?.join) {
+      if (!this.hasJoin) {
         uni.showToast({
           title: '请先加盟',
           icon: 'none'

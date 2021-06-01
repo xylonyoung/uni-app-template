@@ -115,14 +115,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['profile', 'user', 'sessionKey'])
+    ...mapGetters(['profile', 'user', 'sessionKey','hasJoin'])
   },
   onShow() {
     this.$store.dispatch('common/setBadge')
   },
   methods: {
     navTo(path) {
-      if (path === 'join/join' && this.user?.join?.id) {
+      if (path === 'join/join' && this.hasJoin) {
         uni.showToast({
           title: '已经加盟',
           icon: 'none'
