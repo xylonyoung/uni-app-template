@@ -1,5 +1,16 @@
 import numbro from 'numbro'
 import { baseURL } from '@/settings'
+import timeFormat from 'uview-ui/libs/function/timeFormat'
+
+export function getQueryDateRange({ startDate, endDate }) {
+  const tomorrow = timeFormat(getTomorrow(endDate))
+  return `entity.getCreatedTime() >= datetime.get('${startDate}') && entity.getCreatedTime() <= datetime.get('${tomorrow}')`
+
+  function getTomorrow(date) {
+    const today = new Date(date)
+    return new Date(today.setDate(today.getDate() + 1))
+  }
+}
 
 export function numberFormat(num, option) {
   const options = {

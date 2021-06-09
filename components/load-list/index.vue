@@ -37,7 +37,7 @@ export default {
       default: () => ({ page: 1, limit: 10 })
     },
     reload: { type: Boolean, default: false },
-    auto: { type: Boolean, default: true },
+    autoLoad: { type: Boolean, default: true },
     height: { type: String, default: () => `100vh` }
   },
   data() {
@@ -59,7 +59,7 @@ export default {
       if (val) this.backToTop()
       this.refresh = val
     },
-    auto: {
+    autoLoad: {
       handler(val) {
         if (val && !this.empty && this.list.length === 0) this.loadData()
       },

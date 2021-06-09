@@ -43,21 +43,22 @@ export class Api {
       store.dispatch('user/reLogin')
       return
     }
-    if (res.data) {
-      switch (res.data.code) {
-        case 0:
-          resolve(res.data)
-          break
-        case -2:
-          errorResponse(
-            res.data.message === 'The user is not found.' ? '没有此用户~' : null
-          )
-          break
-        default:
-          errorResponse()
-      }
-    } else {
+    if (!res.data) {
       errorResponse()
+      return
+    }
+    
+    switch (res.data.code) {
+      case 0:
+        resolve(res.data)
+        break
+      case -2:
+        errorResponse(
+          res.data.message === 'The user is not found.' ? '没有此用户~' : null
+        )
+        break
+      default:
+        errorResponse()
     }
 
     function errorResponse(message) {
