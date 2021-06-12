@@ -1,12 +1,9 @@
-import $api from '@/api'
-import { jsSdkPay } from './JS-SDK'
+import $api from './request'
 
 export default async function wechatPay(id) {
-  uni.showLoading()
-
-  const params = { gateway: 'JSAPI' }
-  //#ifdef H5
-  params.gateway = 'MWEB'
+  const params = { gateway: 'MWEB' }
+  //#ifdef MP-WEIXIN
+  params.gateway = 'JSAPI'
   //#endif
 
   const { data } = await $api
@@ -15,7 +12,7 @@ export default async function wechatPay(id) {
       uni.hideLoading()
     })
 
-  const { jssdk } = data
+  const { jssdk, payment } = data
 
   return new Promise((resolve, reject) => {
     //#ifdef MP-WEIXIN
@@ -26,32 +23,28 @@ export default async function wechatPay(id) {
       package: jssdk.package,
       signType: jssdk.signType,
       paySign: jssdk.paySign,
-      success,
-      fail
+      success(res) {
+        console.log('success:' + JSON.stringify(res))
+        uni.hideLoading()
+        uni.showToast({
+          title: '支付成功'
+        })
+        resolve()
+      },
+      fail(err) {
+        console.log('fail:' + JSON.stringify(err))
+        uni.hideLoading()
+        uni.showToast({
+          title: '支付失败',
+          icon: 'none'
+        })
+        reject()
+      }
     })
     //#endif
 
     //#ifdef H5
-    jsSdkPay({ ...jssdk, aPackage: jssdk.package, success, fail })
+    location.href = payment?.mweb_url
     //#endif
-
-    function success(res) {
-      console.log('success:' + JSON.stringify(res))
-      uni.hideLoading()
-      uni.showToast({
-        title: '支付成功'
-      })
-      resolve()
-    }
-
-    function fail(err) {
-      console.log('fail:' + JSON.stringify(err))
-      uni.hideLoading()
-      uni.showToast({
-        title: '支付失败',
-        icon: 'none'
-      })
-      reject()
-    }
   })
 }
