@@ -10,7 +10,8 @@
       </view>
       <view>
         <view class="product-price">
-          {{ $numberFormat($getValue(selectedDimension, '__metadata.price')) }}
+          <text>{{ dimensionPrice }}</text>
+          <text>{{ dimensionMarketPrice }}</text>
         </view>
         <view class="product-stock" v-if="stockHasLimit">
           库存{{ quantityInStock }}件
@@ -151,18 +152,28 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+@mixin symbol {
+  &::before {
+    content: '£';
+    padding-right: 4rpx;
+    font-size: 24rpx;
+  }
+}
 .product {
   padding: 24rpx;
   display: flex;
   &-price {
     padding-left: 40rpx;
-    color: $c-price;
-    font-size: 40rpx;
-    &::before {
-      content: '£';
-      padding-right: 4rpx;
-
-      font-size: 24rpx;
+    text:first-child {
+      color: $c-price;
+      font-size: 40rpx;
+      @include symbol;
+    }
+    text:last-child {
+      margin-left: 16rpx;
+      color: $c-gray;
+      text-decoration: line-through;
+      @include symbol;
     }
   }
   &-stock {

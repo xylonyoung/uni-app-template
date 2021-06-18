@@ -1,7 +1,7 @@
 import $api from '@/api'
 
 const state = {
-  cart: [],
+  cart: uni.getStorageSync('cart') || [],
   stockHasLimit: false,
   orderProducts: [],
   orderStatus: [
@@ -15,10 +15,21 @@ const state = {
     { label: '完成', value: '5' },
     { label: '售后中', value: '6' }
   ],
-  member: {}
+  member: {},
+  favorites: uni.getStorageSync('favorites') || []
 }
 
 const actions = {
+  addToFavorites({ state, commit }, productId) {
+    const result = [...state.favorites, productId]
+    commit('SET_FAVORITES', result)
+    uni.setStorageSync('favorites', result)
+  },
+  removeFromFavorites({ state, commit }, productId) {
+    const result = state.favorites.filter((e) => e !== productId)
+    commit('SET_FAVORITES', result)
+    uni.setStorageSync('favorites', result)
+  },
   async getCategory() {
     const params = {
       '@filter':

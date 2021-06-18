@@ -86,7 +86,21 @@
     {
       "path": "pages/coupon/coupon",
       "style": {
+        "navigationBarTitleText": "优惠券",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/me/coupon",
+      "style": {
         "navigationBarTitleText": "我的优惠券",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/me/favorites",
+      "style": {
+        "navigationBarTitleText": "收藏夹",
         "enablePullDownRefresh": false
       }
     },

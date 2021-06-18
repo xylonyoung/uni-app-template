@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import store from '@/store'
 import api from '@/api'
 import lodash from 'lodash'
 import { baseURL } from '@/settings'
@@ -31,8 +30,6 @@ import { getValue, getImage, numberFormat } from './index'
   }
 
   vueUse($api)
-
-  store.commit('common/SET_CART', uni.getStorageSync('cart') || [])
 })()
 
 /**

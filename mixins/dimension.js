@@ -9,6 +9,9 @@ export default {
     },
     dimensionPrice() {
       return this.$numberFormat(this.selectedDimension?.__metadata?.price)
+    },
+    dimensionMarketPrice() {
+      return this.$numberFormat(this.selectedDimension?.__metadata?.marketPrice)
     }
   },
   methods: {

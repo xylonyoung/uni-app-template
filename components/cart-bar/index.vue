@@ -1,22 +1,43 @@
 <template>
   <view class="cart-bar-container">
     <view class="left">
-      <navigator class="left-item" url="/pages/home/home" open-type="switchTab">
+      <!-- <navigator class="left-item" url="/pages/home/home" open-type="switchTab">
         <u-icon name="home" :size="40"></u-icon>
-        <view>店铺</view>
-      </navigator>
+        <view>首页</view>
+      </navigator> -->
+
+      <view
+        v-if="isFavor"
+        class="left-item"
+        @click="
+          () => {
+            $store.dispatch('common/removeFromFavorites', product.id)
+          }
+        "
+      >
+        <u-icon name="star-fill" :size="40" color="#ff7900"></u-icon>
+        <view>已收藏</view>
+      </view>
+
+      <view
+        v-else
+        class="left-item"
+        @click="
+          () => {
+            $store.dispatch('common/addToFavorites', product.id)
+          }
+        "
+      >
+        <u-icon name="star" :size="40"></u-icon>
+        <view>收藏</view>
+      </view>
 
       <navigator
         class="left-item left-cart"
         url="/pages/cart/cart"
         open-type="switchTab"
       >
-        <u-badge
-          class="left-cart-num"
-          :count="cartBadge"
-          type="error"
-          :offset="[-3, -6]"
-        ></u-badge>
+        <u-badge :count="cartBadge" type="error" :offset="[-4, 20]"></u-badge>
         <u-icon name="shopping-cart" :size="40"></u-icon>
         <view>购物车</view>
       </navigator>
@@ -39,27 +60,33 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  props: {
+    product: { type: Object, required: true }
+  },
   data() {
     return {
-      cartBadge: 0,
+      cartBadge: 0
     }
   },
   computed: {
-    ...mapGetters(['cart']),
+    ...mapGetters(['cart', 'favorites']),
+    isFavor() {
+      return this.favorites.some((e) => e === this.product.id)
+    }
   },
   watch: {
     cart: {
       handler(val) {
         this.cartBadge = val.length
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   methods: {
     userClick() {
       this.$emit('buy')
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -79,21 +106,15 @@ export default {
 }
 
 .left {
-  display: flex;
-  justify-content: space-between;
+  width: 50%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   &-item {
-    margin: 0 24rpx;
     font-size: 24rpx;
     text-align: center;
   }
   &-cart {
-    text-align: center;
     position: relative;
-    &-cart-num {
-      position: absolute;
-      top: -12rpx;
-      right: -12rpx;
-    }
   }
 }
 

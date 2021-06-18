@@ -1,9 +1,9 @@
 import $api from './request'
 
 export default async function wechatPay(id) {
-  const params = { gateway: 'MWEB' }
-  //#ifdef MP-WEIXIN
-  params.gateway = 'JSAPI'
+  const params = { gateway: 'JSAPI' }
+  //#ifndef MP-WEIXIN
+  params.gateway = 'MWEB'
   //#endif
 
   const { data } = await $api
@@ -43,7 +43,7 @@ export default async function wechatPay(id) {
     })
     //#endif
 
-    //#ifdef H5
+    //#ifndef MP-WEIXIN
     location.href = payment?.mweb_url
     //#endif
   })

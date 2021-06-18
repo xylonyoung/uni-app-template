@@ -1,5 +1,6 @@
 <template>
   <view>
-    <c-coupon type="get" />
+    <c-coupon />
   </view>
 </template>
+

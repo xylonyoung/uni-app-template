@@ -29,6 +29,8 @@
           <view>
             <text>销售价</text>
             <text>{{ dimensionPrice }}</text>
+            <text>市场价</text>
+            <text>{{ dimensionMarketPrice }}</text>
           </view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
@@ -68,7 +70,7 @@
         <u-parse :html="htmlFormat(product.description)"></u-parse>
       </view>
 
-      <c-cart-bar @buy="showCartSelector = true" />
+      <c-cart-bar :product="product" @buy="showCartSelector = true" />
 
       <c-cart-selector
         v-model="showCartSelector"
@@ -148,6 +150,17 @@ export default {
   onPageScroll(e) {
     this.scrollTop = e.scrollTop
   },
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      // 来自页面内分享按钮
+      console.log(res.target)
+    }
+    return {
+      title: this.product.name,
+      path: '/pages/product/product?id=' + this.product.id,
+      imageUrl: this.$getImage(this.product.cover)
+    }
+  },
   methods: {
     htmlFormat,
     cartSelectorChange(index) {
@@ -177,6 +190,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@mixin market-price {
+  color: $c-gray;
+  text-decoration: line-through;
+}
 .product-container {
   min-height: 100vh;
   background-color: $c-background;
@@ -191,9 +208,21 @@ export default {
     padding: 0 24rpx;
     color: $c-price;
     view {
-      text:last-child {
+      text:nth-child(2) {
         font-size: 60rpx;
         font-weight: bold;
+        &::before {
+          content: '£';
+          padding-right: 4rpx;
+          font-size: 24rpx;
+        }
+      }
+      text:nth-child(3) {
+        margin-left: 16rpx;
+        @include market-price;
+      }
+      text:last-child {
+        @include market-price;
         &::before {
           content: '£';
           padding-right: 4rpx;

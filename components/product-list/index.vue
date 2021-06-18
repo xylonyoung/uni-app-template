@@ -1,6 +1,6 @@
 <template>
   <view>
-    <u-empty v-if="empty" margin-top="32"></u-empty>
+    <u-empty v-if="empty" :mode="emptyMode"  margin-top="32"></u-empty>
     <view class="product">
       <view
         class="product-item"
@@ -37,7 +37,8 @@
 export default {
   props: {
     productList: { type: Array, required: true },
-    showEmpty: { type: Boolean, default: true }
+    showEmpty: { type: Boolean, default: true },
+    emptyMode: { type: String, default: 'data' }
   },
   computed: {
     empty() {

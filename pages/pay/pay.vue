@@ -88,7 +88,7 @@
 
     <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
-        <c-coupon @change="couponChange" v-model="couponList" />
+        <c-coupon @change="couponChange" v-model="couponList" usable />
       </scroll-view>
     </u-popup>
 
@@ -122,18 +122,25 @@ export default {
       return this.$numberFormat(totalPrice)
     },
     addressDetail() {
-      return (
-        this.address.provinceName +
-        this.address.cityName +
-        this.address.countyName +
-        this.address.detailInfo
-      )
+      if (!this.address?.region) return ''
+      const result = this.address.region.reduce((acc, cur) => {
+        return acc + ' ' + cur.label
+      }, '')
+      return result + ' ' + this.address.detailInfo
+      // return (
+      //   this.address.provinceName +
+      //   this.address.cityName +
+      //   this.address.countyName +
+      //   this.address.detailInfo
+      // )
     },
     items() {
+      const region = this.address.region.pop()?.id
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
         specification: e.dimensionId,
-        address: this.addressDetail
+        address: this.addressDetail,
+        region
       }))
     },
     aCoupon() {
