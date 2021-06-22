@@ -6,7 +6,7 @@
         class="coupon-image"
         v-for="(item, index) in couponList"
         :key="index"
-        @click="selectConfirm(item.id)"
+        @click="selectConfirm(item)"
       >
         <u-image mode="widthFix" :src="$getImage(item.image)"></u-image>
       </view>
@@ -20,7 +20,6 @@
 export default {
   props: {
     type: { type: String, default: 'use' },
-    value: { type: Array, default: () => [] },
     usable: { type: Boolean, default: false }
   },
   data() {
@@ -49,16 +48,16 @@ export default {
       this.$emit('input', result)
       if (result.length === 0) this.empty = true
     },
-    selectConfirm(id) {
+    selectConfirm(coupon) {
       if (this.type === 'get') {
-        this.$api.post('/api/user-coupons', { coupon: id }).then((res) => {
+        this.$api.post('/api/user-coupons', { coupon: coupon.id }).then((res) => {
           uni.showToast({
             title: '领取成功',
             duration: 2000
           })
         })
       } else {
-        this.$emit('change', id)
+        this.$emit('change', coupon?.coupon?.__metadata)
       }
     },
     notUse() {

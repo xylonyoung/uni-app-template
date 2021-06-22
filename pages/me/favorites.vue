@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="favorites-container">
     <c-product-list
       :product-list="productList"
       empty-mode="favor"
@@ -31,4 +31,8 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+.favorites-container {
+  background-color: $c-background;
+  height: min(100vh);
+}
 </style>

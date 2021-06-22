@@ -61,13 +61,13 @@
       <u-cell-group>
         <u-cell-item
           title="商品总价"
-          :value="`£ ${amount}`"
+          :value="`£ ${productsAmount}`"
           :arrow="false"
         ></u-cell-item>
         <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
         <u-cell-item
           title="优惠券"
-          :value="aCoupon"
+          :value="couponName"
           @click="showCoupon = true"
         ></u-cell-item>
       </u-cell-group>
@@ -88,7 +88,7 @@
 
     <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
-        <c-coupon @change="couponChange" v-model="couponList" usable />
+        <c-coupon @change="couponChange" usable />
       </scroll-view>
     </u-popup>
 
@@ -114,12 +114,18 @@ export default {
   },
   computed: {
     ...mapGetters(['orderProducts', 'user']),
-    amount() {
+    productsAmount() {
       const totalPrice = this.orderProducts.reduce((acc, cur) => {
         const item = this.findDimension(cur)
         return acc + item?.__metadata?.price * cur.quantity
       }, 0)
       return this.$numberFormat(totalPrice)
+    },
+    amount() {
+      let aCoupon = 0
+      if (this.coupon) aCoupon = this.coupon?.discount
+
+      return this.$numberFormat(this.productsAmount - aCoupon)
     },
     addressDetail() {
       if (!this.address?.region) return ''
@@ -134,7 +140,29 @@ export default {
       //   this.address.detailInfo
       // )
     },
-    items() {
+    couponName() {
+      if (!this.coupon) {
+        return '查看优惠劵'
+      }
+      return this.coupon?.name
+    }
+  },
+  onLoad() {
+    this.address = uni.getStorageSync('address')
+  },
+  methods: {
+    couponChange(coupon) {
+      if (Number(coupon.threshold) > this.amount) {
+        uni.showToast({
+          title: '未满足使用条件',
+          icon: false
+        })
+        return
+      }
+      this.coupon = coupon
+      this.showCoupon = false
+    },
+    getItems() {
       const region = this.address.region.pop()?.id
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
@@ -143,27 +171,9 @@ export default {
         region
       }))
     },
-    aCoupon() {
-      let result
-      if (this.coupon) {
-        result = this.couponList.find((e) => e.id === this.coupon)
-        return this.$getValue(result, 'coupon.__metadata.name')
-      }
-      result = this.couponList.length
-      return result === 0 ? '无可用' : result + '张'
-    }
-  },
-  onLoad() {
-    this.address = uni.getStorageSync('address')
-  },
-  methods: {
-    couponChange(id) {
-      this.coupon = id
-      this.showCoupon = false
-    },
     createOrder() {
       const data = {
-        items: this.items
+        items: this.getItems()
       }
       if (!this.addressDetail) {
         uni.showToast({
@@ -173,7 +183,7 @@ export default {
         return
       }
 
-      if (this.coupon) data.userCoupon = this.coupon
+      if (this.coupon) data.userCoupon = this.coupon.id
       if (this.comment) data.comment = this.comment
 
       this.$api.post(`/api/orders`, data).then((res) => {
