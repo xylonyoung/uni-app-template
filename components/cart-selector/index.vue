@@ -2,11 +2,7 @@
   <u-popup v-model="showPopup" mode="bottom" @close="onClose">
     <view class="product">
       <view class="product-cover">
-        <u-image
-          width="200rpx"
-          height="200rpx"
-          :src="$getImage(product.cover)"
-        ></u-image>
+        <u-image width="200rpx" height="200rpx" :src="dimensionCover"></u-image>
       </view>
       <view>
         <view class="product-price">
@@ -208,10 +204,10 @@ export default {
     padding: 24rpx;
   }
   &-cart {
-    background-color: #ed3f14;
+    background-image: linear-gradient(90deg, #fdcf00, #fd9b00);
   }
   &-buy {
-    background-color: #ff7900;
+    background-image: linear-gradient(90deg, #ff7310, #fe3f00);
   }
 }
 </style>

@@ -1,17 +1,31 @@
 <template>
   <view class="coupon-container">
-    <u-empty mode="coupon" v-if="empty"></u-empty>
-    <view>
-      <view
-        class="coupon-image"
-        v-for="(item, index) in couponList"
-        :key="index"
-        @click="selectConfirm(item)"
-      >
-        <u-image mode="widthFix" :src="$getImage(item.image)"></u-image>
+    <view class="coupon" :class="has ? 'has' : ''">
+      <view>
+        <view class="discount">
+          {{ $numberFormat(coupon.discount) }}
+        </view>
+        <view class="reduction">
+          满{{ $numberFormat(coupon.threshold) }}英镑可用
+        </view>
       </view>
-      <view class="not-use" v-if="usable">
-        <u-button @click="notUse">不使用优惠券</u-button>
+      <view class="receive" v-if="has">
+        已
+        <br />
+        经
+        <br />
+        领
+        <br />
+        取
+      </view>
+      <view class="receive" v-else>
+        立
+        <br />
+        即
+        <br />
+        领
+        <br />
+        取
       </view>
     </view>
   </view>
@@ -19,65 +33,92 @@
 <script>
 export default {
   props: {
-    type: { type: String, default: 'use' },
-    usable: { type: Boolean, default: false }
-  },
-  data() {
-    return { couponList: [], empty: false }
-  },
-  created() {
-    this.loadData()
-  },
-  methods: {
-    async loadData() {
-      let res
-      if (this.type === 'get') {
-        res = await this.$api.get('/api/coupons', {
-          '@filter': 'entity.getEnabled()'
-        })
-      } else {
-        res = await this.$api.get('/api/user-coupons', {
-          '@filter': 'entity.getIsUsed() == false'
-        })
-      }
-      const result = res.data.map((e) => {
-        if (e.image) return e
-        return { ...e, image: e.coupon?.__metadata?.image }
-      })
-      this.couponList = result
-      this.$emit('input', result)
-      if (result.length === 0) this.empty = true
-    },
-    selectConfirm(coupon) {
-      if (this.type === 'get') {
-        this.$api.post('/api/user-coupons', { coupon: coupon.id }).then((res) => {
-          uni.showToast({
-            title: '领取成功',
-            duration: 2000
-          })
-        })
-      } else {
-        this.$emit('change', coupon?.coupon?.__metadata)
-      }
-    },
-    notUse() {
-      this.$emit('change', null)
-    }
+    coupon: { type: Object, default: () => ({}) },
+    has: { type: Boolean, default: false }
   }
 }
 </script>
 <style lang='scss' scoped>
 .coupon-container {
-  width: 100%;
-  padding: 32rpx 15%;
-  .coupon-image {
-    width: 100%;
+  .has {
+    background: radial-gradient(circle at right top, transparent 12rpx, #eee 0)
+        top left / 260rpx 51% no-repeat,
+      radial-gradient(circle at right bottom, transparent 12rpx, #eee 0) bottom
+        left / 260rpx 51% no-repeat,
+      radial-gradient(circle at left top, transparent 12rpx, #eee 0) top right /
+        60rpx 51% no-repeat,
+      radial-gradient(circle at left bottom, transparent 12rpx, #eee 0) bottom
+        right / 60rpx 51% no-repeat;
+    color: $c-font;
   }
-  .coupon-image + .coupon-image {
-    padding-top: 32rpx;
+}
+
+.coupon {
+  width: 320rpx;
+  height: 160rpx;
+  position: relative;
+  background: radial-gradient(circle at right top, transparent 12rpx, #ff6900 0)
+      top left / 260rpx 51% no-repeat,
+    radial-gradient(circle at right bottom, transparent 12rpx, #ff6900 0) bottom
+      left / 260rpx 51% no-repeat,
+    radial-gradient(circle at left top, transparent 12rpx, #eee 0) top right /
+      60rpx 51% no-repeat,
+    radial-gradient(circle at left bottom, transparent 12rpx, #eee 0) bottom
+      right / 60rpx 51% no-repeat;
+  filter: drop-shadow(4rpx 4rpx 4rpx rgba(0, 0, 0, 0.3));
+  color: #fff;
+
+  &::before {
+    content: '';
+    height: 100rpx;
+    border: 4rpx dashed #fff;
+    position: absolute;
+    left: 258rpx;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
-  .not-use {
-    margin: 24rpx;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 5rpx;
+    height: 100%;
+    top: 0;
+    right: -5rpx;
+    background-image: linear-gradient(
+        to bottom,
+        #eee 5rpx,
+        transparent 5rpx,
+        transparent
+      ),
+      radial-gradient(10rpx circle at 5rpx 10rpx, transparent 5rpx, #eee 5rpx);
+    background-size: 5rpx 15rpx;
+  }
+
+  .discount,
+  .reduction {
+    width: 260rpx;
+    display: flex;
+    justify-content: center;
+  }
+
+  .discount {
+    height: 100rpx;
+    padding-top: 16rpx;
+    font-size: 60rpx;
+    &::before {
+      content: '£';
+      padding: 36rpx 4rpx 0;
+      font-size: 24rpx;
+    }
+  }
+
+  .receive {
+    position: absolute;
+    top: 0;
+    right: 10rpx;
+    color: #000;
   }
 }
 </style>

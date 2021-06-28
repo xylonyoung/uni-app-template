@@ -132,10 +132,10 @@ export default {
     padding: 24rpx 0;
   }
   &-cart {
-    background-color: #ed3f14;
+    background-image: linear-gradient(90deg, #fdcf00, #fd9b00);
   }
   &-buy {
-    background-color: #ff7900;
+    background-image: linear-gradient(90deg, #ff7310, #fe3f00);
   }
 }
 </style>

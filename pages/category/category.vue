@@ -7,15 +7,13 @@
         class="u-tab-view menu-scroll-view"
         :scroll-top="scrollTop"
         :scroll-into-view="itemId"
-        enhanced
-        :show-scrollbar="false"
       >
         <view
           v-for="(item, index) in tabbar"
           :key="index"
           class="u-tab-item"
           :class="[current == index ? 'u-tab-item-active' : '']"
-          @tap.stop="swichMenu(index)"
+          @tap.stop="switchMenu(index)"
         >
           <text class="u-line-1">{{ item.name }}</text>
         </view>
@@ -72,12 +70,13 @@ export default {
       menuItemPos: [],
       arr: [],
       scrollRightTop: 0, // 右边栏目scroll-view的滚动条高度
-      timer: null // 定时器
+      timer: null, // 定时器
+      tabTap: false
     }
   },
   onLoad() {
     this.$store.dispatch('common/getCategory').then((res) => {
-      this.tabbar = res.data
+      this.tabbar = res.data.filter((e) => !e.parent)
     })
   },
   onShow() {
@@ -93,13 +92,14 @@ export default {
       })
     },
     // 点击左边的栏目切换
-    async swichMenu(index) {
+    async switchMenu(index) {
       if (this.arr.length == 0) {
         await this.getMenuItemTop()
       }
       if (index == this.current) return
       this.scrollRightTop = this.oldScrollTop
       this.$nextTick(function () {
+        this.tabTap = true
         this.scrollRightTop = this.arr[index]
         this.current = index
         this.leftMenuStatus(index)
@@ -187,17 +187,30 @@ export default {
     },
     // 右边菜单滚动
     async rightScroll(e) {
+      if (this.tabTap) {
+        this.tabTap = false
+        return
+      }
+
+      if (this.timer) return
+
       this.oldScrollTop = e.detail.scrollTop
       if (this.arr.length == 0) {
         await this.getMenuItemTop()
       }
-      if (this.timer) return
+
       if (!this.menuHeight) {
         await this.getElRect('menu-scroll-view', 'menuHeight')
       }
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         // 节流
         this.timer = null
+
+        if (e.detail.scrollTop < 10) {
+          this.leftMenuStatus(0)
+          return
+        }
+
         // scrollHeight为右边菜单垂直中点位置
         let scrollHeight = e.detail.scrollTop + this.menuHeight / 2
         for (let i = 0; i < this.arr.length; i++) {
@@ -216,11 +229,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  color: transparent;
-}
 .u-wrap {
   height: calc(100vh);
   /* #ifdef H5 */

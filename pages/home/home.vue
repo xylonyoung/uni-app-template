@@ -1,6 +1,13 @@
 <template>
   <view class="home-container">
-    <u-swiper :list="swiperList" height="375"></u-swiper>
+    <u-swiper :list="swiperList" height="375" @click="swiperClick"></u-swiper>
+
+    <view class="search-wrapper">
+      <view class="search" @click="navTo('product/list')">
+        <u-icon name="search"></u-icon>
+        搜索
+      </view>
+    </view>
 
     <u-grid :col="4">
       <u-grid-item
@@ -18,7 +25,13 @@
     </u-grid>
 
     <view class="coupon">
-      <view class="coupon-title">优惠券</view>
+      <view class="coupon-title">
+        <view>优惠券</view>
+        <view @click="navTo('coupon/coupon')">
+          <text>全部优惠券</text>
+          <u-icon name="arrow-right"></u-icon>
+        </view>
+      </view>
       <scroll-view scroll-x class="coupon-scroll">
         <u-empty mode="coupon" v-if="couponList.length === 0"></u-empty>
         <template v-else>
@@ -28,25 +41,20 @@
             :key="index"
             @click="getCoupon(item.id)"
           >
-            <u-image
-              class="coupon-scroll-box-image"
-              width="320"
-              height="160"
-              mode="aspectFit"
-              :src="$getImage(item.image)"
-            ></u-image>
-            <view class="coupon-scroll-box-get">立即领取</view>
+            <c-coupon :coupon="item" />
           </view>
         </template>
       </scroll-view>
     </view>
 
-    <c-product-list :product-list="productList" />
+    <product-list :product-list="productList" />
   </view>
 </template>
 
 <script>
+import { ProductList } from './product-list.vue'
 export default {
+  components: { ProductList },
   data() {
     return {
       swiperList: [],
@@ -63,6 +71,17 @@ export default {
     this.$store.dispatch('common/setBadge')
   },
   methods: {
+    swiperClick(index) {
+      // const link = this.swiperList[index].link
+      // uni.navigateTo({
+      //   url: link
+      // })
+    },
+    navTo(path) {
+      uni.navigateTo({
+        url: `/pages/${path}`
+      })
+    },
     getCoupon(id) {
       this.$api.post('/api/user-coupons', { coupon: id }).then((res) => {
         uni.showToast({
@@ -90,9 +109,10 @@ export default {
     },
     getData() {
       this.$api.get('/api/album/by-title/home-swiper').then((res) => {
-        this.swiperList = res.data?.pictures.map((e) =>
-          this.$getImage(e.__toString)
-        )
+        this.swiperList = res.data?.pictures.map((e) => ({
+          image: this.$getImage(e.__toString),
+          link: e.__metadata.link
+        }))
       })
 
       this.$api
@@ -105,9 +125,11 @@ export default {
         this.categoryList = res.data.slice(0, 7)
       })
 
-      this.$api.get('/api/products').then((res) => {
-        this.productList = res.data
-      })
+      this.$api
+        .get('/api/products', { '@filter': 'entity.getIsHomeDisplay()' })
+        .then((res) => {
+          this.productList = res.data
+        })
     }
   }
 }
@@ -118,34 +140,39 @@ export default {
   background-color: $c-background;
 }
 
+.search-wrapper {
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  .search {
+    width: 90vw;
+    padding: 16rpx;
+    top: 40rpx;
+    left: 10vw;
+    background-color: #ddd;
+    border-radius: 8rpx;
+  }
+}
+
 .coupon {
   margin-top: 24rpx;
   padding: 24rpx;
   background-color: #fff;
   &-title {
-    font-size: 40rpx;
-    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $c-gray;
   }
   &-scroll {
     height: 164rpx;
     margin-top: 24rpx;
-    display: flex;
+    white-space: nowrap;
     &-box + &-box {
       margin-left: 24rpx;
     }
     &-box {
-      display: flex;
-      &-image {
-        border: 1px solid $c-gray;
-        border-right: none;
-      }
-      &-get {
-        width: 48rpx;
-        padding: 0 8 rpx;
-        color: $c-gray;
-        text-align: center;
-        border: 1px dashed $c-gray;
-      }
+      display: inline-block;
     }
   }
 }
