@@ -3,6 +3,7 @@ import api from '@/api'
 import lodash from 'lodash'
 import { baseURL } from '@/settings'
 import { getValue, getImage, numberFormat } from './index'
+
 ;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
   let $api
@@ -24,7 +25,7 @@ import { getValue, getImage, numberFormat } from './index'
 
   // debug console hint
   try {
-    console?.log && console.log('%c' + consoleStr, 'font-size:50px;')
+    console?.log('%c' + consoleStr, 'font-size:50px;')
   } catch (e) {
     console.log(e)
   }

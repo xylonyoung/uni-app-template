@@ -16,7 +16,9 @@
     >
       <slot :list="list" />
 
-      <view v-if="empty" style="height: 300rpx"><u-empty /></view>
+      <view v-if="empty" style="height: 300rpx">
+        <u-empty :mode="emptyMode" />
+      </view>
 
       <u-loadmore v-else :status="status" style="padding: 20rpx" />
     </scroll-view>
@@ -38,7 +40,8 @@ export default {
     },
     reload: { type: Boolean, default: false },
     autoLoad: { type: Boolean, default: true },
-    height: { type: String, default: () => `100vh` }
+    height: { type: String, default: () => `100vh` },
+    emptyMode: { type: String, default: 'data' }
   },
   data() {
     return {

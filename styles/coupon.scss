@@ -1,0 +1,62 @@
+.coupon-wrapper {
+  width: 100%;
+  padding: 24rpx;
+  .disable {
+    color: $c-font;
+    .coupon-top {
+      background: $c-background;
+    }
+  }
+}
+
+.coupon + .coupon {
+  margin-top: 24rpx;
+}
+
+.coupon {
+  width: 100%;
+  height: 320rpx;
+  background-color: #eee;
+  color: #fff;
+  border-radius: 8rpx;
+  overflow: hidden;
+  filter: drop-shadow(4rpx 4rpx 4rpx rgba(0, 0, 0, 0.3));
+  &-top {
+    position: relative;
+    width: 100%;
+    height: 200rpx;
+    padding: 24rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, #ffaa00, #ff6900);
+    &-detail {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .discount {
+        padding: 0 24rpx;
+        font-size: 60rpx;
+        &::before {
+          content: '£';
+          padding: 36rpx 4rpx 0;
+          font-size: 24rpx;
+        }
+      }
+    }
+    &::after {
+      content: '';
+      width: 100%;
+      height: 0;
+      position: absolute;
+      border-bottom: 12rpx dotted #eee;
+      bottom: -6rpx;
+      left: 0;
+    }
+  }
+
+  &-bottom {
+    padding: 24px;
+    color: $c-font;
+  }
+}

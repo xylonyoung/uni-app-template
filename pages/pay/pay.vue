@@ -88,7 +88,7 @@
 
     <u-popup v-model="showCoupon" mode="bottom" closeable>
       <scroll-view scroll-y style="height: 70vh">
-        <c-coupon @change="couponChange" usable />
+        <coupon @change="couponChange" />
       </scroll-view>
     </u-popup>
 
@@ -100,8 +100,10 @@
 import { mapGetters } from 'vuex'
 import wechatPay from '@/utils/wechat-pay'
 import dimension from '@/mixins/dimension'
+import Coupon from './coupon.vue'
 export default {
   mixins: [dimension],
+  components: { Coupon },
   data() {
     return {
       address: null,
@@ -152,13 +154,14 @@ export default {
   },
   methods: {
     couponChange(coupon) {
-      if (Number(coupon.threshold) > this.amount) {
+      if (Number(coupon?.threshold) > this.amount) {
         uni.showToast({
           title: '未满足使用条件',
           icon: false
         })
         return
       }
+
       this.coupon = coupon
       this.showCoupon = false
     },

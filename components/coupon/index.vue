@@ -1,6 +1,6 @@
 <template>
   <view class="coupon-container">
-    <view class="coupon" :class="has ? 'has' : ''">
+    <view class="coupon" :class="disable ? 'disable' : ''">
       <view>
         <view class="discount">
           {{ $numberFormat(coupon.discount) }}
@@ -9,7 +9,7 @@
           满{{ $numberFormat(coupon.threshold) }}英镑可用
         </view>
       </view>
-      <view class="receive" v-if="has">
+      <view class="receive" v-if="disable">
         已
         <br />
         经
@@ -34,13 +34,13 @@
 export default {
   props: {
     coupon: { type: Object, default: () => ({}) },
-    has: { type: Boolean, default: false }
+    disable: { type: Boolean, default: false }
   }
 }
 </script>
 <style lang='scss' scoped>
 .coupon-container {
-  .has {
+  .disable {
     background: radial-gradient(circle at right top, transparent 12rpx, #eee 0)
         top left / 260rpx 51% no-repeat,
       radial-gradient(circle at right bottom, transparent 12rpx, #eee 0) bottom
