@@ -166,26 +166,26 @@ export default {
       this.showCoupon = false
     },
     getItems() {
-      const region = this.address.region.pop()?.id
+      const region = this.address.region
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
         specification: e.dimensionId,
         address: this.addressDetail,
-        region
+        region: region[region.length - 1].value
       }))
     },
     createOrder() {
-      const data = {
-        items: this.getItems()
-      }
-      if (!this.addressDetail) {
+      if (!this.address) {
         uni.showToast({
-          title: '请选择地址',
+          title: '请选择收货地址',
           icon: 'none'
         })
         return
       }
 
+      const data = {
+        items: this.getItems()
+      }
       if (this.coupon) data.userCoupon = this.coupon.id
       if (this.comment) data.comment = this.comment
 
