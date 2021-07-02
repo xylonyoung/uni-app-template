@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import api from '@/api'
-import lodash from 'lodash'
 import { baseURL } from '@/settings'
 import { getValue, getImage, numberFormat } from './index'
 
@@ -43,7 +42,6 @@ function vueUse($api) {
       Vue.prototype.$getValue = getValue
       Vue.prototype.$getImage = getImage
       Vue.prototype.$numberFormat = numberFormat
-      Vue.prototype._ = lodash
     }
   })
 }

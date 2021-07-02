@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
-import { snakeCase } from 'lodash'
 
 Vue.use(Vuex)
 
@@ -14,28 +13,43 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   // set './app.js' => 'app'
   const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
   const value = modulesFiles(modulePath)
-  modules[moduleName] = createMutations(value.default)
+  modules[moduleName] = autoCreateMutations(value.default)
   return modules
 }, {})
-
-/**
- * auto create mutation base on state
- * @example state.name --> SET_NAME(state, val){state[name] = val}
- * @returns {Object}
- */
-function createMutations(storeData) {
-  // https://next.vuex.vuejs.org/guide/modules.html#namespacing
-  const { state } = storeData
-  const mutations = Object.keys(state).reduce((mutations, current) => {
-    mutations[`SET_${snakeCase(current).toUpperCase()}`] = function(state, data) {
-      state[current] = data
-    }
-    return mutations
-  }, {})
-  return { mutations, namespaced: true, ...storeData }
-}
 
 export default new Vuex.Store({
   modules,
   getters
 })
+
+/**
+ * auto create mutation base on state and set default namespaced:true.
+ * https://vuex.vuejs.org/guide/modules.html#namespacing
+ * https://vuex.vuejs.org/guide/mutations.html
+ * @example state.name --> SET_NAME(state, val){state[name] = val}
+ * @returns {Object}
+ */
+function autoCreateMutations(storeData) {
+  const { state } = storeData
+  const mutations = Object.keys(state).reduce((aMutation, current) => {
+    aMutation[`SET_${snakeCase(current).toUpperCase()}`] = function (
+      state,
+      data
+    ) {
+      state[current] = data
+    }
+    return aMutation
+  }, {})
+
+  return {
+    namespaced: true,
+    ...storeData,
+    mutations: { ...mutations, ...storeData?.mutations }
+  }
+}
+
+function snakeCase(param) {
+  return param.replace(/[A-Z]/g, (match) => {
+    return '_' + match.toLowerCase()
+  })
+}
