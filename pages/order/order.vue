@@ -15,13 +15,14 @@
           :list.sync="tab.list"
           :list-api="tab.listApi"
           :list-query.sync="tab.listQuery"
-          :auto="curIndex === tabIndex"
+          :auto-load="curIndex === tabIndex"
           :height="height"
         >
           <view
             class="order"
             v-for="(order, orderIndex) in tab.list"
             :key="orderIndex"
+            @click="navTo(order.id)"
           >
             <view class="order-top">
               <text>
@@ -32,7 +33,6 @@
               class="product-row"
               v-for="(item, index) in order.items"
               :key="index"
-              @click="navTo(item)"
             >
               <u-image
                 width="200rpx"
@@ -80,11 +80,6 @@
               </view>
             </view>
 
-            <view class="order-comment">
-              备注：
-              <text>{{ order.comment ? order.comment : '' }}</text>
-            </view>
-
             <view class="order-bottom">
               <view class="order-bottom-date">
                 {{ order.createdTime | date('yyyy-mm-dd hh:MM') }}
@@ -96,29 +91,6 @@
                 </text>
               </view>
             </view>
-
-            <view class="bottom-btn" v-if="order.status === '1'">
-              <u-button
-                type="info"
-                size="mini"
-                plain
-                @click="toCancel(order.id, orderIndex)"
-              >
-                取消订单
-              </u-button>
-              <u-button
-                type="error"
-                size="mini"
-                plain
-                @click="toPay(order.invoice.id)"
-              >
-                立即付款
-              </u-button>
-            </view>
-            <!--   TODO
-            <view class="bottom-btn" v-if="order.status > 3">
-              <u-button type="info" size="mini" plain>申请售后</u-button>
-            </view> -->
           </view>
         </c-load-list>
       </swiper-item>
@@ -126,9 +98,9 @@
   </view>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import wechatPay from '@/utils/wechat-pay'
+import orderMixin from '@/mixins/order'
 export default {
+  mixins: [orderMixin],
   data() {
     return {
       tabList: [],
@@ -137,9 +109,6 @@ export default {
       scrollTop: 0,
       height: 'calc(100vh - 80rpx)'
     }
-  },
-  computed: {
-    ...mapGetters(['orderStatus'])
   },
   onLoad(option) {
     this.setTabList()
@@ -182,27 +151,11 @@ export default {
         ...e
       }))
     },
-    toCancel(id, orderIndex) {
-      this.$api
-        .post(`/api/orders/${id}/cancel-and-refund`, { gateway: 'balance' })
-        .then(() => {
-          this.tabList[this.tabIndex].list.splice(orderIndex, 1)
-          uni.showToast({
-            title: '订单取消成功~'
-          })
-        })
-    },
-    toPay(id) {
-      wechatPay(id)
-    },
     findTabIndex(status) {
       const result = this.tabList.findIndex((e) => e.status === status)
       this.tabIndex = result !== -1 ? result : 0
     },
-    getOrderStatus(status) {
-      const result = this.orderStatus.find((e) => e.value === status)
-      return result ? result.label : '未知状态'
-    },
+
     tabsChange(index) {
       if (index === this.currentIndex) return
       this.tabIndex = index
@@ -210,10 +163,9 @@ export default {
     swiperChange(e) {
       this.tabIndex = e.detail.current
     },
-    navTo(item) {
-      const id = item.id
+    navTo(id) {
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`
+        url: `/pages/order/detail?id=${id}`
       })
     }
   }
@@ -221,64 +173,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '@/styles/product';
+@import '@/styles/order';
 .order-container {
   background-color: $c-background;
-}
-
-.order {
-  margin-bottom: 24rpx;
-  padding: 24rpx 0;
-  background-color: #fff;
-  &-top,
-  &-bottom {
-    padding: 0 24rpx;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-  &-top {
-    margin-bottom: 24rpx;
-    padding-bottom: 12rpx;
-    border-bottom: 1px solid $c-border;
-  }
-  &-bottom {
-    margin-top: 24rpx;
-    padding-top: 12rpx;
-    font-size: 24rpx;
-    border-top: 1px solid $c-border;
-    &-date {
-      color: $c-gray;
-    }
-    &-price {
-      color: $c-price;
-      text:last-child {
-        font-size: 40rpx;
-        font-weight: bold;
-      }
-    }
-  }
-  &-comment {
-    padding: 24rpx;
-    text {
-      color: $c-gray;
-    }
-  }
-}
-
-.product-row {
-  padding: 0 24rpx;
-}
-
-.product-row + .product-row {
-  margin-top: 24rpx;
-}
-
-.bottom-btn {
-  margin: 24rpx 24rpx 0 0;
-  display: flex;
-  justify-content: flex-end;
-  u-button + u-button {
-    margin-left: 20rpx;
-  }
 }
 </style>

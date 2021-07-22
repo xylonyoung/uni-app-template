@@ -1,6 +1,6 @@
 .product {
   width: 100%;
-  padding: 24rpx;
+  padding: 24rpx 24rpx 0 24rpx;
   display: grid;
   grid-template-columns: 1fr 1fr;
   place-items: center;
@@ -13,21 +13,21 @@
     overflow: hidden;
     background-color: #fff;
     &-name {
-      padding: 16rpx;
+      padding: 8rpx 16rpx;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
     &-bottom {
       width: 100%;
-      padding: 0 16rpx 16rpx;
+      padding: 0 16rpx 8rpx;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: flex-end;
       &-price {
         color: $c-price;
-        font-size: 40rpx;
+        font-size: 32rpx;
         line-height: 30rpx;
         &::before {
           content: '£';

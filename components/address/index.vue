@@ -1,97 +1,97 @@
 <template>
-  <u-popup
-    v-model="showPopup"
-    mode="bottom"
-    closeable
-    height="70%"
-    @close="onClose"
-  >
-    <view style="padding: 32rpx">
-      <u-form :model="formData" ref="uForm" label-width="160">
-        <u-form-item label="收件人" prop="userName">
-          <u-input v-model="formData.userName" />
-        </u-form-item>
-        <u-form-item label="电话" prop="telNumber">
-          <u-input v-model="formData.telNumber" />
-        </u-form-item>
-        <u-form-item label="省份" prop="provinceName">
-          <u-input
-            type="select"
-            v-model="formData.provinceName"
-            placeholder="请选择省份"
-            @click="toShowRegionSelect('province')"
-          ></u-input>
-        </u-form-item>
-        <u-form-item label="城市" prop="cityName">
-          <u-input
-            type="select"
-            v-model="formData.cityName"
-            placeholder="请选择城市"
-            @click="toShowRegionSelect('city')"
-          ></u-input>
-        </u-form-item>
-        <u-form-item label="地区" prop="countyName">
-          <u-input
-            type="select"
-            v-model="formData.countyName"
-            placeholder="请选择地区"
-            @click="toShowRegionSelect('county')"
-          ></u-input>
-        </u-form-item>
-        <u-form-item label="详细地址" prop="detailInfo">
-          <u-input
-            v-model="formData.detailInfo"
-            type="textarea"
-            placeholder=" "
-          />
-        </u-form-item>
-      </u-form>
+  <view>
+    <view class="address">
+      <u-cell-item
+        :value="choose ? '选择地址' : ''"
+        :arrow="choose ? true : false"
+        @click="chooseAddress"
+      >
+        <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
+        <view slot="title">
+          <template v-if="value.telNumber">
+            <view class="address-user">
+              <text>{{ value.userName }}</text>
+              <text>{{ value.telNumber }}</text>
+            </view>
+            <view class="address-detail">
+              {{ addressDetail }}
+            </view>
+          </template>
+          <view v-else>暂未设置收货地址</view>
+        </view>
+      </u-cell-item>
+    </view>
 
-      <view style="padding-top: 32rpx">
-        <u-checkbox v-model="setDefault"></u-checkbox>
-        <text>设置为默认地址</text>
+    <u-popup
+      v-model="showPopup"
+      mode="bottom"
+      closeable
+      height="70%"
+      @close="onClose"
+    >
+      <view style="padding: 32rpx">
+        <u-form :model="formData" ref="uForm" label-width="160">
+          <u-form-item label="收件人" prop="userName">
+            <u-input v-model="formData.userName" />
+          </u-form-item>
+          <u-form-item label="电话" prop="telNumber">
+            <u-input v-model="formData.telNumber" />
+          </u-form-item>
+          <u-form-item label="地区" prop="region">
+            <u-input
+              type="select"
+              v-model="regionName"
+              placeholder="请选择地区"
+              @click="showRegionSelect = true"
+            ></u-input>
+          </u-form-item>
+          <u-form-item label="详细地址" prop="detailInfo">
+            <u-input
+              v-model="formData.detailInfo"
+              type="textarea"
+              placeholder=" "
+            />
+          </u-form-item>
+        </u-form>
+
+        <view style="padding-top: 32rpx">
+          <u-checkbox v-model="setDefault"></u-checkbox>
+          <text>设置为默认地址</text>
+        </view>
       </view>
-    </view>
 
-    <view style="padding: 0 20%">
-      <u-button @click="onSubmit" type="success">确定</u-button>
-    </view>
+      <view style="padding: 0 20%">
+        <u-button @click="onSubmit" type="success">确定</u-button>
+      </view>
 
-    <u-select
-      v-if="showRegionSelect"
-      v-model="showRegionSelect"
-      :list="regionList[regionType]"
-      value-name="id"
-      label-name="name"
-      @confirm="regionConfirm"
-    ></u-select>
-  </u-popup>
+      <u-select
+        v-model="showRegionSelect"
+        mode="mutil-column-auto"
+        :list="selectList"
+        value-name="id"
+        label-name="__toString"
+        @confirm="regionConfirm"
+      ></u-select>
+    </u-popup>
+  </view>
 </template>
 <script>
 export default {
   props: {
-    value: { type: Boolean, required: true }
+    value: { type: Object, required: true },
+    choose: { type: Boolean, default: false }
   },
   data() {
     return {
       showPopup: false,
       showRegionSelect: false,
-      regionList: {
-        province: [],
-        city: [],
-        county: []
-      },
-      regionType: '',
+      regionList: [],
+      selectList: [],
       setDefault: false,
       formData: {
         userName: '',
-        telNumber: '',
-        province: null,
-        provinceName: '',
-        city: null,
-        cityName: '',
-        county: null,
-        countyName: '',
+        telNumber: null,
+        region: null,
         detailInfo: ''
       },
       rules: {
@@ -105,34 +105,27 @@ export default {
         telNumber: [
           {
             required: true,
-            message: '请输入手机号',
-            trigger: ['change', 'blur']
-          },
-          {
-            validator: (rule, value, callback) => {
-              return this.$u.test.mobile(value)
-            },
+            type: 'number',
             message: '手机号码不正确',
             trigger: ['change', 'blur']
           }
+          // {
+          //   required: true,
+          //   message: '请输入手机号',
+          //   trigger: ['change', 'blur']
+          // },
+          // {
+          //   validator: (rule, value, callback) => {
+          //     return this.$u.test.mobile(value)
+          //   },
+          //   message: '手机号码不正确',
+          //   trigger: ['change', 'blur']
+          // }
         ],
-        provinceName: [
+        region: [
           {
             required: true,
-            message: '请选择省份',
-            trigger: ['change', 'blur']
-          }
-        ],
-        cityName: [
-          {
-            required: true,
-            message: '请选择城市',
-            trigger: ['change', 'blur']
-          }
-        ],
-        countyName: [
-          {
-            required: true,
+            type: 'object',
             message: '请选择地区',
             trigger: ['change', 'blur']
           }
@@ -145,92 +138,125 @@ export default {
           }
         ]
       },
-      selectList: []
+      regionName: ''
     }
   },
   watch: {
-    value: {
-      handler(val) {
-        this.showPopup = val
-      },
-      immediate: true
+    'formData.region'(val) {
+      this.regionName = this.mergeAddressName(val?.id)
     }
   },
-  onReady() {
+  computed: {
+    addressDetail() {
+      const regionId = this.value?.region?.id ?? this.value?.region
+      return this.mergeAddressName(regionId) + ' ' + this.value?.detailInfo
+
+      // return (
+      //   this.value.provinceName +
+      //   this.value.cityName +
+      //   this.value.countyName +
+      //   this.value.detailInfo
+      // )
+    }
+  },
+  created() {
     this.getRegion()
+  },
+  onReady() {
     this.$refs.uForm.setRules(this.rules)
   },
   methods: {
-    toShowRegionSelect(type) {
-      this.selectList = this.getSelectList(type)
-      this.regionType = type
-      this.$nextTick(() => {
-        this.showRegionSelect = true
-      })
-    },
-    getSelectList(type) {
-      switch (type) {
-        case 'province':
-          return this.regionList.province
-        case 'city':
-          return this.regionList.city
-        case 'county':
-          return this.regionList.county
-        default:
-          return []
-      }
-    },
-    getRegion(id) {
-      const params = { '@filter': 'entity.getParent() == null' }
-      if (id) {
-        params['@filter'] = 'entity.getParent().getId() == ' + id
-      }
-      this.$api.get('api/regions', params).then((res) => {
-        switch (this.regionType) {
-          case 'province':
-            this.regionList.city = res.data
-            break
-          case 'city':
-            this.regionList.county = res.data
-            break
-          default:
-            this.regionList.province = res.data
-            break
+    mergeAddressName(regionId) {
+      const getAddressName = (id) => {
+        const anAddress = this.regionList.find((e) => e.id === id)
+        if (anAddress) {
+          result.unshift(anAddress.name)
         }
-      })
+        const parentId = anAddress?.parent?.id
+        if (parentId) {
+          getAddressName(parentId)
+        }
+      }
+
+      const result = []
+      getAddressName(regionId)
+
+      return result.join(' ')
     },
     onSubmit() {
       this.$refs.uForm.validate((valid) => {
         if (valid) {
           if (this.setDefault) uni.setStorageSync('address', this.formData)
-          this.$emit('confirm', this.formData)
+          this.$emit('input', this.formData)
           this.onClose()
         } else {
           console.log('验证失败')
         }
       })
     },
-    regionConfirm(e) {
-      switch (this.regionType) {
-        case 'province':
-          this.formData.city = null
-          this.formData.cityName = ''
-        case 'city':
-          this.formData.county = null
-          this.formData.countyName = ''
-          this.getRegion(e[0].value)
-          break
-        default:
-          break
+    async getRegion() {
+      const list = await this.$store.dispatch('region/getRegionList')
+      this.regionList = list
+      this.selectList = this.regionFormat(list)
+      const address = uni.getStorageSync('address')
+      if (address) {
+        this.$emit('input', address)
       }
-      this.formData[this.regionType] = e[0]?.value
-      this.formData[this.regionType + 'Name'] = e[0]?.label
+    },
+    regionFormat(data) {
+      const result = data.filter((e) => e.parent === null)
+      return result.map((e) => {
+        return { ...e, children: [...findChild(e)] }
+      })
+      function findChild(item) {
+        if (!item.children) return
+        return item.children.map((e) => {
+          if (e.children) {
+            return findChild(e)
+          } else {
+            return data.find((i) => e.id === i.id)
+          }
+        })
+      }
+    },
+    regionConfirm(region) {
+      const id = region.pop().value
+      this.formData.region = this.regionList.find((e) => e.id === id)
     },
     onClose() {
-      this.$emit('input', false)
+      this.showPopup = false
+    },
+    chooseAddress() {
+      if (!this.choose) return
+
+      this.showPopup = true
+      // uni.chooseAddress({
+      //   success: (res) => {
+      //     uni.setStorageSync('address', res)
+      //     this.address = res
+      //   }
+      // })
     }
   }
 }
 </script>
 <style lang='scss' scoped>
+.address {
+  margin-bottom: 32rpx;
+  background-color: #fff;
+  border-image: url('@/static/pay-stripe.png') 0 0 12 0 / 12rpx repeat;
+  border-style: solid;
+  &-user {
+    margin-left: 12rpx;
+    text:last-child {
+      margin-left: 12rpx;
+      color: $c-gray;
+      font-size: 24rpx;
+    }
+  }
+  &-detail {
+    margin-left: 12rpx;
+    font-size: 24rpx;
+  }
+}
 </style>

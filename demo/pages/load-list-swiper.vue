@@ -27,7 +27,7 @@
           :list.sync="tab.list"
           :list-api="tab.listApi"
           :list-query.sync="tab.listQuery"
-          :auto="curIndex === tabIndex"
+          :auto-load="curIndex === tabIndex"
           :height="height"
         >
           <view v-for="(item, index) in tab.list" :key="index" class="person">

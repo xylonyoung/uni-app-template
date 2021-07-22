@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
+import { snakeCase } from 'lodash'
 
 Vue.use(Vuex)
 
@@ -16,11 +17,6 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   modules[moduleName] = autoCreateMutations(value.default)
   return modules
 }, {})
-
-export default new Vuex.Store({
-  modules,
-  getters
-})
 
 /**
  * auto create mutation base on state and set default namespaced:true.
@@ -48,8 +44,7 @@ function autoCreateMutations(storeData) {
   }
 }
 
-function snakeCase(param) {
-  return param.replace(/[A-Z]/g, (match) => {
-    return '_' + match.toLowerCase()
-  })
-}
+export default new Vuex.Store({
+  modules,
+  getters
+})

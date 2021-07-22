@@ -187,17 +187,18 @@ export default {
     },
     // 右边菜单滚动
     async rightScroll(e) {
+      // tabTap just return
       if (this.tabTap) {
         this.tabTap = false
         return
       }
 
-      if (this.timer) return
-
       this.oldScrollTop = e.detail.scrollTop
       if (this.arr.length == 0) {
         await this.getMenuItemTop()
       }
+
+      if (this.timer) return
 
       if (!this.menuHeight) {
         await this.getElRect('menu-scroll-view', 'menuHeight')
@@ -206,13 +207,9 @@ export default {
         // 节流
         this.timer = null
 
-        if (e.detail.scrollTop < 10) {
-          this.leftMenuStatus(0)
-          return
-        }
-
         // scrollHeight为右边菜单垂直中点位置
-        let scrollHeight = e.detail.scrollTop + this.menuHeight / 2
+        // let scrollHeight = e.detail.scrollTop + this.menuHeight / 2
+        let scrollHeight = e.detail.scrollTop + this.menuHeight / 3
         for (let i = 0; i < this.arr.length; i++) {
           let height1 = this.arr[i]
           let height2 = this.arr[i + 1]

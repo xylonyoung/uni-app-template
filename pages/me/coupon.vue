@@ -12,7 +12,7 @@
           :list.sync="tab.list"
           :list-api="tab.listApi"
           :list-query.sync="tab.listQuery"
-          :auto="curIndex === tabIndex"
+          :auto-load="curIndex === tabIndex"
           :height="height"
           empty-mode="coupon"
         >

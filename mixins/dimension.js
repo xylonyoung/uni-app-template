@@ -7,6 +7,9 @@ export default {
         ) ?? this.product?.specifications?.[0]
       )
     },
+    dimensionCover(){
+      return this.$getImage(this.selectedDimension?.__metadata?.cover)
+    },
     dimensionPrice() {
       return this.$numberFormat(this.selectedDimension?.__metadata?.price)
     },

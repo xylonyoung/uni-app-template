@@ -39,32 +39,35 @@
             class="coupon-scroll-box"
             v-for="(item, index) in couponList"
             :key="index"
-            @click="getCoupon(item.id)"
+            @click="receiveCoupon(item.id)"
           >
-            <c-coupon :coupon="item" />
+            <c-coupon :coupon="item" :disable="hasCoupon(item)" />
           </view>
         </template>
       </scroll-view>
     </view>
 
-    <product-list :product-list="productList" />
+    <product-list v-if="loadComponent" />
   </view>
 </template>
 
 <script>
 import { ProductList } from './product-list.vue'
+import couponMixin from '@/mixins/coupon'
 export default {
+  mixins: [couponMixin],
   components: { ProductList },
   data() {
     return {
       swiperList: [],
-      couponList: [],
-      productList: [],
-      categoryList: []
+      categoryList: [],
+      loadComponent: false
     }
   },
   async onLoad() {
     await this.$store.dispatch('user/wechatLogin')
+    this.loadComponent = true
+    this.getUserCoupons()
     this.getData()
   },
   onShow() {
@@ -80,14 +83,6 @@ export default {
     navTo(path) {
       uni.navigateTo({
         url: `/pages/${path}`
-      })
-    },
-    getCoupon(id) {
-      this.$api.post('/api/user-coupons', { coupon: id }).then((res) => {
-        uni.showToast({
-          title: '领取成功',
-          duration: 2000
-        })
       })
     },
     navToProduct(id) {
@@ -124,12 +119,6 @@ export default {
       this.$store.dispatch('common/getCategory').then((res) => {
         this.categoryList = res.data.slice(0, 7)
       })
-
-      this.$api
-        .get('/api/products', { '@filter': 'entity.getIsHomeDisplay()' })
-        .then((res) => {
-          this.productList = res.data
-        })
     }
   }
 }

@@ -10,7 +10,7 @@
       <view class="coupon-wrapper">
         <view
           class="coupon"
-          :class="checkCoupon(item.id) ? 'disable' : ''"
+          :class="hasCoupon(item) ? 'disable' : ''"
           v-for="(item, index) in couponList"
           :key="index"
         >
@@ -24,7 +24,7 @@
                 <view>满{{ $numberFormat(item.threshold) }}英镑可用</view>
               </view>
             </view>
-            <u-button v-if="checkCoupon(item.id) " shape="circle" plain disabled>
+            <u-button v-if="hasCoupon(item)" shape="circle" plain disabled>
               已领取
             </u-button>
             <u-button
@@ -32,7 +32,7 @@
               type="warning"
               shape="circle"
               plain
-              @click="getCoupon(item.id)"
+              @click="receiveCoupon(item.id)"
             >
               立即领取
             </u-button>
@@ -52,12 +52,14 @@ export default {
   mixins: [couponMixin],
   data() {
     return {
-      couponList: [],
       listApi: '/api/coupons',
       listQuery: {
         '@filter': 'entity.getEnabled()'
       }
     }
+  },
+  created() {
+    this.getUserCoupons()
   }
 }
 </script>

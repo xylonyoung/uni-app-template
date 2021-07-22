@@ -4,18 +4,6 @@ const state = {
   cart: uni.getStorageSync('cart') || [],
   stockHasLimit: false,
   orderProducts: [],
-  orderStatus: [
-    { label: '失败', value: '-2' },
-    { label: '已取消', value: '-1' },
-    { label: '等待', value: '0' },
-    { label: '待支付', value: '1' },
-    { label: '待发货', value: '2' },
-    { label: '待收货', value: '3' },
-    { label: '已收货', value: '4' },
-    { label: '完成', value: '5' },
-    { label: '售后中', value: '6' }
-  ],
-  member: {},
   favorites: uni.getStorageSync('favorites') || []
 }
 
@@ -61,11 +49,7 @@ const actions = {
       url: '/pages/pay/pay'
     })
   }
-  // getMember({ commit }) {
-  //   $api.get('/api/members').then((res) => {
-  //     commit('SET_MEMBER', res.data)
-  //   })
-  // },
+
 }
 
 export default {

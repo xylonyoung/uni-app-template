@@ -78,7 +78,7 @@
       :list-api="listApi"
       :list-query.sync="listQuery"
       :reload.sync="reloadList"
-      :auto="autoLoadList"
+      :auto-load="autoLoadList"
       :height="contentHeight + 'px'"
     >
       <c-product-list :product-list="list" :show-empty="false" />
@@ -106,6 +106,7 @@ export default {
         page: 1,
         limit: 10
       },
+      defaultFilter: 'entity.getIsOnSale()',
       reloadList: false,
       autoLoadList: false,
       contentHeight: '',
@@ -153,9 +154,13 @@ export default {
   },
   onLoad(option) {
     const { category } = option
+
+    let query
     if (category) {
-      this.setListQuery(`entity.getCategory().getId() in ${category}`)
+      query = `entity.getCategory().getId() in ${category}`
     }
+
+    this.setListQuery(query)
     this.autoLoadList = true
   },
   onShow() {
@@ -176,14 +181,17 @@ export default {
     this.getContentHeight()
   },
   methods: {
-    setListQuery(str) {
-      this.listQuery['@filter'] = str ?? ''
+    setListQuery(param) {
+      let result = this.defaultFilter
+      if (param) result += ' && ' + param
+
+      this.listQuery['@filter'] = result
     },
     categoryItemStyle(index) {
       return index === this.categoryIndex ? { color: this.themeColor } : ''
     },
-    categoryConfirm(arr) {
-      this.setListQuery(`entity.getCategory().getId() in [${arr}]`)
+    categoryConfirm(param) {
+      this.setListQuery(`entity.getCategory().getId() in [${param}]`)
       this.toReloadList()
     },
     navToProduct(id) {
@@ -244,7 +252,8 @@ export default {
         this.showToast('请输入搜索内容!', 'warning')
         return
       }
-      this.listQuery['@filter'] = `entity.getName() matches '/${e}/'`
+
+      this.setListQuery(`entity.getName() matches '/${e}/'`)
       this.toReloadList()
     },
     toReloadList() {

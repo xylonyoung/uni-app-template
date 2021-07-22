@@ -2,39 +2,45 @@ import $api from '@/api'
 
 const state = {
   user: {},
-  registered: false
+  registered: false,
+  member: {}
 }
 
 const actions = {
-  async putRecommendedUser({ dispatch }, id) {
-    await dispatch('getUserInformation')
-    //be shared user must register on one hour
-    function newUser() {
-      const recommended_user = state.userInfo.recommended_user
-      const createdTime = new Date(state.userInfo.created_time).getTime()
-      const now = new Date().getTime()
-      console.log('分享时间差:' + (now - createdTime - 60 * 60 * 1000))
-      if (now - createdTime < 60 * 60 * 1000 && !recommended_user) {
-        return true
-      } else {
-        return false
-      }
-    }
-    if (newUser()) {
-      await putUserSet('recommendedUser', id)
-      uni.showToast({
-        title: '成功获取分享',
-        duration: 2000
-      })
+  // getMember({ commit }) {
+  //   $api.get('/api/members').then((res) => {
+  //     commit('SET_MEMBER', res.data)
+  //   })
+  // },
+
+  async putRecommendedUser({ dispatch, state }, id) {
+    let content = '失败，账号已经绑定了！'
+    if (canShare()) {
+      await $api.put(`/api/user/set/recommendedUser/` + id)
       dispatch('getUserInformation')
-    } else {
-      uni.showToast({
-        title: '分享失败！',
-        icon: 'none',
-        duration: 2000
-      })
+      content = '成功绑定'
     }
+
+    uni.showModal({
+      title: '提示',
+      content
+    })
+
     uni.removeStorageSync('shareId')
+
+    //be shared user must register on one hour
+    function canShare() {
+      const recommendedUser = state.user.recommendedUser
+      // const createdTime = new Date(state.user.createdTime).getTime()
+      // const now = new Date().getTime()
+      // console.log('分享时间差:' + (now - createdTime - 60 * 60 * 1000))
+      // if (now - createdTime < 60 * 60 * 1000 && !recommendedUser) {
+      //   return true
+      // } else {
+      //   return false
+      // }
+      return !recommendedUser
+    }
   },
 
   async getUserInformation({ commit }) {
@@ -44,7 +50,13 @@ const actions = {
     if (data?.profile?.__metadata?.phone) {
       commit('SET_REGISTERED', true)
     }
-    return
+
+    const shareId = uni.getStorageSync('shareId')
+    if (shareId) {
+      dispatch('putRecommendedUser', shareId)
+    }
+
+    return data
   },
 
   async wechatLogin({ dispatch }, phone) {
@@ -94,24 +106,17 @@ const actions = {
   },
 
   async reLogin({ dispatch }) {
-    uni.showToast({
-      title: '登录过期，正在跳转登录~',
-      icon: 'none',
-      duration: 3000
-    })
-
     uni.removeStorageSync('token')
-
-    setTimeout(() => {
-      //#ifdef MP-WEIXIN
-      dispatch('wechatLogin')
-      //#endif
-      //#ifndef MP-WEIXIN
-      uni.redirectTo({
-        url: '/pages/login/login'
-      })
-      //#endif
-    }, 2000)
+    //#ifdef MP-WEIXIN
+    dispatch('wechatLogin').then(() => {
+      dispatch('switchHomePage')
+    })
+    //#endif
+    //#ifndef MP-WEIXIN
+    uni.redirectTo({
+      url: '/pages/login/login'
+    })
+    //#endif
   },
 
   login({ dispatch }, loginData) {
@@ -128,7 +133,7 @@ const actions = {
   },
 
   switchHomePage() {
-    uni.switchTab({
+    uni.reLaunch({
       url: '/pages/home/home'
     })
   }

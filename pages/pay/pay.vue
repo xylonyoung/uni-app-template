@@ -1,29 +1,12 @@
 <template>
   <view class="pay-container">
-    <view class="address">
-      <u-cell-item value="选择地址" @click="chooseAddress">
-        <u-icon slot="icon" name="map-fill" color="#ff6700" size="40"></u-icon>
-        <view slot="title">
-          <template v-if="address.telNumber">
-            <view class="address-user">
-              <text>{{ address.userName }}</text>
-              <text>{{ address.telNumber }}</text>
-            </view>
-            <view class="address-detail">
-              {{ addressDetail }}
-            </view>
-          </template>
-          <view v-else>暂未设置收货地址</view>
-        </view>
-      </u-cell-item>
-    </view>
+    <c-address v-model="address" choose />
 
     <view class="products">
       <view
         class="product-row"
         v-for="(item, index) in orderProducts"
         :key="index"
-        @click="navTo(item)"
       >
         <u-image
           width="200rpx"
@@ -64,12 +47,24 @@
           :value="`£ ${productsAmount}`"
           :arrow="false"
         ></u-cell-item>
-        <u-cell-item title="运费" value="包邮" :arrow="false"></u-cell-item>
+        <u-cell-item
+          title="运费"
+          :value="shippingPrice"
+          :arrow="false"
+        ></u-cell-item>
         <u-cell-item
           title="优惠券"
           :value="couponName"
           @click="showCoupon = true"
         ></u-cell-item>
+        <u-radio-group v-model="payType">
+          <u-cell-item title="微信支付" :arrow="false">
+            <u-radio slot="right-icon" name="wechat"></u-radio>
+          </u-cell-item>
+          <u-cell-item title="线下支付" :arrow="false">
+            <u-radio slot="right-icon" name="offline"></u-radio>
+          </u-cell-item>
+        </u-radio-group>
       </u-cell-group>
     </view>
 
@@ -83,7 +78,14 @@
           </text>
         </view>
       </view>
-      <u-button type="error" @click="createOrder">支付</u-button>
+      <u-button
+        type="error"
+        @click="createOrder"
+        :loading="loading"
+        :disabled="loading"
+      >
+        支付
+      </u-button>
     </view>
 
     <u-popup v-model="showCoupon" mode="bottom" closeable>
@@ -91,8 +93,6 @@
         <coupon @change="couponChange" />
       </scroll-view>
     </u-popup>
-
-    <c-address v-model="showAddress" @confirm="addressConfirm" />
   </view>
 </template>
 
@@ -106,55 +106,47 @@ export default {
   components: { Coupon },
   data() {
     return {
-      address: null,
-      showAddress: false,
+      address: {},
       comment: null,
       coupon: null,
       couponList: [],
-      showCoupon: false
+      showCoupon: false,
+      payType: 'wechat',
+      loading: false
     }
   },
   computed: {
-    ...mapGetters(['orderProducts', 'user']),
+    ...mapGetters(['cart', 'orderProducts', 'user']),
     productsAmount() {
-      const totalPrice = this.orderProducts.reduce((acc, cur) => {
+      const result = this.orderProducts.reduce((acc, cur) => {
         const item = this.findDimension(cur)
         return acc + item?.__metadata?.price * cur.quantity
       }, 0)
-      return this.$numberFormat(totalPrice)
+      return this.$numberFormat(result)
+    },
+    shippingPrice() {
+      const region = this.address?.region
+      return region?.shippingPrice ?? 0
+    },
+    totalPrice() {
+      return Number(this.productsAmount) + Number(this.shippingPrice)
     },
     amount() {
       let aCoupon = 0
-      if (this.coupon) aCoupon = this.coupon?.discount
+      if (this.coupon) aCoupon = this.coupon?.coupon?.__metadata?.discount
 
-      return this.$numberFormat(this.productsAmount - aCoupon)
-    },
-    addressDetail() {
-      if (!this.address?.region) return ''
-      const result = this.address.region.reduce((acc, cur) => {
-        return acc + ' ' + cur.label
-      }, '')
-      return result + ' ' + this.address.detailInfo
-      // return (
-      //   this.address.provinceName +
-      //   this.address.cityName +
-      //   this.address.countyName +
-      //   this.address.detailInfo
-      // )
+      return this.$numberFormat(this.totalPrice - aCoupon)
     },
     couponName() {
       if (!this.coupon) {
         return '查看优惠劵'
       }
-      return this.coupon?.name
+      return this.coupon?.coupon?.__toString
     }
-  },
-  onLoad() {
-    this.address = uni.getStorageSync('address')
   },
   methods: {
     couponChange(coupon) {
-      if (Number(coupon?.threshold) > this.amount) {
+      if (Number(coupon?.coupon?.__metadata?.threshold) > this.totalPrice) {
         uni.showToast({
           title: '未满足使用条件',
           icon: false
@@ -166,16 +158,13 @@ export default {
       this.showCoupon = false
     },
     getItems() {
-      const region = this.address.region
       return this.orderProducts.map((e) => ({
         quantity: e.quantity,
-        specification: e.dimensionId,
-        address: this.addressDetail,
-        region: region[region.length - 1].value
+        specification: e.dimensionId
       }))
     },
-    createOrder() {
-      if (!this.address) {
+    async createOrder() {
+      if (!this.address.telNumber) {
         uni.showToast({
           title: '请选择收货地址',
           icon: 'none'
@@ -183,35 +172,32 @@ export default {
         return
       }
 
+      this.loading = true
+
       const data = {
-        items: this.getItems()
+        items: this.getItems(),
+        address: this.address.detailInfo,
+        phone: this.address.telNumber,
+        name: this.address.userName,
+        region: this.address.region.id
       }
       if (this.coupon) data.userCoupon = this.coupon.id
+      if (this.payType === 'offline') data.isOfflinePay = true
       if (this.comment) data.comment = this.comment
 
-      this.$api.post(`/api/orders`, data).then((res) => {
-        const id = res.data.invoice.id
-        if (id) {
-          wechatPay(id).then(() => {
-            this.$store.dispatch('common/setCart', [])
-            uni.navigateBack({
-              delta: 2
-            })
-          })
-        }
+      const res = await this.$api.post(`/api/orders`, data)
+      const id = res?.data?.invoice?.id
+      if (id && this.payType === 'wechat') await wechatPay(id)
+
+      // reset cart
+      const cart = this.cart.filter(
+        (e) => !this.orderProducts.some((i) => i.cart && i.id === e.id)
+      )
+      this.$store.dispatch('common/setCart', cart)
+
+      uni.redirectTo({
+        url: '/pages/order/detail?id=' + res.data.id
       })
-    },
-    chooseAddress() {
-      this.showAddress = true
-      // uni.chooseAddress({
-      //   success: (res) => {
-      //     uni.setStorageSync('address', res)
-      //     this.address = res
-      //   }
-      // })
-    },
-    addressConfirm(obj) {
-      this.address = { ...obj }
     }
   }
 }
@@ -221,24 +207,6 @@ export default {
 @import '@/styles/product.scss';
 .pay-container {
   padding-bottom: 122rpx;
-}
-.address {
-  margin-bottom: 32rpx;
-  background-color: #fff;
-  border-image: url('@/static/pay-stripe.png') 0 0 12 0 / 12rpx repeat;
-  border-style: solid;
-  &-user {
-    margin-left: 12rpx;
-    text:last-child {
-      margin-left: 12rpx;
-      color: $c-gray;
-      font-size: 24rpx;
-    }
-  }
-  &-detail {
-    margin-left: 12rpx;
-    font-size: 24rpx;
-  }
 }
 
 .products {
@@ -251,6 +219,7 @@ export default {
 .order {
   margin: 32rpx 0;
 }
+
 .bottom {
   margin: 0 32rpx 32rpx;
   display: flex;

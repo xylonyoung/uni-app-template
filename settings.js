@@ -1,3 +1,3 @@
 module.exports = {
-  baseURL: 'http://120.78.177.124:8000/' || 'https://mockjs'
+  baseURL: 'http://englishren.kf321.net/' || 'https://mockjs'
 }

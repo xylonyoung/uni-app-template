@@ -47,8 +47,8 @@ export default {
       const files = require.context('./', false, /\.vue$/)
       const pages = files.keys().map((key) => files(key).default)
       pages.forEach((e) => {
-        const title = e.__file.split('/')[2]
-        if (title === 'demo.vue') return
+        const title = e.__file.split('/')[2].split('.')[0]
+        if (title === 'demo') return
         result.push({
           title,
           icon: getIcon(),

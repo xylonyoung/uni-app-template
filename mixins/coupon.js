@@ -2,19 +2,10 @@ export default {
   data() {
     return {
       couponList: [],
-      userCouponList: [],
+      userCouponList: []
     }
   },
-  created() {
-    this.getCoupons()
-    this.getUserCoupons()
-  },
   methods: {
-    getCoupons(){
-      this.$api.get('/api/coupons').then((res) => {
-        this.couponList = res?.data ?? []
-      })
-    },
     getUserCoupons() {
       this.$api.get('/api/user-coupons').then((res) => {
         this.userCouponList = res?.data ?? []
@@ -28,9 +19,15 @@ export default {
         duration: 2000
       })
     },
-    checkCoupon(id){
-      this.userCouponList.forEach(e=>{
+    hasCoupon(item) {
+      const { id, userLimit } = item
+      let count = 0
+      this.userCouponList.forEach((e) => {
+        if (e.coupon.id === id) {
+          count++
+        }
       })
+      return userLimit === count
     }
   }
 }

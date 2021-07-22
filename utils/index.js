@@ -1,10 +1,9 @@
 import numbro from 'numbro'
 import { baseURL } from '@/settings'
-import timeFormat from 'uview-ui/libs/function/timeFormat'
 
 export function getQueryDateRange({ startDate, endDate }) {
-  const tomorrow = timeFormat(getTomorrow(endDate))
-  return `entity.getCreatedTime() >= datetime.get('${startDate}') && entity.getCreatedTime() <= datetime.get('${tomorrow}')`
+  const tomorrow = getTomorrow(endDate).toISOString()
+  return `entity.getCreatedTime() >= datetime.get('${startDate.toISOString()}') && entity.getCreatedTime() < datetime.get('${tomorrow}')`
 
   function getTomorrow(date) {
     const today = new Date(date)
@@ -13,20 +12,27 @@ export function getQueryDateRange({ startDate, endDate }) {
 }
 
 export function numberFormat(num, option) {
+  if (isNaN(num) || !num) return 0
+
   const options = {
     thousandSeparated: true,
     trimMantissa: true,
     mantissa: 2,
     ...option
   }
-  return numbro(num ?? 0).format(options)
+  return numbro(num).format(options)
 }
 
 export function buildFullPath(relativeURL) {
   return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
 }
 
-export function getImage(name) {
+export function getImage(image) {
+  if (!image) return
+
+  const name = image?.__toString ?? image
+  if (/^http/.test(name)) return name
+
   return buildFullPath(`/uploads/images/${name}`)
 }
 

@@ -1,4 +1,4 @@
-import $api from './request'
+import $api from '@/api'
 
 export default async function wechatPay(id) {
   const params = { gateway: 'JSAPI' }
@@ -6,11 +6,7 @@ export default async function wechatPay(id) {
   params.gateway = 'MWEB'
   //#endif
 
-  const { data } = await $api
-    .post(`/api/invoices/${id}/pay/wechat`, params)
-    .catch(() => {
-      uni.hideLoading()
-    })
+  const { data } = await $api.post(`/api/invoices/${id}/pay/wechat`, params)
 
   const { jssdk, payment } = data
 

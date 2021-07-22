@@ -39,26 +39,35 @@ export class Api {
   }
 
   responseProcess(res, resolve, reject) {
-    if (res.statusCode === 403) {
-      store.dispatch('user/reLogin')
-      return
-    }
     if (!res.data) {
       errorResponse()
       return
     }
-    
+
+    const message = res.data?.message ?? res.data
+    if (res.statusCode === 403) {
+      uni.showModal({
+        title: '登录错误',
+        content: message,
+        confirmText: '重新登录',
+        success: function (res) {
+          if (res.confirm) {
+            store.dispatch('user/reLogin')
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+      return
+    }
+
     switch (res.data.code) {
       case 0:
         resolve(res.data)
         break
-      case -2:
-        errorResponse(
-          res.data.message === 'The user is not found.' ? '没有此用户~' : null
-        )
-        break
       default:
-        errorResponse()
+        errorResponse(message)
     }
 
     function errorResponse(message) {

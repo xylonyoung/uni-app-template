@@ -1,6 +1,8 @@
 <template>
   <view>
-    <u-empty v-if="empty" :mode="emptyMode"  margin-top="32"></u-empty>
+    <view v-if="empty" style="padding-top: 40rpx">
+      <u-empty :mode="emptyMode"></u-empty>
+    </view>
     <view class="product">
       <view
         class="product-item"

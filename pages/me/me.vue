@@ -1,8 +1,8 @@
 <template>
   <view class="me-container">
-    <view class="background">
+    <!-- <view class="background">
       <c-solar-system />
-    </view>
+    </view> -->
     <view class="user">
       <view class="user-info">
         <u-avatar :src="profile.avatarUrl" @click="getUserProfile"></u-avatar>
@@ -44,7 +44,7 @@
       </u-grid-item>
       <u-grid-item @click="navTo('me/coupon')">
         <view class="balance-number">
-          {{ $numberFormat($getValue(user, 'balance.coupon')) }}
+          {{ $numberFormat(couponList.length) }}
         </view>
         <view>优惠券</view>
       </u-grid-item>
@@ -70,7 +70,7 @@
       </u-grid>
     </view>
 
-    <!-- <view class="menu">
+    <view class="menu">
       <u-cell-group>
         <u-cell-item
           :title="item.title"
@@ -87,7 +87,7 @@
           ></u-icon>
         </u-cell-item>
       </u-cell-group>
-    </view> -->
+    </view>
   </view>
 </template>
 <script>
@@ -108,10 +108,11 @@ export default {
       ],
       menuList: [
         { title: '收藏', icon: 'star-fill', color: '#ee883b',path:'me/favorites' },
-        { title: '砍价', icon: 'tags', color: '#9789f7' },
-        { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
-        { title: '设置', icon: 'setting-fill', color: '#54b4ef' }
-      ]
+        // { title: '砍价', icon: 'tags', color: '#9789f7' },
+        // { title: '分享', icon: 'zhuanfa', color: '#5fcda2' },
+        // { title: '设置', icon: 'setting-fill', color: '#54b4ef' }
+      ],
+      couponList: []
     }
   },
   computed: {
@@ -119,12 +120,22 @@ export default {
   },
   onShow() {
     this.$store.dispatch('common/setBadge')
+    this.getCoupon()
   },
   methods: {
+    getCoupon() {
+      this.$api
+        .get('/api/user-coupons', {
+          '@filter': 'entity.getIsUsed() == false'
+        })
+        .then((res) => {
+          this.couponList = res.data
+        })
+    },
     navTo(path) {
       if (!path) {
         uni.showToast({
-          title: '功能维护中~',
+          title: '功能尚未开通~',
           icon: 'none'
         })
         return
@@ -151,14 +162,25 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.background {
-  position: fixed;
-  top: -80vh;
-  left: 0;
-  width: 100%;
-  height: 200vh;
-  z-index: -1;
+.me-container {
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to right bottom,
+    #d99ec9,
+    #f5abba,
+    #ffc0b0,
+    #ffd8b2,
+    #f6f0c4
+  );
 }
+// .background {
+//   position: fixed;
+//   top: -80vh;
+//   left: 0;
+//   width: 100%;
+//   height: 200vh;
+//   z-index: -1;
+// }
 .user {
   position: relative;
   height: 500rpx;

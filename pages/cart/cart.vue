@@ -8,6 +8,9 @@
     </view>
 
     <view class="empty" v-if="isEmpty">
+      <view class="empty-loading">
+        <u-loading :show="loading" size="40" color="#ff6900"></u-loading>
+      </view>
       <u-empty mode="car"></u-empty>
       <c-recommend />
     </view>
@@ -108,7 +111,7 @@ export default {
       product: {},
       productIndex: 0,
       checkList: [],
-      showLoading: false
+      loading: true
     }
   },
   computed: {
@@ -190,11 +193,10 @@ export default {
       this.showCartSelector = true
     },
     async getProducts() {
-      uni.showLoading()
       const productsId = []
       const cart = this.cart.map((e) => {
         productsId.push(e.productId)
-        return { ...e, checked: false }
+        return { ...e, checked: false, cart: true }
       })
       const res = await this.$api.get('/api/products', {
         '@filter': `entity.getId() in [${productsId}]`
@@ -208,7 +210,7 @@ export default {
         }
       })
       this.products = products
-      uni.hideLoading()
+      this.loading = false
 
       // remove inexistent products
       if (this.cart.length > products.length) {
@@ -256,6 +258,9 @@ export default {
 }
 .empty {
   padding-top: 80rpx;
+  &-loading {
+    text-align: center;
+  }
 }
 .cart-product {
   margin: 24rpx 0;

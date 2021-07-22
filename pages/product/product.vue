@@ -24,19 +24,26 @@
         @click="showPreview"
       ></u-swiper>
 
+      <view class="presell" v-if="product.isPreSale">预售</view>
+
       <view class="introduction">
-        <view class="introduction-price">
-          <view>
+        <view class="introduction-top">
+          <view class="introduction-top-price">
             <text>销售价</text>
             <text>{{ dimensionPrice }}</text>
             <text>市场价</text>
             <text>{{ dimensionMarketPrice }}</text>
           </view>
+          <button class="reset-button" open-type="share">
+            <u-icon name="share" size="32"></u-icon>
+            <text>分享</text>
+          </button>
+        </view>
+        <view class="introduction-center">
+          <view>{{ product.name }}</view>
           <view>已售 {{ $numberFormat(product.sales) }}件</view>
         </view>
-        <view class="introduction-name">
-          <view>{{ product.name }}</view>
-        </view>
+
         <!-- <view class="introduction-member">
           <text>会员最高享受5折优惠</text>
           <text @click="$u.route('pages/member/member')">立即开通</text>
@@ -169,15 +176,15 @@ export default {
     getProduct(id) {
       this.$api.get(`/api/products/${id}`).then((res) => {
         this.product = res.data
-        const { pictures } = this.product
-        if (pictures) this.getSwiperList(pictures)
+        const { pictures, cover } = this.product
+        if (pictures) this.getSwiperList([cover, ...pictures])
         uni.setNavigationBarTitle({
           title: this.product.name
         })
       })
     },
     getSwiperList(images) {
-      this.swiperList = images.map((e) => this.$getImage(e.__toString))
+      this.swiperList = images.map((e) => this.$getImage(e.__toString ?? e))
     },
     showPreview(index) {
       uni.previewImage({
@@ -198,18 +205,34 @@ export default {
   min-height: 100vh;
   background-color: $c-background;
 }
+
+.presell {
+  width: 100%;
+  padding: 12rpx 40rpx;
+  color:#fff;
+  font-size: 40rpx;
+  font-weight: bold;
+  background-image: linear-gradient(
+    to right,
+    #ff5934,
+    #ff622b,
+    #ff6b22,
+    #ff7415,
+    #ff7d00
+  );
+}
+
 .introduction {
   background-color: #fff;
-  padding: 24rpx;
-  &-price {
+  padding: 24rpx 40rpx;
+  &-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0 24rpx;
     color: $c-price;
-    view {
+    &-price {
       text:nth-child(2) {
-        font-size: 60rpx;
+        font-size: 40rpx;
         font-weight: bold;
         &::before {
           content: '£';
@@ -230,15 +253,25 @@ export default {
         }
       }
     }
+    .reset-button {
+      color: $c-gray;
+      font-size: 28rpx;
+      text:last-child {
+        margin-left: 8rpx;
+      }
+    }
+  }
+  &-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    view:first-child {
+      font-size: 36rpx;
+      font-weight: bold;
+    }
     view:last-child {
       color: $c-gray;
     }
-  }
-  &-name {
-    padding: 0 24rpx;
-    display: flex;
-    font-size: 36rpx;
-    font-weight: bold;
   }
   &-member {
     position: relative;

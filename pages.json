@@ -12,8 +12,7 @@
     {
       "path": "pages/home/home",
       "style": {
-        "navigationBarTitleText": "首页",
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "首页"
       }
     },
     {
@@ -73,6 +72,13 @@
       "path": "pages/order/order",
       "style": {
         "navigationBarTitleText": "我的订单",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/order/detail",
+      "style": {
+        "navigationBarTitleText": "订单详情",
         "enablePullDownRefresh": false
       }
     },
