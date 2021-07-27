@@ -108,7 +108,7 @@ export default {
     padding-top: 16rpx;
     font-size: 60rpx;
     &::before {
-      content: '£';
+      content: '￥';
       padding: 36rpx 4rpx 0;
       font-size: 24rpx;
     }

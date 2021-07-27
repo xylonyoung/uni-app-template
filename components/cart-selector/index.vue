@@ -150,7 +150,7 @@ export default {
 <style lang='scss' scoped>
 @mixin symbol {
   &::before {
-    content: '£';
+    content: '￥';
     padding-right: 4rpx;
     font-size: 24rpx;
   }

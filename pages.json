@@ -110,6 +110,13 @@
         "enablePullDownRefresh": false
       }
     },
+    {
+      "path": "pages/address/address",
+      "style": {
+        "navigationBarTitleText": "管理地址",
+        "enablePullDownRefresh": false
+      }
+    },
     // below for demo
     {
       "path": "demo/pages/demo",

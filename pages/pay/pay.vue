@@ -44,7 +44,7 @@
       <u-cell-group>
         <u-cell-item
           title="商品总价"
-          :value="`£ ${productsAmount}`"
+          :value="`￥ ${productsAmount}`"
           :arrow="false"
         ></u-cell-item>
         <u-cell-item
@@ -234,7 +234,7 @@ export default {
       color: $c-price;
       font-size: 40rpx;
       &::before {
-        content: '£';
+        content: '￥';
         padding-right: 4rpx;
         font-size: 24rpx;
       }

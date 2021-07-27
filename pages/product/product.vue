@@ -235,7 +235,7 @@ export default {
         font-size: 40rpx;
         font-weight: bold;
         &::before {
-          content: '£';
+          content: '￥';
           padding-right: 4rpx;
           font-size: 24rpx;
         }
@@ -247,7 +247,7 @@ export default {
       text:last-child {
         @include market-price;
         &::before {
-          content: '£';
+          content: '￥';
           padding-right: 4rpx;
           font-size: 24rpx;
         }

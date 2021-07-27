@@ -105,22 +105,16 @@ export default {
         telNumber: [
           {
             required: true,
-            type: 'number',
+            message: '请输入手机号',
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: (rule, value, callback) => {
+              return this.$u.test.mobile(value)
+            },
             message: '手机号码不正确',
             trigger: ['change', 'blur']
           }
-          // {
-          //   required: true,
-          //   message: '请输入手机号',
-          //   trigger: ['change', 'blur']
-          // },
-          // {
-          //   validator: (rule, value, callback) => {
-          //     return this.$u.test.mobile(value)
-          //   },
-          //   message: '手机号码不正确',
-          //   trigger: ['change', 'blur']
-          // }
         ],
         region: [
           {
