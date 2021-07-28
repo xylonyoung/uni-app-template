@@ -64,6 +64,7 @@
           :key="index"
           @click="navToOrder(item.status)"
         >
+        <u-badge v-if="item.count" :count="item.count" :offset="[20, 20]"></u-badge>
           <u-icon :name="item.icon" color="#999" size="56"></u-icon>
           <view>{{ item.name }}</view>
         </u-grid-item>
@@ -121,8 +122,26 @@ export default {
   onShow() {
     this.$store.dispatch('common/setBadge')
     this.getCoupon()
+    this.getOrders()
   },
   methods: {
+      getOrders() {
+      this.$api.get('/api/orders').then((res) => {
+        const countList = []
+        res.data.forEach((item) => {
+          if (item.status > 0) {
+            if (!countList[item.status]) countList[item.status] = 0
+            countList[item.status] += 1
+          }
+        })
+
+        this.orderList = this.orderList.map((item, index) => {
+          const result = { ...item }
+          result.count = countList[index + 1] ?? 0
+          return result
+        })
+      })
+    },
     getCoupon() {
       this.$api
         .get('/api/user-coupons', {
