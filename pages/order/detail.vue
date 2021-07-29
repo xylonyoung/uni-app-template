@@ -142,9 +142,9 @@ export default {
         }
       })
     },
-    navTo(id) {
+    navTo(item) {
       uni.navigateTo({
-        url: `/pages/product/product?id=${id}`
+        url: `/pages/product/product?id=${item?.__metadata?.specification?.__metadata?.product?.id}`
       })
     }
   }

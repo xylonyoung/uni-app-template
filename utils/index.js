@@ -1,7 +1,13 @@
 import numbro from 'numbro'
 import { baseURL } from '@/settings'
+import { get } from 'lodash'
 
-export function getQueryDateRange({ startDate, endDate }) {
+/**
+ * @param {Date} startDate
+ * @param {Date} endDate
+ * @returns {string}
+ */
+export function getQueryDateRange(startDate, endDate) {
   const tomorrow = getTomorrow(endDate).toISOString()
   return `entity.getCreatedTime() >= datetime.get('${startDate.toISOString()}') && entity.getCreatedTime() < datetime.get('${tomorrow}')`
 
@@ -11,8 +17,13 @@ export function getQueryDateRange({ startDate, endDate }) {
   }
 }
 
+/**
+ * @param {(Number|String)} num
+ * @returns {string}
+ * https://numbrojs.com/format.html
+ */
 export function numberFormat(num, option) {
-  if (isNaN(num) || !num) return 0
+  if (!num ?? isNaN(num)) return '0'
 
   const options = {
     thousandSeparated: true,
@@ -23,19 +34,29 @@ export function numberFormat(num, option) {
   return numbro(num).format(options)
 }
 
+/**
+ * @param {String} relativeURL
+ * @returns {String}
+ */
 export function buildFullPath(relativeURL) {
   return baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
 }
 
+/**
+ * @param {String} image
+ * @returns {String}
+ */
 export function getImage(image) {
-  if (!image) return
-
   const name = image?.__toString ?? image
   if (/^http/.test(name)) return name
 
   return buildFullPath(`/uploads/images/${name}`)
 }
 
+/**
+ * @param {String} htmlData
+ * @returns {String}
+ */
 export function htmlFormat(htmlData) {
   if (!htmlData) return
   const str = `src="${baseURL}/uploads`
@@ -43,23 +64,11 @@ export function htmlFormat(htmlData) {
 }
 
 /**
- * get the value in Object or Array
- * key include "." to separate
- * @param {Object | Array} arg
- * @param {String} key
- * @returns {String | null}
+ * @param {Object} object
+ * @param {String} path
+ * @returns {String}
+ * https://www.lodashjs.com/docs/lodash.get
  */
-export function getValue(arg, prop) {
-  if (typeof arg !== 'object' || typeof prop !== 'string') return null
-
-  const keys = prop.split('.')
-
-  let result = arg
-
-  for (const key of keys) {
-    result = result?.[key]
-    if (!result) break
-  }
-
-  return result ?? null
+export function getValue(object, path) {
+  return get(object, path, null)
 }

@@ -187,17 +187,19 @@ export default {
 
       const res = await this.$api.post(`/api/orders`, data)
       const id = res?.data?.invoice?.id
-      if (id && this.payType === 'wechat') await wechatPay(id)
-
       // reset cart
       const cart = this.cart.filter(
-        (e) => !this.orderProducts.some((i) => i.cart && i.id === e.id)
+        (e) => !this.orderProducts.some((i) => i.cart && i.id === e.productId)
       )
       this.$store.dispatch('common/setCart', cart)
 
-      uni.redirectTo({
-        url: '/pages/order/detail?id=' + res.data.id
-      })
+      if (id && this.payType === 'wechat') await wechatPay(id)
+
+      setTimeout(() => {
+        uni.reLaunch({
+          url: '/pages/order/detail?id=' + res.data.id
+        })
+      }, 2222)
     }
   }
 }

@@ -10,7 +10,7 @@ export default async function wechatPay(id) {
 
   const { jssdk, payment } = data
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     //#ifdef MP-WEIXIN
     uni.requestPayment({
       provider: 'wxpay',
@@ -25,7 +25,7 @@ export default async function wechatPay(id) {
         uni.showToast({
           title: '支付成功'
         })
-        resolve()
+        resolve(res)
       },
       fail(err) {
         console.log('fail:' + JSON.stringify(err))
@@ -34,7 +34,7 @@ export default async function wechatPay(id) {
           title: '支付失败',
           icon: 'none'
         })
-        reject()
+        resolve(err)
       }
     })
     //#endif

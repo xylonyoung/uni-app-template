@@ -44,7 +44,9 @@ const actions = {
   },
 
   async getUserInformation({ commit }) {
-    const res = await $api.get('/api/user')
+    const res = await $api.get('/api/user', {
+      '@expands': "['entity.profile']"
+    })
     const { data } = res
     commit('SET_USER', data)
     if (data?.profile?.__metadata?.phone) {
