@@ -55,19 +55,18 @@ export default {
     this.getCategoryList()
   },
   methods: {
-    async getCategoryList() {
-      const { data } = await this.$api.get('/api/categories', {
-        '@filter': 'entity.getIsHomeDisplay()'
-      })
-      this.categoryList = data ?? []
-      this.categoryList.forEach((e, index) => {
-        const idList = [...this.collectCategoryId(e)]
-        const params = {
-          limit: 6,
-          '@filter': `entity.getCategory().getId() in [${idList}]`
-        }
-        this.$api.get('/api/products', params).then((res) => {
-          this.$set(this.categoryList[index], 'productList', res.data)
+    getCategoryList() {
+      this.$store.dispatch('category/get').then((res) => {
+        this.categoryList = res.filter(e=>e.isHomeDisplay)
+        this.categoryList.forEach((e, index) => {
+          const idList = [...this.collectCategoryId(e)]
+          const params = {
+            limit: 6,
+            '@filter': `entity.getCategory().getId() in [${idList}]`
+          }
+          this.$api.get('/api/products', params).then((res) => {
+            this.$set(this.categoryList[index], 'productList', res.data)
+          })
         })
       })
     },

@@ -75,12 +75,12 @@ export default {
     }
   },
   onLoad() {
-    this.$store.dispatch('common/getCategory').then((res) => {
-      this.tabbar = res.data.filter((e) => !e.parent)
+    this.$store.dispatch('category/get').then((res) => {
+      this.tabbar = res.filter((e) => !e.parent)
     })
   },
   onShow() {
-    this.$store.dispatch('common/setBadge')
+    this.$store.dispatch('cart/setBadge')
   },
   onReady() {
     this.getMenuItemTop()

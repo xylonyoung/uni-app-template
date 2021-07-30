@@ -11,7 +11,7 @@
         class="left-item"
         @click="
           () => {
-            $store.dispatch('common/removeFromFavorites', product.id)
+            $store.dispatch('favorite/removeFromFavorites', product.id)
           }
         "
       >
@@ -24,7 +24,7 @@
         class="left-item"
         @click="
           () => {
-            $store.dispatch('common/addToFavorites', product.id)
+            $store.dispatch('favorite/addToFavorites', product.id)
           }
         "
       >

@@ -159,28 +159,30 @@ export default {
     if (category) {
       query = `entity.getCategory().getId() in ${category}`
     }
-
+    this.getCategoryList()
     this.setListQuery(query)
     this.autoLoadList = true
   },
   onShow() {
-    this.$store.dispatch('common/setBadge')
-    this.$store.dispatch('common/getCategory').then((res) => {
-      this.categoryList = res.data.map((e) => {
-        const result = { ...e }
-        if (result.children) {
-          result.children = result.children.map((i) => {
-            return i.__metadata
-          })
-        }
-        return result
-      })
-    })
+    this.$store.dispatch('cart/setBadge')
   },
   mounted() {
     this.getContentHeight()
   },
   methods: {
+    getCategoryList() {
+      this.$store.dispatch('category/get').then((res) => {
+        this.categoryList = res.map((e) => {
+          const result = { ...e }
+          if (result.children) {
+            result.children = result.children.map((i) => {
+              return i.__metadata
+            })
+          }
+          return result
+        })
+      })
+    },
     setListQuery(param) {
       let result = this.defaultFilter
       if (param) result += ' && ' + param

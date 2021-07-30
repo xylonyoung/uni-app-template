@@ -99,10 +99,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import dimension from '@/mixins/dimension'
+import { stockHasLimit } from '@/config'
 export default {
   mixins: [dimension],
   data() {
     return {
+      stockHasLimit,
       checkAll: false,
       isEmpty: false,
       showDelete: false,
@@ -115,7 +117,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cart', 'stockHasLimit']),
+    ...mapGetters(['cart']),
     amount() {
       const totalPrice = this.products.reduce((acc, cur) => {
         if (!cur.checked) return acc
@@ -146,7 +148,7 @@ export default {
   },
   onShow() {
     this.getProducts()
-    this.$store.dispatch('common/setBadge')
+    this.$store.dispatch('cart/setBadge')
   },
   methods: {
     navTo(id) {
@@ -170,7 +172,7 @@ export default {
         })
         return
       }
-      this.$store.dispatch('common/toPay', products)
+      this.$store.dispatch('order/toPay', products)
     },
     deleteFromCart() {
       this.products = this.products.filter((e) => !e.checked)
@@ -184,8 +186,8 @@ export default {
       })
     },
     cartChange(cart) {
-      this.$store.dispatch('common/setCart', cart)
-      this.$store.dispatch('common/setBadge')
+      this.$store.dispatch('set/setCart', cart)
+      this.$store.dispatch('set/setBadge')
     },
     toShowCartSelector(item, index) {
       this.product = { ...item }

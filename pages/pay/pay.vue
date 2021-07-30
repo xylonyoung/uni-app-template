@@ -1,6 +1,6 @@
 <template>
   <view class="pay-container">
-    <c-address v-model="address" choose />
+    <c-address v-model="address" />
 
     <view class="products">
       <view
@@ -164,7 +164,7 @@ export default {
       }))
     },
     async createOrder() {
-      if (!this.address.telNumber) {
+      if (!this.address.phone) {
         uni.showToast({
           title: '请选择收货地址',
           icon: 'none'
@@ -176,9 +176,9 @@ export default {
 
       const data = {
         items: this.getItems(),
-        address: this.address.detailInfo,
-        phone: this.address.telNumber,
-        name: this.address.userName,
+        address: this.address.address,
+        phone: this.address.phone,
+        name: this.address.name,
         region: this.address.region.id
       }
       if (this.coupon) data.userCoupon = this.coupon.id
@@ -191,7 +191,7 @@ export default {
       const cart = this.cart.filter(
         (e) => !this.orderProducts.some((i) => i.cart && i.id === e.productId)
       )
-      this.$store.dispatch('common/setCart', cart)
+      this.$store.dispatch('set/setCart', cart)
 
       if (id && this.payType === 'wechat') await wechatPay(id)
 

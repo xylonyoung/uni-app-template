@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import api from '@/api'
-import { baseURL } from '@/settings'
+import { baseURL } from '@/config'
 import { getValue, getImage, numberFormat } from './index'
-
 ;(async function initialization() {
   let consoleStr = '🌈🌻🌼'
   let $api
@@ -23,11 +22,7 @@ import { getValue, getImage, numberFormat } from './index'
   }
 
   // debug console hint
-  try {
-    console?.log('%c' + consoleStr, 'font-size:50px;')
-  } catch (e) {
-    console.log(e)
-  }
+  console?.log('%c' + consoleStr, 'font-size:50px;')
 
   vueUse($api)
 })()

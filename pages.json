@@ -104,16 +104,23 @@
       }
     },
     {
-      "path": "pages/me/favorites",
+      "path": "pages/me/favorite",
       "style": {
         "navigationBarTitleText": "收藏夹",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/address/address",
+      "path": "pages/address/list",
       "style": {
         "navigationBarTitleText": "管理地址",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/address/add",
+      "style": {
+        "navigationBarTitleText": "添加地址",
         "enablePullDownRefresh": false
       }
     },

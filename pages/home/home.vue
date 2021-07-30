@@ -71,7 +71,7 @@ export default {
     this.getData()
   },
   onShow() {
-    this.$store.dispatch('common/setBadge')
+    this.$store.dispatch('cart/setBadge')
   },
   methods: {
     swiperClick(index) {
@@ -116,8 +116,10 @@ export default {
           this.couponList = res.data
         })
 
-      this.$store.dispatch('common/getCategory').then((res) => {
-        this.categoryList = res.data.slice(0, 7)
+      this.$store.dispatch('category/get').then((res) => {
+        this.categoryList = res
+          .slice(0, 7)
+          .sort((a, b) => a.sequence - b.sequence)
       })
     }
   }

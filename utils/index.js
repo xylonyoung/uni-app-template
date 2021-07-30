@@ -1,5 +1,5 @@
 import numbro from 'numbro'
-import { baseURL } from '@/settings'
+import { baseURL } from '@/config'
 import { get } from 'lodash'
 
 /**

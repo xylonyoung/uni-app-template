@@ -5,10 +5,12 @@ const state = {
 }
 
 const actions = {
-  async getRegionList({ commit, state }) {
+  async get({ state, commit }) {
     if (state.list.length > 0) return state.list
-    
-    const { data } = await $api.get('api/regions')
+
+    const { data } = await $api.get('/api/categories', {
+      '@filter': 'entity.getEnabled() && entity.getType().getName() == "产品"'
+    })
     const result = data ?? []
     commit('SET_LIST', result)
     return result

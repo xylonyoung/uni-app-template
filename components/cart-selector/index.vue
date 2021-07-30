@@ -50,6 +50,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import dimension from '@/mixins/dimension'
+import { stockHasLimit } from '@/config'
 export default {
   mixins: [dimension],
   props: {
@@ -59,12 +60,13 @@ export default {
   },
   data() {
     return {
+      stockHasLimit,
       showPopup: false,
       quantity: 1
     }
   },
   computed: {
-    ...mapGetters(['cart', 'stockHasLimit']),
+    ...mapGetters(['cart']),
     quantityInStock() {
       return this.selectedDimension?.remains ?? 0
     },
@@ -101,7 +103,7 @@ export default {
         quantity: this.quantity,
         dimensionId: this.selectedDimension.id
       }
-      this.$store.dispatch('common/toPay', [product])
+      this.$store.dispatch('order/toPay', [product])
     },
     addToCart() {
       if (this.withoutDimension()) return
@@ -132,8 +134,8 @@ export default {
       })
     },
     cartChange(cart) {
-      this.$store.dispatch('common/setCart', cart)
-      this.$store.dispatch('common/setBadge')
+      this.$store.dispatch('cart/setCart', cart)
+      this.$store.dispatch('cart/setBadge')
       this.onClose()
     },
     dimensionChange(id) {
