@@ -2,9 +2,9 @@
   <view>
     <c-load-list
       ref="loadList"
-      :list.sync="couponList"
-      :list-api="listApi"
-      :list-query.sync="listQuery"
+      :v-model="list"
+      :api="listApi"
+      :query.sync="listQuery"
       empty-mode="coupon"
     >
       <view class="coupon-wrapper">

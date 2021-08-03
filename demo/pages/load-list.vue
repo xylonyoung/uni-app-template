@@ -1,9 +1,9 @@
 <template>
   <c-load-list
     ref="loadList"
-    :list.sync="list"
-    :list-api="listApi"
-    :list-query.sync="listQuery"
+    :v-model="list"
+    :api="listApi"
+    :query.sync="listQuery"
   >
     <view v-for="(item, index) in list" :key="index" class="person">
       <u-avatar :src="item.avatar"></u-avatar>

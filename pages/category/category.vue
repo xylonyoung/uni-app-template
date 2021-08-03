@@ -206,6 +206,11 @@ export default {
       this.timer = setTimeout(() => {
         // 节流
         this.timer = null
+        // switch to the first menu
+        if (e.detail.scrollTop < 9) {
+          this.leftMenuStatus(0)
+          return
+        }
 
         // scrollHeight为右边菜单垂直中点位置
         // let scrollHeight = e.detail.scrollTop + this.menuHeight / 2

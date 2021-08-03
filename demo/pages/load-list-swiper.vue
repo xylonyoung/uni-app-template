@@ -24,10 +24,10 @@
       <swiper-item v-for="(tab, curIndex) in tabList" :key="curIndex">
         <c-load-list
           ref="loadList"
-          :list.sync="tab.list"
-          :list-api="tab.listApi"
-          :list-query.sync="tab.listQuery"
-          :auto-load="curIndex === tabIndex"
+          :v-model="tab.list"
+          :api="tab.listApi"
+          :query.sync="tab.listQuery"
+          :load="curIndex === tabIndex"
           :height="height"
         >
           <view v-for="(item, index) in tab.list" :key="index" class="person">

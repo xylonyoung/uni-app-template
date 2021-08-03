@@ -1,18 +1,18 @@
 <template>
   <view class="cart-container">
-    <view class="top" v-if="!isEmpty">
-      <view></view>
-      <view @click="showDelete = !showDelete">
-        {{ showDelete ? '完成' : '管理' }}
-      </view>
-    </view>
-
     <view class="empty" v-if="isEmpty">
       <view class="empty-loading">
         <u-loading :show="loading" size="40" color="#ff6900"></u-loading>
       </view>
       <u-empty mode="car"></u-empty>
       <c-recommend />
+    </view>
+
+    <view class="top" v-else>
+      <view></view>
+      <view @click="showDelete = !showDelete">
+        {{ showDelete ? '完成' : '管理' }}
+      </view>
     </view>
 
     <view class="cart-product" v-for="(item, index) in products" :key="index">
@@ -57,34 +57,37 @@
       </view>
     </view>
 
-    <view class="bottom">
-      <view>
-        <u-checkbox
-          v-model="checkAll"
-          @change="checkedAll"
-          shape="circle"
-          active-color="#ff6900"
-        >
-          全选
-        </u-checkbox>
-        <!-- <view v-if="discount">
+    <view v-if="!isEmpty" class="bottom-container">
+      <u-gap height="130"></u-gap>
+      <view class="bottom">
+        <view>
+          <u-checkbox
+            v-model="checkAll"
+            @change="checkedAll"
+            shape="circle"
+            active-color="#ff6900"
+          >
+            全选
+          </u-checkbox>
+          <!-- <view v-if="discount">
           {{ member.level.__toString + '：' + $numberFormat(discount * 10) }}折
         </view> -->
-      </view>
-      <view class="bottom-right" v-if="showDelete">
-        <u-button type="error" plain @click="deleteFromCart">删除</u-button>
-      </view>
-      <view class="bottom-right" v-else>
-        <view class="bottom-right-price-box">
-          <view>
-            合计:
-            <text class="bottom-right-price-box-price">
-              <text>{{ amount }}</text>
-            </text>
-          </view>
-          <view class="bottom-right-price-box-freight">含运费</view>
         </view>
-        <u-button type="error" @click="toPay">结算</u-button>
+        <view class="bottom-right" v-if="showDelete">
+          <u-button type="error" plain @click="deleteFromCart">删除</u-button>
+        </view>
+        <view class="bottom-right" v-else>
+          <view class="bottom-right-price-box">
+            <view>
+              合计:
+              <text class="bottom-right-price-box-price">
+                <text>{{ amount }}</text>
+              </text>
+            </view>
+            <view class="bottom-right-price-box-freight">含运费</view>
+          </view>
+          <u-button type="error" @click="toPay">结算</u-button>
+        </view>
       </view>
     </view>
 
@@ -246,9 +249,6 @@ export default {
   background-color: $c-background;
 }
 
-.cart-container {
-  padding-bottom: 124rpx;
-}
 .top {
   position: sticky;
   top: 0;
@@ -258,12 +258,14 @@ export default {
   justify-content: space-between;
   background-color: #fff;
 }
+
 .empty {
   padding-top: 80rpx;
   &-loading {
     text-align: center;
   }
 }
+
 .cart-product {
   margin: 24rpx 0;
   padding: 24rpx;
@@ -272,6 +274,7 @@ export default {
   place-items: center;
   background-color: #fff;
 }
+
 .bottom {
   position: fixed;
   bottom: 0;

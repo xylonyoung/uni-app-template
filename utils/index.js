@@ -46,9 +46,11 @@ export function buildFullPath(relativeURL) {
  * @param {String} image
  * @returns {String}
  */
-export function getImage(image) {
+ export function getImage(image) {
   const name = image?.__toString ?? image
-  if (/^http/.test(name)) return name
+  if (/^http|^data:image/.test(name)) {
+    return name
+  }
 
   return buildFullPath(`/uploads/images/${name}`)
 }

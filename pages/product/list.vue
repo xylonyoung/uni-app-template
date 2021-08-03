@@ -74,11 +74,11 @@
 
     <c-load-list
       ref="loadList"
-      :list.sync="list"
-      :list-api="listApi"
-      :list-query.sync="listQuery"
+      :v-model="list"
+      :api="listApi"
+      :query.sync="listQuery"
+      :load="autoLoadList"
       :reload.sync="reloadList"
-      :auto-load="autoLoadList"
       :height="contentHeight + 'px'"
     >
       <c-product-list :product-list="list" :show-empty="false" />

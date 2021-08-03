@@ -14,7 +14,7 @@
       :refresher-triggered="refresh"
       @refresherrefresh="loadData('refresh')"
     >
-      <slot :list="list" />
+      <slot :list="value" />
 
       <view v-if="empty" style="height: 300rpx">
         <u-empty :mode="emptyMode" />
@@ -32,14 +32,14 @@
 <script>
 export default {
   props: {
-    list: { type: Array, default: () => [] },
-    listApi: { type: String, default: '' },
-    listQuery: {
+    value: { type: Array, default: () => [] },
+    api: { type: String, default: '' },
+    query: {
       type: Object,
       default: () => ({ page: 1, limit: 10 })
     },
     reload: { type: Boolean, default: false },
-    autoLoad: { type: Boolean, default: true },
+    load: { type: Boolean, default: true },
     height: { type: String, default: () => `100vh` },
     emptyMode: { type: String, default: 'data' }
   },
@@ -62,9 +62,9 @@ export default {
       if (val) this.backToTop()
       this.refresh = val
     },
-    autoLoad: {
+    load: {
       handler(val) {
-        if (val && !this.empty && this.list.length === 0) this.loadData()
+        if (val && !this.empty && this.value.length === 0) this.loadData()
       },
       immediate: true
     }
@@ -89,10 +89,10 @@ export default {
       this.$emit('update:reload', false)
     },
     async loadData(refresh) {
-      const listQuery = { ...this.listQuery }
+      const query = { ...this.query }
 
       if (refresh) {
-        listQuery.page = 1
+        query.page = 1
         this.empty = false
         this.refresh = true
         this.$emit('update:list', [])
@@ -100,7 +100,7 @@ export default {
 
       this.status = 'loading'
 
-      const res = await this.$api.get(this.listApi, listQuery)
+      const res = await this.$api.get(this.api, query)
 
       if (!res) {
         this.empty = true
@@ -109,20 +109,20 @@ export default {
       }
 
       const { paginator, data } = res
-      const list = refresh ? data : [...this.list, ...data]
+      const list = refresh ? data : [...this.value, ...data]
 
       if (res.data.length === 0) {
         this.empty = true
       } else {
-        listQuery.page = paginator.next
-        listQuery.totalCount = paginator.totalCount
+        query.page = paginator.next
+        query.totalCount = paginator.totalCount
         this.status =
           paginator.current === paginator.last ? 'nomore' : 'loadmore'
       }
 
-      this.$emit('update:list', list)
-      this.$emit('update:listQuery', listQuery)
-      this.$emit('change', { list, listQuery })
+      this.$emit('input', list)
+      this.$emit('update:query', query)
+      this.$emit('change', { list, query })
       this.resetReload()
     }
   }
