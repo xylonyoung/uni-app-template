@@ -145,7 +145,7 @@ export default {
     getCoupon() {
       this.$api
         .get('/api/user-coupons', {
-          '@filter': 'entity.getIsUsed() == false'
+          '@filter': `entity.getIsUsed() == false && entity.getExpiredTime() > datetime.get('${new Date().toISOString()}')`
         })
         .then((res) => {
           this.couponList = res.data

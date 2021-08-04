@@ -1,6 +1,6 @@
 <template>
   <view class="order-detail-container">
-    <c-address v-model="address" />
+    <c-address v-model="address" show/>
 
     <view class="order">
       <view class="order-top">

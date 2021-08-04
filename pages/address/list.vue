@@ -64,7 +64,7 @@ export default {
     this.getRegions()
   },
   onShow() {
-    this.addressList = [...uni.getStorageSync('address')]
+    this.addressList = uni.getStorageSync('address') || []
   },
   methods: {
     navTo(index) {

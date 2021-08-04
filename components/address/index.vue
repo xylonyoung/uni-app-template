@@ -29,7 +29,8 @@ import { mapGetters } from 'vuex'
 export default {
   mixins: [Address],
   props: {
-    value: { type: Object, default: () => ({}) }
+    value: { type: Object, default: () => ({}) },
+    show: { type: Boolean, default: false }
   },
   data() {
     return { addressList: [] }
@@ -46,14 +47,14 @@ export default {
   },
   watch: {
     selectAddress(val) {
-      this.addressList = [...uni.getStorageSync('address')]
+      this.addressList = uni.getStorageSync('address') || []
       this.$emit('input', this.addressList[val])
     }
   },
   created() {
     if (wechatAddress) return
 
-    this.addressList = [...uni.getStorageSync('address')]
+    this.addressList = uni.getStorageSync('address') || []
     const address = uni.getStorageSync('address') || []
     const defaultIndex = address.findIndex((e) => e.default)
     this.$store.commit('address/SET_SELECT', defaultIndex)
@@ -63,6 +64,8 @@ export default {
   },
   methods: {
     toSelect() {
+      if (this.show) return
+      
       if (wechatAddress) {
         uni.chooseAddress({
           success: (res) => {

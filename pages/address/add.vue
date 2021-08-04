@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     onDelete() {
-      const result = [...uni.getStorageSync('address')]
+      const result = uni.getStorageSync('address') || []
       result.splice(this.addressIndex, 1)
       uni.setStorageSync('address', result)
       uni.navigateBack({ delta: 1 })
@@ -130,7 +130,7 @@ export default {
     onSubmit() {
       this.$refs.uForm.validate((valid) => {
         if (valid) {
-          const result = [...uni.getStorageSync('address')]
+          const result = uni.getStorageSync('address') || []
 
           if (this.formData.default) {
             result.forEach((item) => {
