@@ -1,12 +1,16 @@
 <template>
   <view class="order-detail-container">
-    <c-address v-model="address" show/>
+    <c-address v-model="address" disabled />
 
     <view class="order">
       <view class="order-top">
-        <text>
+        <view>
           {{ getOrderStatus(order.status) }}
-        </text>
+        </view>
+        <view v-if="order.status > 2" class="order-top-shipping">
+          <view>物流公司：{{ order.shippingCompany }}</view>
+          <view>物流单号：{{ order.shippingNo }}</view>
+        </view>
       </view>
       <view
         class="product-row"
@@ -84,6 +88,11 @@
           立即付款
         </u-button>
       </view>
+      <view class="bottom-btn" v-else-if="order.status === '3'">
+        <u-button type="success" size="mini" @click="confirmDelivery(order.id)">
+          确定收货
+        </u-button>
+      </view>
       <!--   TODO
             <view class="bottom-btn" v-if="order.status > 3">
               <u-button type="info" size="mini" plain>申请售后</u-button>
@@ -103,13 +112,24 @@ export default {
     }
   },
   onLoad(option) {
-    const { id } = option
-    this.getOrder(id)
+    this.getOrder(option.id)
   },
   methods: {
     toPay(id) {
       wechatPay(id).then(() => {
         this.getOrder(id)
+      })
+    },
+    confirmDelivery(id) {
+      this.$api.put(`/api/orders/${id}/confirm`).then(() => {
+        uni.showToast({
+          title: '已确定收货'
+        })
+        setTimeout(() => {
+          uni.navigateBack({
+            delta: 1
+          })
+        }, 999)
       })
     },
     toCancel(id) {
@@ -126,7 +146,7 @@ export default {
         })
         setTimeout(() => {
           uni.navigateBack({
-            delta: 2
+            delta: 1
           })
         }, 999)
       })

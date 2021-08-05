@@ -30,7 +30,7 @@ export default {
   mixins: [Address],
   props: {
     value: { type: Object, default: () => ({}) },
-    show: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false }
   },
   data() {
     return { addressList: [] }
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     toSelect() {
-      if (this.show) return
+      if (this.disabled) return
       
       if (wechatAddress) {
         uni.chooseAddress({

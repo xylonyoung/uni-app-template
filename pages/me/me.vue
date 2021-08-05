@@ -68,6 +68,14 @@
           <u-icon :name="item.icon" color="#999" size="56"></u-icon>
           <view>{{ item.name }}</view>
         </u-grid-item>
+        <u-grid-item>
+          <button open-type="contact" class="reset-button">
+            <view class="order-contact">
+              <u-icon name="server-man" :size="60"></u-icon>
+              <view>退款/售后</view>
+            </view>
+          </button>
+        </u-grid-item>
       </u-grid>
     </view>
 
@@ -100,12 +108,7 @@ export default {
         { name: '待付款', status: '1', icon: 'rmb-circle' },
         { name: '待发货', status: '2', icon: 'gift' },
         { name: '待收货', status: '3', icon: 'car' },
-        { name: '待评价', status: '4', icon: 'edit-pen' },
-        {
-          name: '退款/售后',
-          status: '5',
-          icon: 'server-man'
-        }
+        { name: '待评价', status: '4', icon: 'edit-pen' }
       ],
       menuList: [
         { title: '收藏', icon: 'star-fill', color: '#ee883b',path:'me/favorite' },
@@ -241,6 +244,10 @@ export default {
   margin-top: 20rpx;
   u-icon {
     color: $c-gray;
+  }
+  &-contact {
+    height: 94rpx;
+    font-size: 26rpx;
   }
 }
 

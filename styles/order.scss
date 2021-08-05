@@ -2,7 +2,6 @@
   margin-bottom: 24rpx;
   padding: 24rpx 0;
   background-color: #fff;
-  &-top,
   &-bottom {
     padding: 0 24rpx;
     display: flex;
@@ -11,8 +10,15 @@
   }
   &-top {
     margin-bottom: 24rpx;
-    padding-bottom: 12rpx;
+    padding: 0 24rpx 12rpx;
     border-bottom: 1px solid $c-border;
+    &-shipping {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24rpx;
+      font-size: 24rpx;
+      color: $c-gray;
+    }
   }
   &-bottom {
     margin-top: 24rpx;
