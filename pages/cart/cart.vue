@@ -171,7 +171,7 @@ export default {
       if (!products.length) {
         uni.showToast({
           title: '请选商品~',
-          icon: 'none'
+          icon: 'error'
         })
         return
       }

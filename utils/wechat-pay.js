@@ -32,7 +32,7 @@ export default async function wechatPay(id) {
         uni.hideLoading()
         uni.showToast({
           title: '支付失败',
-          icon: 'none'
+          icon: 'error'
         })
         resolve(err)
       }

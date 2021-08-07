@@ -88,7 +88,7 @@ export default {
       if (result) {
         uni.showToast({
           title: '暂无规格~',
-          icon: 'none'
+          icon: 'error'
         })
       }
       return result
@@ -110,7 +110,7 @@ export default {
       if (this.stockHasLimit && this.quantityInStock < 1) {
         uni.showToast({
           title: '库存不足~',
-          icon: 'none'
+          icon: 'error'
         })
         return
       }

@@ -15,8 +15,7 @@ export default {
       await this.$api.post('/api/user-coupons', { coupon: id })
       await this.getUserCoupons()
       uni.showToast({
-        title: '领取成功',
-        duration: 2000
+        title: '领取成功'
       })
     },
     hasCoupon(item) {

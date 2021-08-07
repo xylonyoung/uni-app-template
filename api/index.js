@@ -75,7 +75,7 @@ export class Api {
       console.log(res)
       uni.showToast({
         title: message || '服务器繁忙！',
-        icon: 'none'
+        icon: 'error'
       })
     }
   }

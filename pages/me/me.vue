@@ -158,7 +158,7 @@ export default {
       if (!path) {
         uni.showToast({
           title: '功能尚未开通~',
-          icon: 'none'
+          icon: 'error'
         })
         return
       }

@@ -1,6 +1,6 @@
 <template>
   <view class="order-detail-container">
-    <c-address v-model="address" disabled />
+    <c-address v-model="order" disabled />
 
     <view class="order">
       <view class="order-top">
@@ -154,12 +154,6 @@ export default {
     getOrder(id) {
       this.$api.get('/api/orders/' + id).then((res) => {
         this.order = res.data
-        this.address = {
-          detailInfo: this.order.address,
-          telNumber: this.order.phone,
-          userName: this.order.name,
-          region: this.order.region?.id
-        }
       })
     },
     navTo(item) {

@@ -44,12 +44,12 @@
       <u-cell-group>
         <u-cell-item
           title="商品总价"
-          :value="`￥ ${productsAmount}`"
+          :value="`￥ ${$numberFormat(productsAmount)}`"
           :arrow="false"
         ></u-cell-item>
         <u-cell-item
           title="运费"
-          :value="shippingPrice"
+          :value="deliveryPrice"
           :arrow="false"
         ></u-cell-item>
         <u-cell-item
@@ -122,14 +122,14 @@ export default {
         const item = this.findDimension(cur)
         return acc + item?.__metadata?.price * cur.quantity
       }, 0)
-      return this.$numberFormat(result)
+      return result
     },
-    shippingPrice() {
+    deliveryPrice() {
       const region = this.address?.region
-      return region?.shippingPrice ?? 0
+      return region?.deliveryPrice ?? 0
     },
     totalPrice() {
-      return Number(this.productsAmount) + Number(this.shippingPrice)
+      return Number(this.productsAmount) + Number(this.deliveryPrice)
     },
     amount() {
       let aCoupon = 0
@@ -149,7 +149,7 @@ export default {
       if (Number(coupon?.coupon?.__metadata?.threshold) > this.totalPrice) {
         uni.showToast({
           title: '未满足使用条件',
-          icon: false
+          icon: 'error'
         })
         return
       }
@@ -167,7 +167,7 @@ export default {
       if (!this.address.phone) {
         uni.showToast({
           title: '请选择收货地址',
-          icon: 'none'
+          icon: 'error'
         })
         return
       }
