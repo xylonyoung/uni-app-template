@@ -1,39 +1,39 @@
 import Vue from 'vue'
-import api from '@/api'
+import request from './request'
 import { baseURL } from '@/config'
 import { getValue, getImage, numberFormat } from './index'
 ;(async function initialization() {
-  let consoleStr = '🌈🌻🌼'
-  let $api
+  let aLog = '🌈🌻🌼'
+  let $request
 
   // when development need mock or not?
   if (process.env.NODE_ENV === 'development' && baseURL === 'https://mockjs') {
-    consoleStr += 'mock'
+    aLog += 'mock'
     //#ifndef MP-WEIXIN
     import('@/mock')
     //#endif
     //#ifdef MP-WEIXIN
     await import('@/mock/wechat-mock').then((module) => {
-      $api = module.default
+      $request = module.default
     })
     //#endif
   } else {
-    $api = api
+    $request = request
   }
 
   // debug console hint
-  console?.log('%c' + consoleStr, 'font-size:50px;')
+  console?.log('%c' + aLog, 'font-size:50px;')
 
-  vueUse($api)
+  vueUse($request)
 })()
 
 /**
  ** set global functions, variables, components, etc.
  */
-function vueUse($api) {
+function vueUse($request) {
   Vue.use({
     install(Vue) {
-      Vue.prototype.$api = $api
+      Vue.prototype.$request = $request
       Vue.prototype.$getValue = getValue
       Vue.prototype.$getImage = getImage
       Vue.prototype.$numberFormat = numberFormat

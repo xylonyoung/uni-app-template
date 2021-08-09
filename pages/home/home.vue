@@ -103,14 +103,14 @@ export default {
       }
     },
     getData() {
-      this.$api.get('/api/album/by-title/home-swiper').then((res) => {
+      this.$request.get('/api/album/by-title/home-swiper').then((res) => {
         this.swiperList = res.data?.pictures.map((e) => ({
           image: this.$getImage(e.__toString),
           link: e.__metadata.link
         }))
       })
 
-      this.$api
+      this.$request
         .get('/api/coupons', { '@filter': 'entity.getEnabled()' })
         .then((res) => {
           this.couponList = res.data

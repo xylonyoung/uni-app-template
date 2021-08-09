@@ -1,17 +1,16 @@
-import Api from '@/api'
+import { Request } from '@/utils/request'
 import { getFiles, createMock } from './mock-utils'
 
-class MockApi extends Api {
+class MockRequest extends Request {
   constructor() {
     super()
     this.requestData = {}
     this.initMock()
   }
 
-  async request(method, url, data = {}) {
+  async aRequest(method, url, data = {}) {
     await new Promise((resolve) => setTimeout(resolve, 666))
-    const name = url.replace('/', '')
-    return createMock(data, this.requestData[method][name])
+    return createMock(data, this.requestData[method][url])
   }
 
   initMock() {
@@ -28,4 +27,4 @@ class MockApi extends Api {
   }
 }
 
-export default new MockApi()
+export default new MockRequest()

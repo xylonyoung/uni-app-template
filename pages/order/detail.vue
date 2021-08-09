@@ -121,7 +121,7 @@ export default {
       })
     },
     confirmDelivery(id) {
-      this.$api.put(`/api/orders/${id}/confirm`).then(() => {
+      this.$request.put(`/api/orders/${id}/confirm`).then(() => {
         uni.showToast({
           title: '已确定收货'
         })
@@ -133,14 +133,14 @@ export default {
       })
     },
     toCancel(id) {
-      // this.$api
+      // this.$request
       //   .post(`/api/orders/${id}/cancel-and-refund`, { gateway: 'balance' })
       //   .then(() => {
       //     uni.showToast({
       //       title: '订单取消成功~'
       //     })
       //   })
-      this.$api.put(`/api/orders/${id}/cancel`).then(() => {
+      this.$request.put(`/api/orders/${id}/cancel`).then(() => {
         uni.showToast({
           title: '订单取消成功~'
         })
@@ -152,7 +152,7 @@ export default {
       })
     },
     getOrder(id) {
-      this.$api.get('/api/orders/' + id).then((res) => {
+      this.$request.get('/api/orders/' + id).then((res) => {
         this.order = res.data
       })
     },

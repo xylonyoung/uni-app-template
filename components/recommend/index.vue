@@ -26,7 +26,7 @@ export default {
         '@order': 'modifiedTime|DESC',
         '@filter': 'entity.getIsRecommended()'
       }
-      this.$api.get('/api/products', params).then((res) => {
+      this.$request.get('/api/products', params).then((res) => {
         this.recommendList = res.data
       })
     }

@@ -174,7 +174,7 @@ export default {
       this.specificationIndex = index
     },
     getProduct(id) {
-      this.$api.get(`/api/products/${id}`).then((res) => {
+      this.$request.get(`/api/products/${id}`).then((res) => {
         this.product = res.data
         const { pictures, cover } = this.product
         if (pictures) this.getSwiperList([cover, ...pictures])

@@ -41,7 +41,8 @@ export default {
     reload: { type: Boolean, default: false },
     load: { type: Boolean, default: true },
     height: { type: String, default: () => `100vh` },
-    emptyMode: { type: String, default: 'data' }
+    emptyMode: { type: String, default: 'data' },
+    format: { type: Function, default: undefined }
   },
   data() {
     return {
@@ -100,12 +101,16 @@ export default {
 
       this.status = 'loading'
 
-      const res = await this.$api.get(this.api, query)
+      const res = await this.$request.get(this.api, query)
 
       if (!res) {
         this.empty = true
         this.resetReload()
         return
+      }
+
+      if (this.format) {
+        res.data = this.format(res.data)
       }
 
       const { paginator, data } = res

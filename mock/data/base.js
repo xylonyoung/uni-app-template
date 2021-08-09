@@ -41,7 +41,7 @@ const orders = {
   ],
 }
 
-const category = {
+const categories = {
   'data|20': [
     {
       'id|+1': 1,
@@ -61,7 +61,7 @@ function createList(response, list) {
 }
 
 export default {
-  'mockProducts.get': (response) => createList(response, products),
-  'mockOrders.get': (response) => createList(response, orders),
-  'mockCategory.get': (response) => createList(response, category),
+  'mock/products.get': (response) => createList(response, products),
+  'mock/orders.get': (response) => createList(response, orders),
+  'mock/categories.get': (response) => createList(response, categories),
 }

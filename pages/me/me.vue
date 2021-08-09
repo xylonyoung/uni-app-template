@@ -129,7 +129,7 @@ export default {
   },
   methods: {
       getOrders() {
-      this.$api.get('/api/orders').then((res) => {
+      this.$request.get('/api/orders').then((res) => {
         const countList = []
         res.data.forEach((item) => {
           if (item.status > 0) {
@@ -146,7 +146,7 @@ export default {
       })
     },
     getCoupon() {
-      this.$api
+      this.$request
         .get('/api/user-coupons', {
           '@filter': `entity.getIsUsed() == false && entity.getExpiredTime() > datetime.get('${new Date().toISOString()}')`
         })
@@ -174,7 +174,7 @@ export default {
         desc: '用于完善会员资料',
         success: (res) => {
           const { userInfo } = res
-          this.$api.put('/api/user-profile', userInfo).then(() => {
+          this.$request.put('/api/user-profile', userInfo).then(() => {
             this.$store.dispatch('user/getUserInformation')
           })
         }

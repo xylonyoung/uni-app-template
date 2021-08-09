@@ -1,4 +1,4 @@
-import $api from '@/api'
+import $request from '@/utils/request'
 
 const state = {
   regions: [],
@@ -9,7 +9,7 @@ const actions = {
   async getRegions({ commit, state }) {
     if (state.regions.length > 0) return state.regions
 
-    const { data } = await $api.get('/api/regions')
+    const { data } = await $request.get('/api/regions')
     const result = data ?? []
     commit('SET_REGIONS', result)
     return result

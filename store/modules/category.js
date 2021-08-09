@@ -1,4 +1,4 @@
-import $api from '@/api'
+import $request from '@/utils/request'
 
 const state = {
   list: []
@@ -8,7 +8,7 @@ const actions = {
   async get({ state, commit }) {
     if (state.list.length > 0) return state.list
 
-    const { data } = await $api.get('/api/categories', {
+    const { data } = await $request.get('/api/categories', {
       '@filter': 'entity.getEnabled() && entity.getType().getName() == "产品"'
     })
     const result = data ?? []

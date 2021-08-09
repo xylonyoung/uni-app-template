@@ -7,12 +7,12 @@ export default {
   },
   methods: {
     getUserCoupons() {
-      this.$api.get('/api/user-coupons').then((res) => {
+      this.$request.get('/api/user-coupons').then((res) => {
         this.userCouponList = res?.data ?? []
       })
     },
     async receiveCoupon(id) {
-      await this.$api.post('/api/user-coupons', { coupon: id })
+      await this.$request.post('/api/user-coupons', { coupon: id })
       await this.getUserCoupons()
       uni.showToast({
         title: '领取成功'

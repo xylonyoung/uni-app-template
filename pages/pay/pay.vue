@@ -185,7 +185,7 @@ export default {
       if (this.payType === 'offline') data.isOfflinePay = true
       if (this.comment) data.comment = this.comment
 
-      const res = await this.$api.post(`/api/orders`, data)
+      const res = await this.$request.post(`/api/orders`, data)
       const id = res?.data?.invoice?.id
       // reset cart
       const cart = this.cart.filter(

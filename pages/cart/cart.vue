@@ -203,7 +203,7 @@ export default {
         productsId.push(e.productId)
         return { ...e, checked: false, cart: true }
       })
-      const res = await this.$api.get('/api/products', {
+      const res = await this.$request.get('/api/products', {
         '@filter': `entity.getId() in [${productsId}]`
       })
 

@@ -1,12 +1,12 @@
 <template>
   <c-load-list
     ref="loadList"
-    :v-model="list"
+    v-model="list"
     :api="listApi"
     :query.sync="listQuery"
   >
     <view v-for="(item, index) in list" :key="index" class="person">
-      <u-avatar :src="item.avatar"></u-avatar>
+      <u-avatar :src="item.cover"></u-avatar>
       <view>{{ item.name }}</view>
       <view>{{ index }}</view>
     </view>
@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       list: [],
-      listApi: 'mockProducts',
+      listApi: 'mock/products',
       listQuery: {
         page: 1,
         limit: 10,

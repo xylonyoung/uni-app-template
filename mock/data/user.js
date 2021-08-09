@@ -1,5 +1,5 @@
 export default {
-  'api/user.get': response => getUser(response),
+  '/api/user.get': response => getUser(response),
   'api-login.post': response => login(response),
   'agreement.get': response => agreement(response)
 }

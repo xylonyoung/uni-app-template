@@ -64,7 +64,7 @@ export default {
             limit: 6,
             '@filter': `entity.getCategory().getId() in [${idList}]`
           }
-          this.$api.get('/api/products', params).then((res) => {
+          this.$request.get('/api/products', params).then((res) => {
             this.$set(this.categoryList[index], 'productList', res.data)
           })
         })

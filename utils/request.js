@@ -1,7 +1,7 @@
 import store from '@/store'
 import { buildFullPath } from '@/utils'
 
-export class Api {
+export class Request {
   constructor() {
     this.buildMethods()
   }
@@ -11,12 +11,12 @@ export class Api {
     methods.forEach((e) => {
       this[e] = (requestedURL, data) => {
         const method = e.toUpperCase()
-        return this.request(method, requestedURL, data)
+        return this.aRequest(method, requestedURL, data)
       }
     })
   }
 
-  request(method, requestedURL, data = {}) {
+  aRequest(method, requestedURL, data = {}) {
     const token = uni.getStorageSync('token')
     const url = buildFullPath(requestedURL)
     const header = {
@@ -81,4 +81,4 @@ export class Api {
   }
 }
 
-export default new Api()
+export default new Request()

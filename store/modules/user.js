@@ -1,4 +1,4 @@
-import $api from '@/api'
+import $request from '@/utils/request'
 
 const state = {
   user: {},
@@ -8,7 +8,7 @@ const state = {
 
 const actions = {
   // getMember({ commit }) {
-  //   $api.get('/api/members').then((res) => {
+  //   $request.get('/api/members').then((res) => {
   //     commit('SET_MEMBER', res.data)
   //   })
   // },
@@ -16,7 +16,7 @@ const actions = {
   async putRecommendedUser({ dispatch, state }, id) {
     let content = '失败，账号已经绑定了！'
     if (canShare()) {
-      await $api.put(`/api/user/set/recommendedUser/` + id)
+      await $request.put(`/api/user/set/recommendedUser/` + id)
       dispatch('getUserInformation')
       content = '成功绑定'
     }
@@ -44,7 +44,7 @@ const actions = {
   },
 
   async getUserInformation({ commit }) {
-    const res = await $api.get('/api/user', {
+    const res = await $request.get('/api/user', {
       '@expands': "['entity.profile']"
     })
     const { data } = res
@@ -79,7 +79,7 @@ const actions = {
             }
             if (phone) params.phone = phone
 
-            $api
+            $request
               .get('/wechat/mini/login', params)
               .then((response) => {
                 uni.setStorageSync('token', response?.data?.token)
@@ -122,7 +122,7 @@ const actions = {
   },
 
   login({ dispatch }, loginData) {
-    $api.post('/api-login', loginData).then((res) => {
+    $request.post('/api-login', loginData).then((res) => {
       uni.setStorageSync('token', res.data)
       dispatch('getUserInformation')
       dispatch('switchHomePage')

@@ -23,7 +23,7 @@ export default {
   methods: {
     getProduct() {
       const params = { '@filter': `entity.getId() in [${this.favorites}]` }
-      this.$api.get('/api/products', params).then((res) => {
+      this.$request.get('/api/products', params).then((res) => {
         this.productList = res.data
       })
     }
