@@ -1,10 +1,6 @@
 <template>
   <view class="address-container">
-    <u-cell-item
-      :value="value ? '选择地址' : ''"
-      :arrow="value ? true : false"
-      @click="toSelect"
-    >
+    <u-cell-item :value="tips" :arrow="value ? true : false" @click="toSelect">
       <u-icon slot="icon" name="map-fill" color="#ff6900" size="40"></u-icon>
       <view slot="title">
         <template v-if="value.phone">
@@ -43,6 +39,11 @@ export default {
       }
 
       return this.getRegionFullName(this.value?.region?.id)
+    },
+    tips() {
+      if (this.disabled) return ''
+
+      return this.value.phone ? '选择地址' : ''
     }
   },
   watch: {
@@ -65,7 +66,7 @@ export default {
   methods: {
     toSelect() {
       if (this.disabled) return
-      
+
       if (wechatAddress) {
         uni.chooseAddress({
           success: (res) => {
