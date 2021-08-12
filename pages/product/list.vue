@@ -78,7 +78,6 @@
       :api="listApi"
       :query.sync="listQuery"
       :load="autoLoadList"
-      :reload.sync="reloadList"
       :height="contentHeight + 'px'"
     >
       <c-product-list :product-list="list" :show-empty="false" />
@@ -107,7 +106,6 @@ export default {
         limit: 10
       },
       defaultFilter: 'entity.getIsOnSale()',
-      reloadList: false,
       autoLoadList: false,
       contentHeight: '',
       categoryList: [],
@@ -259,7 +257,9 @@ export default {
       this.toReloadList()
     },
     toReloadList() {
-      this.reloadList = true
+      this.$nextTick(() => {
+        this.$refs.loadList.reloadData()
+      })
     }
   }
 }

@@ -12,7 +12,7 @@
       scroll-anchoring
       refresher-enabled
       :refresher-triggered="refresh"
-      @refresherrefresh="loadData('refresh')"
+      @refresherrefresh="refreshData"
     >
       <slot :list="value" />
 
@@ -34,11 +34,7 @@ export default {
   props: {
     value: { type: Array, default: () => [] },
     api: { type: String, default: '' },
-    query: {
-      type: Object,
-      default: () => ({ page: 1, limit: 10 })
-    },
-    reload: { type: Boolean, default: false },
+    query: { type: Object, default: () => ({}) },
     load: { type: Boolean, default: true },
     height: { type: String, default: () => `100vh` },
     emptyMode: { type: String, default: 'data' },
@@ -50,7 +46,8 @@ export default {
       distanceOfTop: 0,
       status: 'loading',
       empty: false,
-      refresh: false
+      refresh: false,
+      defaultQuery: { page: 1, limit: 10 }
     }
   },
   computed: {
@@ -59,16 +56,15 @@ export default {
     }
   },
   watch: {
-    reload(val) {
-      if (val) this.backToTop()
-      this.refresh = val
-    },
     load: {
       handler(val) {
         if (val && !this.empty && this.value.length === 0) this.loadData()
       },
       immediate: true
     }
+  },
+  created() {
+    this.$emit('update:query', { ...this.defaultQuery, ...this.query })
   },
   methods: {
     backToTop() {
@@ -85,50 +81,45 @@ export default {
         this.$emit('scroll', e)
       }, 99)
     },
-    resetReload() {
-      this.refresh = false
-      this.$emit('update:reload', false)
+    refreshData() {
+      if (this.refresh) return
+      this.refresh = true
+      this.reloadData()
     },
-    async loadData(refresh) {
-      const query = { ...this.query }
-
-      if (refresh) {
-        query.page = 1
-        this.empty = false
-        this.refresh = true
-        this.$emit('update:list', [])
-      } else if (this.status === 'nomore') return
-
+    reloadData() {
+      this.backToTop()
+      this.$emit('update:query', { ...this.query, page: 1 })
+      this.$emit('input', [])
       this.status = 'loading'
+      this.empty = false
+      this.$nextTick(() => {
+        this.loadData().then(() => {
+          this.refresh = false
+        })
+      })
+    },
+    async loadData() {
+      if (this.status === 'nomore') return
 
+      const query = { ...this.query }
       const res = await this.$request.get(this.api, query)
+      let { paginator, data } = res
 
-      if (!res) {
-        this.empty = true
-        this.resetReload()
-        return
-      }
-
-      if (this.format) {
-        res.data = this.format(res.data)
-      }
-
-      const { paginator, data } = res
-      const list = refresh ? data : [...this.value, ...data]
-
-      if (res.data.length === 0) {
+      if (!data || data?.length === 0) {
         this.empty = true
       } else {
         query.page = paginator.next
-        query.totalCount = paginator.totalCount
+        if (this.format) {
+          data = this.format(data)
+        }
+
         this.status =
           paginator.current === paginator.last ? 'nomore' : 'loadmore'
+        this.$emit('input', [...this.value, ...data])
+        this.$emit('update:query', query)
       }
 
-      this.$emit('input', list)
-      this.$emit('update:query', query)
-      this.$emit('change', { list, query })
-      this.resetReload()
+      this.$emit('complete')
     }
   }
 }

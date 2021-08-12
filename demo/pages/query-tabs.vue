@@ -6,7 +6,6 @@
       :v-model="list"
       :api="listApi"
       :query.sync="listQuery"
-      :reload.sync="reloadList"
       :height="height"
     >
       <view v-for="(item, index) in list" :key="index" class="person">
@@ -46,13 +45,11 @@ export default {
         limit: 10,
         '@order': 'createdTime|DESC'
       },
-      reloadList: false,
       height: 'calc(100vh - 80rpx)'
     }
   },
   methods: {
     queryChange(e) {
-      if (this.reloadList) this.reloadList = false
       this.listQuery = { ...this.defaultQuery, ...e }
       if (this.searchData) {
         this.listQuery[
@@ -60,7 +57,9 @@ export default {
         ] = `entity.getName() matches '/${this.searchData}/'`
       }
       this.$u.debounce(() => {
-        this.reloadList = true
+        this.$nextTick(() => {
+          this.$refs.loadList.reloadData()
+        })
       }, 333)
     }
   }

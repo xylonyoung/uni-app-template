@@ -43,7 +43,7 @@ export default {
     current: { type: [Number, Array], required: true },
     mode: {
       type: String,
-      default: 'right'
+      default: 'left'
     },
     width: {
       type: String,
@@ -154,13 +154,14 @@ export default {
   &-box-active {
     position: relative;
     color: $c-theme;
+    background-color: #fff;
     &::before {
       content: '';
       position: absolute;
       border-left: 4px solid $c-theme;
-      height: 32rpx;
+      height: 56rpx;
       left: 0;
-      top: 39rpx;
+      top: 28rpx;
     }
   }
 }
